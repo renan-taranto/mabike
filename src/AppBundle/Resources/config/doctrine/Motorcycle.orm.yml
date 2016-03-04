@@ -1,0 +1,27 @@
+AppBundle\Entity\Motorcycle:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\MotorcycleRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        brand:
+            type: string
+            length: '20'
+        model:
+            type: string
+            length: '20'
+        color:
+            type: string
+            length: '20'
+        year:
+            type: datetime
+        kilometersDriven:
+            type: integer
+            options:
+                unsigned: true
+    lifecycleCallbacks: {  }
