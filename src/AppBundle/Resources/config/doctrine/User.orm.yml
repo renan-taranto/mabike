@@ -11,10 +11,20 @@ AppBundle\Entity\User:
     fields:
         username:
             type: string
-            length: '50'
+            length: 50
             unique: true
+        email:
+            type: string
+            length: 255
+            unique: true
+        password:
+            type: string
+            length: 64
         apiKey:
             type: string
             length: 255
             unique: true
+        apiKeyExpirationTime:
+            type: datetime
+            
     lifecycleCallbacks: {  }

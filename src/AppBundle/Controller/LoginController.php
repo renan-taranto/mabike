@@ -1,0 +1,54 @@
+<?php
+namespace AppBundle\Controller;
+
+use AppBundle\Form\LoginType;
+use AppBundle\Security\LoginCommand;
+use AppBundle\Security\LoginService;
+use AppBundle\Security\TokenGenerator;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+
+class LoginController extends Controller
+{
+    public function loginAction(Request $request)
+    {
+        $loginForm = $this->createForm(LoginType::class, new LoginCommand());
+        $loginForm->submit($request->request->all()); 
+        
+        if (!$loginForm->isValid()) {
+            return $loginForm;
+        }
+        
+        $loginService = $this->getLoginService();
+        $loginCommand = $this->getLoginCommandFromForm($loginForm);
+        try {
+            $token = $loginService->createUserToken($loginCommand->getUsername(), $loginCommand->getPassword());
+        } catch (BadCredentialsException $ex) {
+            throw new BadRequestHttpException("Invalid username or password.");
+        }
+        return array('api_token' => $token, 'api_entry_point' => 'api/');
+    }
+    
+    /**
+     * @param Form $loginForm
+     * @return LoginCommand
+     */
+    private function getLoginCommandFromForm(Form $loginForm)
+    {
+        return $loginForm->getData();
+    }
+    
+    /**
+     * @return LoginService
+     */
+    private function getLoginService()
+    {
+        $userRepository = $this->getDoctrine()->getRepository('AppBundle:User');
+        $encoderFactory = $this->get('security.encoder_factory');
+        $tokenGenerator = new TokenGenerator($userRepository);
+        return new LoginService($userRepository, $encoderFactory, $tokenGenerator);
+    }
+}

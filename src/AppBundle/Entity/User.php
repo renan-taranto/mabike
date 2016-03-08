@@ -22,9 +22,23 @@ class User implements UserInterface
     /**
      * @var string
      */
+    private $email;
+
+    /**
+     * @var string
+     */
     private $apiKey;
+    
+    /**
+     * @var \DateTime
+     */
+    private $apiKeyExpirationTime;
 
-
+    /**
+     * @var string
+     */
+    private $password;
+    
     /**
      * Get id
      *
@@ -58,7 +72,50 @@ class User implements UserInterface
     {
         return $this->username;
     }
+    
+    /**
+     * Set email
+     *
+     * @param string $email
+     *
+     * @return User
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
 
+        return $this;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+    
+    /**
+     * Set password
+     *
+     * @param string $password
+     *
+     * @return User
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+    
+    public function getPassword()
+    {
+        return $this->password;
+    }
+    
     /**
      * Set apiKey
      *
@@ -83,12 +140,31 @@ class User implements UserInterface
         return $this->apiKey;
     }
 
-    public function eraseCredentials()
+    /**
+     * Set apiKeyExpirationTime
+     *
+     * @param \DateTime $apiKeyExpirationTime
+     *
+     * @return User
+     */
+    public function setApiKeyExpirationTime($apiKeyExpirationTime)
     {
-        
+        $this->apiKeyExpirationTime = $apiKeyExpirationTime;
+
+        return $this;
     }
 
-    public function getPassword()
+    /**
+     * Get apiKeyExpirationTime
+     *
+     * @return \DateTime
+     */
+    public function getApiKeyExpirationTime()
+    {
+        return $this->apiKeyExpirationTime;
+    }
+    
+    public function eraseCredentials()
     {
         
     }
@@ -100,8 +176,6 @@ class User implements UserInterface
 
     public function getSalt()
     {
-        
+        return null;
     }
-
 }
-

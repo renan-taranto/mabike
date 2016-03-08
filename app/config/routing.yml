@@ -1,3 +1,23 @@
-app:
-    resource: "@AppBundle/Controller/"
-    type:     annotation
+#api_v1:
+#    type:     rest
+#    resource: "@AppBundle/Resources/config/routing/routes.yml"
+#    prefix:   /api
+    
+#user_registration:
+#    path:      /register
+#    defaults:  { _controller: AppBundle:Registration:register }
+#    methods:  [POST]
+#    requirements:
+#      _format:  json
+#      
+api_v1_login:
+    type:     rest
+    methods:  [POST]
+    resource: AppBundle\Controller\LoginController
+    prefix:   /api/v1
+    
+api_v1_entry_point:
+    path:      /api/v1
+    defaults:  { _controller: AppBundle:EntryPoint:get }
+    prefix:   /api/v1
+    methods:  [GET]

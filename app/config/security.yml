@@ -9,6 +9,8 @@ security:
         db_provider:
             entity:
                 class: AppBundle:User
+    encoders:
+        AppBundle\Entity\User: bcrypt
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -16,6 +18,11 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        login:
+            pattern:  ^/api/v1/login$
+            anonymous:  ~
+            security: false
+            
         main:
             guard:
                 authenticators:
@@ -24,5 +31,4 @@ security:
             stateless: true        
                     
     access_control:
-        # require ROLE_ADMIN for /admin*
-        - { path: ^/, roles: ROLE_USER }
+        - { path: ^/api/v1, roles: ROLE_USER }
