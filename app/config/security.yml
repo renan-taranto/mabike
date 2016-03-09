@@ -19,7 +19,7 @@ security:
             security: false
 
         login:
-            pattern:  ^/api/v1/login$
+            pattern:  ^/api/v1/login
             anonymous:  ~
             security: false
             
@@ -27,8 +27,8 @@ security:
             guard:
                 authenticators:
                     - app.token_authenticator
-                    
             stateless: true        
+                    
                     
     access_control:
         - { path: ^/api/v1, roles: ROLE_USER }

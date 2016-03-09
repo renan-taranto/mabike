@@ -1,0 +1,9 @@
+api_v1_login:
+    type: rest
+    resource: AppBundle\Controller\LoginController 
+    name_prefix: "api_v1_"
+    
+api_v1_entry_point:
+    type: rest
+    resource: AppBundle\Controller\EntryPointController
+    name_prefix: "api_v1_"

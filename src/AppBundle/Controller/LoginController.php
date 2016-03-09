@@ -13,6 +13,9 @@ use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 class LoginController extends Controller
 {
+    /**
+     * @FOS\RestBundle\Controller\Annotations\Post()
+     */
     public function loginAction(Request $request)
     {
         $loginForm = $this->createForm(LoginType::class, new LoginCommand());
