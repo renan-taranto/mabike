@@ -24,8 +24,10 @@ AppBundle\Entity\User:
             type: string
             length: 255
             unique: true
+            nullable: true
         apiKeyExpirationTime:
             type: datetime
+            nullable: true
         roles:
             type: json_array
             

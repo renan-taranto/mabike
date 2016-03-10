@@ -42,8 +42,10 @@ class User implements UserInterface
     private $password;
     
     
-    public function __construct(array $roles)
+    public function __construct($username, $email, array $roles)
     {
+        $this->username = $username;
+        $this->email = $email;
         $this->roles = $roles;
     }
     

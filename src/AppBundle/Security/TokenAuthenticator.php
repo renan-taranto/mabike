@@ -46,7 +46,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         if (empty($user)) {
             throw new CustomUserMessageAuthenticationException(
                 'Unauthorized. A valid token must be provided. POST credentials to: ' .
-                $this->router->generate('login')
+                $this->router->generate('api_v1_login')
             );
         }
         return $user;

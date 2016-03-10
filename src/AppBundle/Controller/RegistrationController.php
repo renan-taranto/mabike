@@ -14,14 +14,10 @@ class RegistrationController extends Controller
      */
     public function registerAction(Request $request)
     {
-        $user = new User(array('ROLE_USER'));
+        $user = new User('auser', 'user@mail.com', array('ROLE_USER'));
         $password = $this->get('security.password_encoder')
                 ->encodePassword($user, '12345');
-        $user->setUsername('taranto');
-        $user->setEmail('renantaranto@gmail.com');
         $user->setPassword($password);
-        $user->setApiKey('tempKey');
-        $user->setApiKeyExpirationTime(new \DateTime('now'));
         $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
