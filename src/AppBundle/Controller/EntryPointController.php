@@ -8,6 +8,9 @@ class EntryPointController extends Controller
 {
     public function getAction(Request $request)
     {
-        return new \Symfony\Component\HttpFoundation\JsonResponse(array('msg' => 'woot'));
+        if ($this->isGranted('ROLE_DEV', $this->getUser())) {
+            return new \Symfony\Component\HttpFoundation\JsonResponse(array('msg' => 'developer'));
+        }
+        return new \Symfony\Component\HttpFoundation\JsonResponse(array('msg' => 'normal user'));
     }
 }

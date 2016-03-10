@@ -26,5 +26,7 @@ AppBundle\Entity\User:
             unique: true
         apiKeyExpirationTime:
             type: datetime
+        roles:
+            type: json_array
             
     lifecycleCallbacks: {  }

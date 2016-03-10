@@ -3,6 +3,11 @@ api_v1_login:
     resource: AppBundle\Controller\LoginController 
     name_prefix: "api_v1_"
     
+api_v1_register:
+    type: rest
+    resource: AppBundle\Controller\RegistrationController
+    name_prefix: "api_v1_"
+    
 api_v1_entry_point:
     type: rest
     resource: AppBundle\Controller\EntryPointController

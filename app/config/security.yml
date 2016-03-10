@@ -22,6 +22,10 @@ security:
             pattern:  ^/api/v1/login
             anonymous:  ~
             security: false
+        register:
+            pattern:  ^/api/v1/register
+            anonymous:  ~
+            security: false
             
         main:
             guard:

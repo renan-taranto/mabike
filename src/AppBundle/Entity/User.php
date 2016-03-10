@@ -24,6 +24,8 @@ class User implements UserInterface
      */
     private $email;
 
+    private $roles;
+    
     /**
      * @var string
      */
@@ -38,6 +40,12 @@ class User implements UserInterface
      * @var string
      */
     private $password;
+    
+    
+    public function __construct(array $roles)
+    {
+        $this->roles = $roles;
+    }
     
     /**
      * Get id
@@ -171,7 +179,7 @@ class User implements UserInterface
 
     public function getRoles()
     {
-        return ['ROLE_USER'];
+        return $this->roles;
     }
 
     public function getSalt()
