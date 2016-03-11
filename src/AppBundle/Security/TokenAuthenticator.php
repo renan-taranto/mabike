@@ -10,7 +10,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
@@ -43,22 +44,31 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
         $user = $this->em->getRepository('AppBundle:User')
             ->findOneBy(array('apiKey' => $apiKey));
+        /*
+         * When this method returns null, an UsernameNotFoundException will be
+         * thrown and onAuthenticationFailure method will "catch" it somehow
+         */
         if (empty($user)) {
-            throw new CustomUserMessageAuthenticationException(
-                'Unauthorized. A valid token must be provided. POST credentials to: ' .
-                $this->router->generate('api_v1_login')
-            );
+            return;
         }
         return $user;
     }
 
     public function checkCredentials($credentials, UserInterface $user)
     {
+        if (in_array('ROLE_DEV', $user->getRoles())) {
+            return true;
+        }
+        
+        /*
+         * When this method returns null, a BadCredentialsException will be
+         * thrown and onAuthenticationFailure method will "catch" it somehow
+         */
         if (
             $user instanceof User and
             $user->getApiKeyExpirationTime() < new DateTime('now')
         ) {
-            throw new CustomUserMessageAuthenticationException('Unauthorized. Token has expired.');
+            return;
         }
         
         return true;
@@ -71,17 +81,40 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
+        if ($exception instanceof UsernameNotFoundException) {
+            $data = array(
+                'code' => 403,
+                'message' => 'Invalid authentication token.',
+                'login_url' => $this->router->generate('api_v1_login')
+            );
+            return new JsonResponse($data, 403);
+        }
+        
+        /*
+         * When token has expired
+         */
+        if ($exception instanceof BadCredentialsException) {
+            $data = array(
+                'code' => 403,
+                'message' => 'Authentication token has expired.',
+                'login_url' => $this->router->generate('api_v1_login')
+            );
+            return new JsonResponse($data, 403);
+        }
+        
         $data = array(
             'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
         );
-
         return new JsonResponse($data, 403);
+
     }
 
     public function start(Request $request, AuthenticationException $authException = null)
     {
         $data = array(
-            'message' => 'Authentication Required'
+            'code' => 401,
+            'message' => 'Authentication token required.',
+            'login_url' => $this->router->generate('api_v1_login')
         );
 
         return new JsonResponse($data, 401);

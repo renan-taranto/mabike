@@ -32,7 +32,7 @@ class LoginController extends Controller
         } catch (BadCredentialsException $ex) {
             throw new BadRequestHttpException("Invalid username or password.");
         }
-        return array('api_token' => $token, 'api_entry_point' => 'api/');
+        return array('auth_token' => $token, 'entry_point_url' => $this->generateUrl('api_v1_entry_point'));
     }
     
     /**
