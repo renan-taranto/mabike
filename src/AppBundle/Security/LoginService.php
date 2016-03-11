@@ -3,7 +3,6 @@ namespace AppBundle\Security;
 
 use AppBundle\Entity\User;
 use AppBundle\Repository\UserRepository;
-use Exception;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
@@ -31,11 +30,8 @@ class LoginService
      */
     public function createUserToken($username, $password)
     {
-        $user = $this->findUserOrThrowException($username);
-        if (!$this->isPasswordValid($user, $password)) {
-            throw new BadCredentialsException('Invalid Password.');
-            
-        }
+        $user = $this->findUserOrThrowBadCredentials($username);
+        $this->throwBadCredentialsIfInvalidPassword($user, $password);
         
         $token = $this->tokenGenerator->generate();
         $this->persistUserToken($user, $token);
@@ -47,7 +43,7 @@ class LoginService
      * @return User
      * @throws BadCredentialsException
      */
-    private function findUserOrThrowException($username)
+    private function findUserOrThrowBadCredentials($username)
     {
         $user = $this->userRepository->findByUserName($username);
         if (empty($user)) {
@@ -62,10 +58,12 @@ class LoginService
      * @param string $salt
      * @return boolean
      */
-    private function isPasswordValid(User $user, $rawPassword)
+    private function throwBadCredentialsIfInvalidPassword(User $user, $rawPassword)
     {
         $encoder = $this->encoderFactory->getEncoder($user);
-        return $encoder->isPasswordValid($user->getPassword(), $rawPassword, $user->getSalt());
+        if (!$encoder->isPasswordValid($user->getPassword(), $rawPassword, $user->getSalt())) {
+            throw new BadCredentialsException('Invalid Password.');
+        }
     }
     
     private function persistUserToken(User $user, TokenCommand $token)
