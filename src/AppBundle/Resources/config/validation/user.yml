@@ -1,4 +1,8 @@
 AppBundle\Entity\User:
     constraints:
-        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: email
-        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: username
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [email]
+            message: 'E-emal address already in use.'
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [username]
+            message: 'Username already in use.'

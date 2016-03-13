@@ -6,6 +6,7 @@ use AppBundle\Security\RegisterUserCommand;
 use AppBundle\Security\RegisterUserCommandHandler;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class RegistrationController extends FOSRestController
 {
@@ -20,14 +21,14 @@ class RegistrationController extends FOSRestController
         if (!$form->isValid()) {
             return $form;
         }
-        
+
         $registerUserCommandHandler = new RegisterUserCommandHandler($this->get('security.password_encoder'));
         $user = $registerUserCommandHandler->perform($form->getData());
         
         $validator = $this->get('validator');
         $errors = $validator->validate($user);
         if (count($errors)) {
-            return $errors;
+            throw new BadRequestHttpException($errors[0]->getMessage());
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -39,7 +40,7 @@ class RegistrationController extends FOSRestController
             'message' => 'User successfully registered.',
             'login_url' => $this->generateUrl('api_v1_login')
         );
-        return $this->view($data, 200);
+        return $data;
     }
 
 }
