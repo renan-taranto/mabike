@@ -1,25 +1,45 @@
 <?php
-
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Form\RegistrationType;
+use AppBundle\Security\RegisterUserCommand;
+use AppBundle\Security\RegisterUserCommandHandler;
+use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 
-class RegistrationController extends Controller
+class RegistrationController extends FOSRestController
 {
     /**
      * @FOS\RestBundle\Controller\Annotations\Post()
      */
-    public function registerAction(Request $request)
+    public function registrationAction(Request $request)
     {
-        $user = new User('auser', 'user@mail.com', array('ROLE_USER'));
-        $password = $this->get('security.password_encoder')
-                ->encodePassword($user, '12345');
-        $user->setPassword($password);
+        $form = $this->createForm(RegistrationType::class, new RegisterUserCommand());
+        $form->submit($request->request->all());
+
+        if (!$form->isValid()) {
+            return $form;
+        }
+        
+        $registerUserCommandHandler = new RegisterUserCommandHandler($this->get('security.password_encoder'));
+        $user = $registerUserCommandHandler->perform($form->getData());
+        
+        $validator = $this->get('validator');
+        $errors = $validator->validate($user);
+        if (count($errors)) {
+            return $errors;
+        }
+
         $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
+        $em->persist($user);
+        $em->flush();
+
+        $data = array(
+            'code' => 200,
+            'message' => 'User successfully registered.',
+            'login_url' => $this->generateUrl('api_v1_login')
+        );
+        return $this->view($data, 200);
     }
-   
+
 }

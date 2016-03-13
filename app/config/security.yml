@@ -23,7 +23,7 @@ security:
             anonymous:  ~
             security: false
         register:
-            pattern:  ^/api/v1/register
+            pattern:  ^/api/v1/registration
             anonymous:  ~
             security: false
             
