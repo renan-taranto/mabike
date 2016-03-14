@@ -1,10 +1,9 @@
 <?php
-
 namespace AppBundle\Security;
 
-use AppBundle\Entity\User;
 use DateTime;
 use Doctrine\ORM\EntityManager;
+use Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,7 +41,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     {
         $apiKey = $credentials['token'];
 
-        $user = $this->em->getRepository('AppBundle:User')
+        $user = $this->em->getRepository('Domain:User')
             ->findOneBy(array('apiKey' => $apiKey));
         /*
          * When this method returns null, an UsernameNotFoundException will be

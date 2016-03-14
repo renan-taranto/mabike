@@ -8,9 +8,9 @@ security:
 #            memory: ~
         db_provider:
             entity:
-                class: AppBundle:User
+                class: Domain:User
     encoders:
-        AppBundle\Entity\User: bcrypt
+        Domain\Entity\User: bcrypt
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs

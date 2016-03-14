@@ -1,9 +1,9 @@
 <?php
 namespace AppBundle\Security;
 
-use AppBundle\Repository\UserRepository;
 use DateInterval;
 use DateTime;
+use Domain\Entity\Repository\UserRepository;
 use InvalidArgumentException;
 
 class TokenGenerator

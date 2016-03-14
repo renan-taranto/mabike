@@ -1,7 +1,7 @@
 <?php
 namespace AppBundle\Security;
 
-use AppBundle\Entity\User;
+use Domain\Entity\User;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class RegisterUserCommandHandler

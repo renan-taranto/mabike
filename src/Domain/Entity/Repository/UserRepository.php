@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Repository;
+namespace Domain\Entity\Repository;
 
-use AppBundle\Entity\User;
+use Domain\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 /**

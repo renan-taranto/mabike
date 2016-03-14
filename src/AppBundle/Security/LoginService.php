@@ -1,8 +1,8 @@
 <?php
 namespace AppBundle\Security;
 
-use AppBundle\Entity\User;
-use AppBundle\Repository\UserRepository;
+use Domain\Entity\Repository\UserRepository;
+use Domain\Entity\User;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 

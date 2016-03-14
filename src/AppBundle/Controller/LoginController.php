@@ -40,7 +40,7 @@ class LoginController extends Controller
      */
     private function getLoginService()
     {
-        $userRepository = $this->getDoctrine()->getRepository('AppBundle:User');
+        $userRepository = $this->getDoctrine()->getRepository('Domain:User');
         $encoderFactory = $this->get('security.encoder_factory');
         $tokenGenerator = new TokenGenerator($userRepository);
         return new LoginService($userRepository, $encoderFactory, $tokenGenerator);

@@ -1,7 +1,7 @@
-AppBundle\Entity\Motorcycle:
+Domain\Entity\Motorcycle:
     type: entity
     table: null
-    repositoryClass: AppBundle\Repository\MotorcycleRepository
+    repositoryClass: Domain\Entity\Repository\MotorcycleRepository
     id:
         id:
             type: integer
