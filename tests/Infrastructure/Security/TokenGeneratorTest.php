@@ -1,10 +1,10 @@
 <?php
-namespace Tests\AppBundle\Security;
+namespace Tests\Infrastructure\Security;
 
-use AppBundle\Repository\UserRepository;
-use AppBundle\Security\TokenGenerator;
 use DateInterval;
 use DateTime;
+use Domain\Entity\Repository\UserRepository;
+use Infrastructure\Security\TokenGenerator;
 
 class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
 {
