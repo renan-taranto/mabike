@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle\Controller;
+namespace Presentation\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;

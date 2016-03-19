@@ -1,6 +1,7 @@
 <?php
-namespace AppBundle\Security;
+namespace Infrastructure\Security;
 
+use Application\Command\TokenCommand;
 use DateInterval;
 use DateTime;
 use Domain\Entity\Repository\UserRepository;

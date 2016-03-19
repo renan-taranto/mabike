@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle\Security;
+namespace Application\Command;
 
 use Domain\Entity\User;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;

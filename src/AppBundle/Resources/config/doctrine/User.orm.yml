@@ -1,7 +1,6 @@
 Domain\Entity\User:
     type: entity
     table: null
-    repositoryClass: Domain\Entity\Repository\UserRepository
     id:
         id:
             type: integer

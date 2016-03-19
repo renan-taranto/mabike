@@ -1,12 +1,16 @@
 <?php
-namespace AppBundle\Controller;
+namespace Presentation\Controller;
 
-use AppBundle\Form\RegistrationType;
-use AppBundle\Security\RegisterUserCommand;
-use AppBundle\Security\RegisterUserCommandHandler;
+use Application\Command\RegisterUserCommand;
+use Application\Command\RegisterUserCommandHandler;
+use Application\Service\RegisterUserService;
+use Exception;
 use FOS\RestBundle\Controller\FOSRestController;
+use Infrastructure\Repository\DoctrineUserRepository;
+use Presentation\Form\RegistrationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+
 
 class RegistrationController extends FOSRestController
 {
@@ -25,15 +29,15 @@ class RegistrationController extends FOSRestController
         $registerUserCommandHandler = new RegisterUserCommandHandler($this->get('security.password_encoder'));
         $user = $registerUserCommandHandler->perform($form->getData());
         
-        $validator = $this->get('validator');
-        $errors = $validator->validate($user);
-        if (count($errors)) {
-            throw new BadRequestHttpException($errors[0]->getMessage());
-        }
-
         $em = $this->getDoctrine()->getManager();
-        $em->persist($user);
-        $em->flush();
+        $userRepository = new DoctrineUserRepository($em);
+        $validator = $this->get('validator');
+        $registerUserService = new RegisterUserService($userRepository, $validator);
+        try {
+            $registerUserService->registerUser($user);
+        } catch (Exception $ex) {
+            throw new BadRequestHttpException($ex->getMessage());
+        }
 
         $data = array(
             'code' => 200,

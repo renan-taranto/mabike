@@ -1,4 +1,4 @@
-AppBundle\Security\LoginCommand:
+Application\Command\LoginCommand:
     properties:
         username:
             - NotBlank: ~

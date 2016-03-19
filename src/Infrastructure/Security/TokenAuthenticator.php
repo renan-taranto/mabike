@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle\Security;
+namespace Infrastructure\Security;
 
 use DateTime;
 use Doctrine\ORM\EntityManager;

@@ -5,5 +5,5 @@ parameters:
 
 services:
     app.token_authenticator:
-        class: AppBundle\Security\TokenAuthenticator
+        class: Infrastructure\Security\TokenAuthenticator
         arguments: ['@doctrine.orm.entity_manager', '@router']

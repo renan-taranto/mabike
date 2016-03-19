@@ -1,10 +1,12 @@
 <?php
-namespace AppBundle\Controller;
+namespace Presentation\Controller;
 
-use AppBundle\Form\LoginType;
-use AppBundle\Security\LoginCommand;
-use AppBundle\Security\LoginService;
-use AppBundle\Security\TokenGenerator;
+use Application\Command\LoginCommand;
+use Application\Service\LoginService;
+use Doctrine\ORM\EntityManager;
+use Infrastructure\Repository\DoctrineUserRepository;
+use Infrastructure\Security\TokenGenerator;
+use Presentation\Form\LoginType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -24,7 +26,8 @@ class LoginController extends Controller
             return $loginForm;
         }
         
-        $loginService = $this->getLoginService();
+        $em = $this->getDoctrine()->getManager();
+        $loginService = $this->getLoginService($em);
         /* @var $loginCommand LoginCommand */
         $loginCommand = $loginForm->getData();
         try {
@@ -38,9 +41,9 @@ class LoginController extends Controller
     /**
      * @return LoginService
      */
-    private function getLoginService()
+    private function getLoginService(EntityManager $em)
     {
-        $userRepository = $this->getDoctrine()->getRepository('Domain:User');
+        $userRepository = new DoctrineUserRepository($em);
         $encoderFactory = $this->get('security.encoder_factory');
         $tokenGenerator = new TokenGenerator($userRepository);
         return new LoginService($userRepository, $encoderFactory, $tokenGenerator);

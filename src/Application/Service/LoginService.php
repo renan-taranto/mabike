@@ -1,8 +1,10 @@
 <?php
-namespace AppBundle\Security;
+namespace Application\Service;
 
+use Application\Command\TokenCommand;
 use Domain\Entity\Repository\UserRepository;
 use Domain\Entity\User;
+use Infrastructure\Security\TokenGenerator;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
@@ -45,7 +47,7 @@ class LoginService
      */
     private function findUserOrThrowBadCredentials($username)
     {
-        $user = $this->userRepository->findByUserName($username);
+        $user = $this->userRepository->findByUsername($username);
         if (empty($user)) {
             throw new BadCredentialsException('Username could not be found.');
         }
@@ -70,6 +72,6 @@ class LoginService
     {
         $user->setApiKey($token->getKey());
         $user->setApiKeyExpirationTime($token->getExpirationDateTime());
-        $this->userRepository->save($user);
+        $this->userRepository->updateUser($user);
     }
 }

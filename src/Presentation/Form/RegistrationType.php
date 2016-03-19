@@ -1,8 +1,9 @@
 <?php
-namespace AppBundle\Form;
+namespace Presentation\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RegistrationType extends AbstractType
 {
@@ -15,7 +16,7 @@ class RegistrationType extends AbstractType
         ;
     }
     
-    public function configureOptions(\Symfony\Component\OptionsResolver\OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array('allow_extra_fields' => true));
     }

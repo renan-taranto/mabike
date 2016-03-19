@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle\Security;
+namespace Application\Command;
 
 use DateTime;
 
