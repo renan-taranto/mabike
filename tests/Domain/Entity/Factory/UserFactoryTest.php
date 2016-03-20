@@ -2,14 +2,13 @@
 namespace Tests\Domain\Entity\Factory;
 
 use Domain\Entity\Factory\NormalUserFactory;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactoryReturnsNormalUserWithEncodedPassword()
     {
-        $passwordEncoder = $this->getMock(
-            'Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface'
-        );
+        $passwordEncoder = $this->getMock(UserPasswordEncoderInterface::class);
         $passwordEncoder->expects($this->once())
             ->method('encodePassword')
             ->will($this->returnValue('encodedPassword'));
