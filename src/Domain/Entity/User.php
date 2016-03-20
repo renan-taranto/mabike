@@ -42,11 +42,12 @@ class User implements UserInterface
     private $password;
     
     
-    public function __construct($username, $email, array $roles)
+    public function __construct($username, $email, $password)
     {
         $this->username = $username;
         $this->email = $email;
-        $this->roles = $roles;
+        $this->password = $password;
+        $this->roles = array('ROLE_USER');
     }
     
     /**
@@ -179,8 +180,22 @@ class User implements UserInterface
         
     }
 
+    /**
+     * @param string $role
+     */
+    public function addRole($role)
+    {
+        if (!in_array(strtoupper($role), $this->roles)) {
+            array_push($this->roles, strtoupper($role));
+        }
+    }
+    
     public function getRoles()
     {
+        if (empty($this->roles)) {
+            return array('ROLE_USER');
+        }
+        
         return $this->roles;
     }
 

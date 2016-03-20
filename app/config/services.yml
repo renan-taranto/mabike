@@ -4,6 +4,22 @@ parameters:
 #    parameter_name: value
 
 services:
-    app.token_authenticator:
+    #Application
+    app.service.register_user:
+        class: Application\Service\RegisterUserService
+        arguments: ['@domain.factory.normal_user', '@infra.repository.user', '@validator']
+        
+    #Domain
+    domain.factory.normal_user:
+        class: Domain\Entity\Factory\NormalUserFactory
+        arguments: ['@security.password_encoder']
+        
+    #Infrastructure
+    infra.token_authenticator:
         class: Infrastructure\Security\TokenAuthenticator
         arguments: ['@doctrine.orm.entity_manager', '@router']
+    infra.repository.user:
+        class: Infrastructure\Repository\DoctrineUserRepository
+        arguments: ['@doctrine.orm.entity_manager']
+        
+        

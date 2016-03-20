@@ -1,40 +1,25 @@
 <?php
 namespace Application\Command;
 
+use Application\Service\RegisterUserService;
+
 class RegisterUserCommand
 {
-    private $username;
-    private $email;
-    private $password;
+    private $registerUserService;
     
-    public function getUsername()
+    public function __construct(RegisterUserService $registerUserService)
     {
-        return $this->username;
+        $this->registerUserService = $registerUserService;
     }
-
-    public function getEmail()
+    
+    public function execute(RegisterUserDTO $registerUserDTO)
     {
-        return $this->email;
+        $user = $this->registerUserService->registerUser(
+            $registerUserDTO->getUsername(),
+            $registerUserDTO->getEmail(),
+            $registerUserDTO->getPassword()
+        );
+        
+        return $user;
     }
-
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    public function setUsername($username)
-    {
-        $this->username = $username;
-    }
-
-    public function setEmail($email)
-    {
-        $this->email = $email;
-    }
-
-    public function setPassword($password)
-    {
-        $this->password = $password;
-    }
-
 }

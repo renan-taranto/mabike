@@ -2,11 +2,9 @@
 namespace Presentation\Controller;
 
 use Application\Command\RegisterUserCommand;
-use Application\Command\RegisterUserCommandHandler;
-use Application\Service\RegisterUserService;
+use Application\Command\RegisterUserDTO;
 use Exception;
 use FOS\RestBundle\Controller\FOSRestController;
-use Infrastructure\Repository\DoctrineUserRepository;
 use Presentation\Form\RegistrationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -19,22 +17,17 @@ class RegistrationController extends FOSRestController
      */
     public function registrationAction(Request $request)
     {
-        $form = $this->createForm(RegistrationType::class, new RegisterUserCommand());
+        $form = $this->createForm(RegistrationType::class, new RegisterUserDTO());
         $form->submit($request->request->all());
 
         if (!$form->isValid()) {
             return $form;
         }
-
-        $registerUserCommandHandler = new RegisterUserCommandHandler($this->get('security.password_encoder'));
-        $user = $registerUserCommandHandler->perform($form->getData());
         
-        $em = $this->getDoctrine()->getManager();
-        $userRepository = new DoctrineUserRepository($em);
-        $validator = $this->get('validator');
-        $registerUserService = new RegisterUserService($userRepository, $validator);
+        $registerUserService = $this->get('app.service.register_user');
+        $registerUserCommand = new RegisterUserCommand($registerUserService);
         try {
-            $registerUserService->registerUser($user);
+            $registerUserCommand->execute($form->getData());
         } catch (Exception $ex) {
             throw new BadRequestHttpException($ex->getMessage());
         }
@@ -46,5 +39,4 @@ class RegistrationController extends FOSRestController
         );
         return $data;
     }
-
 }
