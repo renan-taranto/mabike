@@ -1,6 +1,7 @@
 <?php
 namespace Application\Command;
 
+use Application\Dto\UserRegistration;
 use Application\Service\RegisterUserService;
 
 class RegisterUserCommand
@@ -12,7 +13,7 @@ class RegisterUserCommand
         $this->registerUserService = $registerUserService;
     }
     
-    public function execute(RegisterUserDTO $registerUserDTO)
+    public function execute(UserRegistration $registerUserDTO)
     {
         $user = $this->registerUserService->registerUser(
             $registerUserDTO->getUsername(),

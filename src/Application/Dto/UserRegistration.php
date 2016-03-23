@@ -1,7 +1,7 @@
 <?php
-namespace Application\Command;
+namespace Application\Dto;
 
-class RegisterUserDTO
+class UserRegistration
 {
     private $username;
     private $email;

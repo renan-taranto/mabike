@@ -2,7 +2,7 @@
 namespace Presentation\Controller;
 
 use Application\Command\RegisterUserCommand;
-use Application\Command\RegisterUserDTO;
+use Application\Command\UserRegistration;
 use Exception;
 use FOS\RestBundle\Controller\FOSRestController;
 use Presentation\Form\RegistrationType;
@@ -17,7 +17,7 @@ class RegistrationController extends FOSRestController
      */
     public function registrationAction(Request $request)
     {
-        $form = $this->createForm(RegistrationType::class, new RegisterUserDTO());
+        $form = $this->createForm(RegistrationType::class, new UserRegistration());
         $form->submit($request->request->all());
 
         if (!$form->isValid()) {

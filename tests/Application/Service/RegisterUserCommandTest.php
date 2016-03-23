@@ -2,7 +2,7 @@
 namespace Tests\Application\Service;
 
 use Application\Command\RegisterUserCommand;
-use Application\Command\RegisterUserDTO;
+use Application\Dto\UserRegistration;
 use Application\Service\RegisterUserService;
 use Domain\Entity\User;
 
@@ -23,7 +23,7 @@ class RegisterUserCommandTest extends \PHPUnit_Framework_TestCase
             ->method('registerUser')
             ->will($this->returnValue($user));
         
-        $registerUserDTO = new RegisterUserDTO();
+        $registerUserDTO = new UserRegistration();
         $registerUserDTO->setUsername($username);
         $registerUserDTO->setEmail($email);
         $registerUserDTO->setPassword($password);
