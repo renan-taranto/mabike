@@ -2,6 +2,7 @@
 
 namespace Domain\Entity;
 
+use DateTime;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -32,7 +33,7 @@ class User implements UserInterface
     private $apiKey;
     
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $apiKeyExpirationTime;
 
@@ -128,20 +129,6 @@ class User implements UserInterface
     }
     
     /**
-     * Set apiKey
-     *
-     * @param string $apiKey
-     *
-     * @return User
-     */
-    public function setApiKey($apiKey)
-    {
-        $this->apiKey = $apiKey;
-
-        return $this;
-    }
-
-    /**
      * Get apiKey
      *
      * @return string
@@ -152,23 +139,19 @@ class User implements UserInterface
     }
 
     /**
-     * Set apiKeyExpirationTime
-     *
-     * @param \DateTime $apiKeyExpirationTime
-     *
-     * @return User
+     * @param string $apiKey
+     * @param DateTime $apiKeyExpirationTime
      */
-    public function setApiKeyExpirationTime($apiKeyExpirationTime)
+    public function updateApiKey($apiKey, $apiKeyExpirationTime)
     {
+        $this->apiKey = $apiKey;
         $this->apiKeyExpirationTime = $apiKeyExpirationTime;
-
-        return $this;
     }
 
     /**
      * Get apiKeyExpirationTime
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getApiKeyExpirationTime()
     {

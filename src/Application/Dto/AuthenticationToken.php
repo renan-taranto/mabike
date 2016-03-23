@@ -1,9 +1,9 @@
 <?php
-namespace Application\Command;
+namespace Application\Dto;
 
 use DateTime;
 
-class TokenCommand
+class AuthenticationToken
 {
     /**
      * @var string

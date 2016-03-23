@@ -2,10 +2,10 @@
 namespace Presentation\Controller;
 
 use Application\Command\LoginCommand;
-use Application\Service\LoginService;
+use Application\Service\StatelessLoginService;
 use Doctrine\ORM\EntityManager;
 use Infrastructure\Repository\DoctrineUserRepository;
-use Infrastructure\Security\TokenGenerator;
+use Infrastructure\Security\RandomKeyGenerator;
 use Presentation\Form\LoginType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,13 +39,13 @@ class LoginController extends Controller
     }
     
     /**
-     * @return LoginService
+     * @return StatelessLoginService
      */
     private function getLoginService(EntityManager $em)
     {
         $userRepository = new DoctrineUserRepository($em);
         $encoderFactory = $this->get('security.encoder_factory');
-        $tokenGenerator = new TokenGenerator($userRepository);
-        return new LoginService($userRepository, $encoderFactory, $tokenGenerator);
+        $tokenGenerator = new RandomKeyGenerator($userRepository);
+        return new StatelessLoginService($userRepository, $encoderFactory, $tokenGenerator);
     }
 }
