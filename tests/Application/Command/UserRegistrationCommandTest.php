@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Application\Service;
+namespace Tests\Application\Command;
 
 use Application\Command\UserRegistrationCommand;
 use Application\Dto\UserRegistration;
@@ -10,11 +10,15 @@ class UserRegistrationCommandTest extends \PHPUnit_Framework_TestCase
 {
     public function testCommandReturnsUser()
     {
-        $username = 'normal_user';
-        $email = 'user@email.com';
-        $password = 'plainPass';
+        $registerUserDTO = new UserRegistration();
+        $registerUserDTO->setUsername('normal_user');
+        $registerUserDTO->setEmail('user@email.com');
+        $registerUserDTO->setPassword('plainPass');
         
-        $user = new User($username, $email, $password);
+        $user = new User(
+            $registerUserDTO->getUsername(),
+            $registerUserDTO->getEmail(),
+            $registerUserDTO->getPassword());
         
         $registerUserService = $this->getMockBuilder(RegisterUserService::class)
             ->disableOriginalConstructor()
@@ -23,10 +27,6 @@ class UserRegistrationCommandTest extends \PHPUnit_Framework_TestCase
             ->method('registerUser')
             ->will($this->returnValue($user));
         
-        $registerUserDTO = new UserRegistration();
-        $registerUserDTO->setUsername($username);
-        $registerUserDTO->setEmail($email);
-        $registerUserDTO->setPassword($password);
 
         $registerUserCommand = new UserRegistrationCommand($registerUserService);
         $registeredUser = $registerUserCommand->execute($registerUserDTO);
