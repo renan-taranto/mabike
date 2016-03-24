@@ -3,10 +3,11 @@ namespace Application\Service;
 
 use Application\Dto\AuthenticationToken;
 use Application\Factory\AuthenticationTokenFactory;
+use Application\Security\UserTokenGenerator;
 use Domain\Entity\Repository\UserRepository;
 use Domain\Entity\User;
 
-class UserTokenService
+class UserTokenService implements UserTokenGenerator
 {
     private static $KEY_LENGTH = 255;
     private static $MINUTES_BEFORE_EXPIRATION = 15;
@@ -34,6 +35,7 @@ class UserTokenService
         $token = $this->createToken();
         $user->updateApiKey($token->getKey(), $token->getExpirationDateTime());
         $this->saveChanges($user);
+        return $token;
     }
     
     /**

@@ -4,7 +4,7 @@ namespace Application\Command;
 use Application\Dto\UserRegistration;
 use Application\Service\RegisterUserService;
 
-class RegisterUserCommand
+class UserRegistrationCommand
 {
     private $registerUserService;
     

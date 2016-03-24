@@ -10,16 +10,16 @@ class StatelessLoginService
 {
     private $userRepository;
     private $passwordValidatorService;
-    private $userTokenService;
+    private $userTokenGenerator;
     
     public function __construct(
         UserRepository $userRepository,
         PasswordValidator $passwordValidator,
-        UserTokenGenerator $userTokenService
+        UserTokenGenerator $userTokenGenerator
     ) {
         $this->userRepository = $userRepository;
         $this->passwordValidatorService = $passwordValidator;
-        $this->userTokenService = $userTokenService;
+        $this->userTokenGenerator = $userTokenGenerator;
     }
     /**
      * @param string $username
@@ -33,7 +33,7 @@ class StatelessLoginService
             throw new Exception('Invalid password.');
         }
         
-        return $this->userTokenService->createTokenForUser($user);
+        return $this->userTokenGenerator->createTokenForUser($user);
     }
     
     /**

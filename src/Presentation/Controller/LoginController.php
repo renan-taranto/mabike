@@ -2,10 +2,14 @@
 namespace Presentation\Controller;
 
 use Application\Command\LoginCommand;
+use Application\Dto\Login;
+use Application\Factory\RandomAuthenticationTokenFactory;
 use Application\Service\StatelessLoginService;
+use Application\Service\UserTokenService;
 use Doctrine\ORM\EntityManager;
 use Infrastructure\Repository\DoctrineUserRepository;
 use Infrastructure\Security\RandomKeyGenerator;
+use Infrastructure\Security\SaltedPasswordValidator;
 use Presentation\Form\LoginType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +23,7 @@ class LoginController extends Controller
      */
     public function loginAction(Request $request)
     {
-        $loginForm = $this->createForm(LoginType::class, new LoginCommand());
+        $loginForm = $this->createForm(LoginType::class, new Login());
         $loginForm->submit($request->request->all()); 
 
         if (!$loginForm->isValid()) {
@@ -27,11 +31,12 @@ class LoginController extends Controller
         }
         
         $em = $this->getDoctrine()->getManager();
-        $loginService = $this->getLoginService($em);
+        $statelessLoginService = $this->createLoginService($em);
+        $loginCommand = new LoginCommand($statelessLoginService);
         /* @var $loginCommand LoginCommand */
-        $loginCommand = $loginForm->getData();
+        $login = $loginForm->getData();
         try {
-            $token = $loginService->createUserToken($loginCommand->getUsername(), $loginCommand->getPassword());
+            $token = $loginCommand->execute($login);
         } catch (BadCredentialsException $ex) {
             throw new BadRequestHttpException("Invalid username or password.");
         }
@@ -41,11 +46,14 @@ class LoginController extends Controller
     /**
      * @return StatelessLoginService
      */
-    private function getLoginService(EntityManager $em)
+    private function createLoginService(EntityManager $em)
     {
         $userRepository = new DoctrineUserRepository($em);
         $encoderFactory = $this->get('security.encoder_factory');
+        $passwordValidator = new SaltedPasswordValidator($encoderFactory);
         $tokenGenerator = new RandomKeyGenerator($userRepository);
-        return new StatelessLoginService($userRepository, $encoderFactory, $tokenGenerator);
+        $authenticationTokenFactory = new RandomAuthenticationTokenFactory();
+        $userTokenService = new UserTokenService($userRepository, $authenticationTokenFactory);
+        return new StatelessLoginService($userRepository, $passwordValidator, $userTokenService);
     }
 }

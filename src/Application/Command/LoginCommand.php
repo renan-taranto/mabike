@@ -1,46 +1,22 @@
 <?php
 namespace Application\Command;
 
+use Application\Dto\Login;
+use Application\Service\StatelessLoginService;
+
 class LoginCommand
 {
-    private $username;
-    private $password;
+    private $statelessLoginService;
     
-    public function __construct($username = null, $password = null)
+    public function __construct(StatelessLoginService $statelessLoginService)
     {
-        $this->username = $username;
-        $this->password = $password;
+        $this->statelessLoginService = $statelessLoginService;
     }
 
-    /**
-     * @param string $username
-     */
-    public function setUsername($username)
+    public function execute(Login $login)
     {
-        $this->username = $username;
-    }
-    
-    /**
-     * @return string
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-    
-    /**
-     * @param string $password
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-    }
-    
-    /**
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
+        return $this->statelessLoginService->login(
+            $login->getUsername(),
+            $login->getPassword());
     }
 }

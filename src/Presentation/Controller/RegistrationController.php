@@ -1,8 +1,8 @@
 <?php
 namespace Presentation\Controller;
 
-use Application\Command\RegisterUserCommand;
-use Application\Command\UserRegistration;
+use Application\Command\UserRegistrationCommand;
+use Application\Dto\UserRegistration;
 use Exception;
 use FOS\RestBundle\Controller\FOSRestController;
 use Presentation\Form\RegistrationType;
@@ -25,7 +25,7 @@ class RegistrationController extends FOSRestController
         }
         
         $registerUserService = $this->get('app.service.register_user');
-        $registerUserCommand = new RegisterUserCommand($registerUserService);
+        $registerUserCommand = new UserRegistrationCommand($registerUserService);
         try {
             $registerUserCommand->execute($form->getData());
         } catch (Exception $ex) {

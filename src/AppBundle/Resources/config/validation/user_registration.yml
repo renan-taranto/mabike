@@ -1,4 +1,4 @@
-Application\Command\RegisterUserDTO:
+Application\Dto\UserRegistration:
     properties:
         username:
             - NotBlank: ~

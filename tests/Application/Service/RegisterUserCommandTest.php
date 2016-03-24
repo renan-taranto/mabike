@@ -1,12 +1,12 @@
 <?php
 namespace Tests\Application\Service;
 
-use Application\Command\RegisterUserCommand;
+use Application\Command\UserRegistrationCommand;
 use Application\Dto\UserRegistration;
 use Application\Service\RegisterUserService;
 use Domain\Entity\User;
 
-class RegisterUserCommandTest extends \PHPUnit_Framework_TestCase
+class UserRegistrationCommandTest extends \PHPUnit_Framework_TestCase
 {
     public function testCommandReturnsUser()
     {
@@ -28,7 +28,7 @@ class RegisterUserCommandTest extends \PHPUnit_Framework_TestCase
         $registerUserDTO->setEmail($email);
         $registerUserDTO->setPassword($password);
 
-        $registerUserCommand = new RegisterUserCommand($registerUserService);
+        $registerUserCommand = new UserRegistrationCommand($registerUserService);
         $registeredUser = $registerUserCommand->execute($registerUserDTO);
         
         $this->assertEquals($user, $registeredUser);
