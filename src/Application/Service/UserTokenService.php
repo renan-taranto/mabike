@@ -29,7 +29,9 @@ class UserTokenService implements UserTokenGenerator
     /**
      * Creates a random token for the given user and persists it
      * @param User $user
+     * @return AuthenticationToken
      */
+     
     public function createTokenForUser(User $user)
     {
         $token = $this->createToken();
