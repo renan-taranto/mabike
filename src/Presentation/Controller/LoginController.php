@@ -51,7 +51,6 @@ class LoginController extends Controller
         $userRepository = new DoctrineUserRepository($em);
         $encoderFactory = $this->get('security.encoder_factory');
         $passwordValidator = new SaltedPasswordValidator($encoderFactory);
-        $tokenGenerator = new RandomKeyGenerator($userRepository);
         $authenticationTokenFactory = new RandomAuthenticationTokenFactory();
         $userTokenService = new UserTokenService($userRepository, $authenticationTokenFactory);
         return new StatelessLoginService($userRepository, $passwordValidator, $userTokenService);
