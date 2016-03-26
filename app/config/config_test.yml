@@ -18,7 +18,8 @@ framework:
     profiler:
         collect: false
         
-liip_functional_test: ~
+liip_functional_test: 
+    cache_sqlite_db: true
 
 web_profiler:
     toolbar: false
