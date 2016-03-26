@@ -31,4 +31,9 @@ class JsonPostRequest implements PostRequest
     {
         return array('CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json');
     }
+    
+    public function getStandardHeadersWithAuthentication()
+    {
+        return array('CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json', 'HTTP_X-AUTH-TOKEN' => 'testuserkey');
+    }
 }

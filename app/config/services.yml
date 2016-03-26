@@ -8,6 +8,15 @@ services:
     app.service.register_user:
         class: Application\Service\RegisterUserService
         arguments: ['@domain.factory.normal_user', '@infra.repository.user', '@validator']
+    #Endpoint Service 
+    app.endpoint.bikers:
+        class: Application\Service\Endpoint\BikersEndpointService
+        arguments: ['@app.action.bikers.post_action']
+    
+    #Endpoint Action
+    app.action.bikers.post_action:
+        class: Application\Service\Endpoint\Action\Biker\BikersPostAction
+        arguments: ['@infra.repository.biker', '@validator']
         
     #Domain
     domain.factory.normal_user:
@@ -20,6 +29,9 @@ services:
         arguments: ['@doctrine.orm.entity_manager', '@router']
     infra.repository.user:
         class: Infrastructure\Repository\DoctrineUserRepository
+        arguments: ['@doctrine.orm.entity_manager']
+    infra.repository.biker:
+        class: Infrastructure\Repository\DoctrineBikerRepository
         arguments: ['@doctrine.orm.entity_manager']
         
         

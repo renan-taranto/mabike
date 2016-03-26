@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Presentation\Controller;
 
+use AppBundle\DataFixtures\ORM\LoadUserTestingData;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\JsonPostRequest;
@@ -8,6 +9,11 @@ use Tests\JsonPostRequest;
 class LoginControllerTest extends WebTestCase
 {
     private static $LOGIN_URI = '/api/v1/login';
+    
+    public function setUp()
+    {
+        $this->loadFixtures(array(LoadUserTestingData::class));
+    }
     
     public function testSuccesfullLoginReturnsToken()
     {

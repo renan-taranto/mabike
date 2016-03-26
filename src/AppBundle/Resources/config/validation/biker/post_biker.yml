@@ -1,0 +1,12 @@
+Application\Dto\Biker\PostBiker:
+    properties:
+        name:
+            - NotBlank: ~
+            - Length:
+                min: 8
+                max: 50
+        email:
+            - NotBlank: ~
+            - Email:
+                message: Invalid e-mail address.
+                checkMX: true
