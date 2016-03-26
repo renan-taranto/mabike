@@ -2,7 +2,7 @@ Domain\Entity\User:
     constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
             fields: [email]
-            message: 'E-emal address already in use.'
+            message: 'E-email address already in use.'
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
             fields: [username]
             message: 'Username already in use.'

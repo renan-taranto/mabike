@@ -1,12 +1,24 @@
 imports:
     - { resource: config_dev.yml }
 
+doctrine:
+    dbal:
+#        host:     localhost
+#        dbname:   mabike_test
+#        user:     root
+#        password: root
+        driver: pdo_sqlite 
+        path: %kernel.cache_dir%/test.db 
+        charset: UTF8
+
 framework:
     test: ~
     session:
         storage_id: session.storage.mock_file
     profiler:
         collect: false
+        
+liip_functional_test: ~
 
 web_profiler:
     toolbar: false

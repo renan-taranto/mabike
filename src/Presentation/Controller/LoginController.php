@@ -8,7 +8,6 @@ use Application\Service\StatelessLoginService;
 use Application\Service\UserTokenService;
 use Doctrine\ORM\EntityManager;
 use Infrastructure\Repository\DoctrineUserRepository;
-use Infrastructure\Security\RandomKeyGenerator;
 use Infrastructure\Security\SaltedPasswordValidator;
 use Presentation\Form\LoginType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
