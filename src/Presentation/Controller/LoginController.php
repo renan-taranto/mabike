@@ -13,7 +13,6 @@ use Presentation\Form\LoginType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 class LoginController extends Controller
 {
@@ -36,7 +35,7 @@ class LoginController extends Controller
         $login = $loginForm->getData();
         try {
             $token = $loginCommand->execute($login);
-        } catch (BadCredentialsException $ex) {
+        } catch (\Exception $ex) {
             throw new BadRequestHttpException("Invalid username or password.");
         }
         return array('auth_token' => $token, 'entry_point_url' => $this->generateUrl('api_v1_entry_point'));

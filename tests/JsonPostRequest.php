@@ -26,4 +26,9 @@ class JsonPostRequest implements PostRequest
         $this->client->restart();
         return $response;
     }
+    
+    public function getStandardHeaders()
+    {
+        return array('CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json');
+    }
 }
