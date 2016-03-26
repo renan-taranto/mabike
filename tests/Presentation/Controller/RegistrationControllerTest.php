@@ -147,5 +147,32 @@ class RegistrationControllerTest extends WebTestCase
         );
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
+    
+    public function testBlankUsernameReturnsBadRequest()
+    {
+        $data = array('username' => '');
+        $client = static::createClient();
+        $post = new JsonPostRequest($client);
+        $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
 
+        $content = json_decode($response->getContent(), true);
+        $this->assertContains('This value should not be blank.',
+            $content['errors']['children']['username']['errors'][0]);
+        
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+    }
+    
+    public function testBlankPasswordReturnsBadRequest()
+    {
+        $data = array('username' => '');
+        $client = static::createClient();
+        $post = new JsonPostRequest($client);
+        $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
+
+        $content = json_decode($response->getContent(), true);
+        $this->assertContains('This value should not be blank.',
+            $content['errors']['children']['password']['errors'][0]);
+        
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+    }
 }
