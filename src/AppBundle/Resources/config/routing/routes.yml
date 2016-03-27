@@ -15,5 +15,5 @@ api_v1_entry_point:
     
 api_bikers:
     type:         rest
-    resource:     Presentation\Controller\BikerController
+    resource:     Presentation\Controller\BikersController
     name_prefix:  api_v1_

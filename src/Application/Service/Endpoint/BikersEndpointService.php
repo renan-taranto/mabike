@@ -1,13 +1,13 @@
 <?php
 namespace Application\Service\Endpoint;
 
-use Application\Service\Endpoint\Action\Biker\BikersPostAction;
+use Application\Service\Endpoint\Action\Biker\BikersPostActionInterface;
 
 class BikersEndpointService
 {
     private $bikerPostAction;
     
-    public function __construct(BikersPostAction $bikerPostAction)
+    public function __construct(BikersPostActionInterface $bikerPostAction)
     {
         $this->bikerPostAction = $bikerPostAction;
     }

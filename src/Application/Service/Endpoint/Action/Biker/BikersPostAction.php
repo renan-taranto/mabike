@@ -6,7 +6,7 @@ use Domain\Entity\Repository\BikerRepository;
 use Exception;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class BikersPostAction
+class BikersPostAction implements BikersPostActionInterface
 {
     private $bikerRepository;
     private $validator;

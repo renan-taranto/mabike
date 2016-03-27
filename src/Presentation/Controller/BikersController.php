@@ -11,7 +11,7 @@ use Presentation\Form\Biker\PostBikerType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class BikerController extends FOSRestController implements ClassResourceInterface
+class BikersController extends FOSRestController implements ClassResourceInterface
 {
     public function postAction(Request $request)
     {

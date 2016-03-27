@@ -7,7 +7,7 @@ use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\JsonPostRequest;
 
-class BikerControllerTest extends WebTestCase
+class BikersControllerTest extends WebTestCase
 {
     private static $URI = 'api/v1/bikers';
     
@@ -28,6 +28,7 @@ class BikerControllerTest extends WebTestCase
         
         $response = $post->post(self::$URI, $post->getStandardHeadersWithAuthentication(), $data);
         $content = json_decode($response->getContent(), true);
+        
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
         $this->assertContains($name, $content['name']);
         $this->assertContains($email, $content['email']);
@@ -65,14 +66,15 @@ class BikerControllerTest extends WebTestCase
     
     public function testEmailAlreadyInUseReturnsBadRequest()
     {
+        $client = static::createClient();
+        
+        $post = new JsonPostRequest($client);
         $data = array(
             'name' => 'new test biker',
             'email' => 'testbiker@email.com');
-        $client = static::createClient();
-        $post = new JsonPostRequest($client);
-
         $response = $post->post(self::$URI, $post->getStandardHeadersWithAuthentication(), $data);
         $content = json_decode($response->getContent(), true);
+        
         $this->assertContains(
                 'E-email address already in use.', $content['message']
         );
@@ -81,14 +83,16 @@ class BikerControllerTest extends WebTestCase
     
     public function testNameAlreadyInUseReturnsBadRequest()
     {
+        $client = static::createClient();
+        
+        $post = new JsonPostRequest($client);
         $data = array(
             'name' => 'Test Biker',
             'email' => 'testnewbiker@email.com');
-        $client = static::createClient();
-        $post = new JsonPostRequest($client);
-
         $response = $post->post(self::$URI, $post->getStandardHeadersWithAuthentication(), $data);
+        
         $content = json_decode($response->getContent(), true);
+        
         $this->assertContains(
                 'Name already in use.', $content['message']
         );
@@ -97,12 +101,15 @@ class BikerControllerTest extends WebTestCase
     
     public function testNameBelowMinLengthReturnsBadRequest()
     {
-        $data = array('name' => str_repeat('u', 7));
         $client = static::createClient();
+        
+        
         $post = new JsonPostRequest($client);
+        $data = array('name' => str_repeat('u', 7));
         $response = $post->post(self::$URI, $post->getStandardHeadersWithAuthentication(), $data);
 
         $content = json_decode($response->getContent(), true);
+        
         $this->assertContains(
                 'Validation Failed', $content['message']
         );
@@ -114,12 +121,14 @@ class BikerControllerTest extends WebTestCase
     
     public function testNameOverMinLengthReturnsBadRequest()
     {
-        $data = array('name' => str_repeat('u', 51));
         $client = static::createClient();
+        
         $post = new JsonPostRequest($client);
+        $data = array('name' => str_repeat('u', 51));
         $response = $post->post(self::$URI, $post->getStandardHeadersWithAuthentication(), $data);
 
         $content = json_decode($response->getContent(), true);
+        
         $this->assertContains(
                 'Validation Failed', $content['message']
         );
