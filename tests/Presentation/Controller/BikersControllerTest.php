@@ -5,6 +5,7 @@ use AppBundle\DataFixtures\ORM\LoadBikerTestingData;
 use AppBundle\DataFixtures\ORM\LoadUserTestingData;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
+use Tests\JsonGetRequest;
 use Tests\JsonPostRequest;
 
 class BikersControllerTest extends WebTestCase
@@ -124,5 +125,30 @@ class BikersControllerTest extends WebTestCase
         $this->assertContains('Validation Failed', $content['message']);
         $this->assertContains('This value is too long.', $content['errors']['name'][0]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+    }
+    
+    public function testGetReturnsBiker()
+    {
+        $client = static::createClient();
+        
+        $getRequest = new JsonGetRequest($client);
+        $response = $getRequest->get(self::$URI . '/1', $getRequest->getStandardHeadersWithAuthentication());
+        $content = json_decode($response->getContent(), true);
+        $expected = array('id' => 1, 'name' => 'Test Biker', 'email' => 'testbiker@email.com');
+        $this->assertEquals($expected, $content);
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+    
+    public function testGetReturnsNotFoundException()
+    {
+        $client = static::createClient();
+        
+        $getRequest = new JsonGetRequest($client);
+        $response = $getRequest->get(self::$URI . '/2', $getRequest->getStandardHeadersWithAuthentication());
+        $content = json_decode($response->getContent(), true);
+        
+        $expectedArray = array('code' => Response::HTTP_NOT_FOUND, 'message' => "The Biker resource of id '2' was not found.");
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+        $this->assertEquals($expectedArray, $content);
     }
 }

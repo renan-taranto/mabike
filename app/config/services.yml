@@ -4,18 +4,21 @@ parameters:
 #    parameter_name: value
 
 services:
-    ###Application###
+    ##################Application##################
     app.user_registration:
         class: Application\Service\Security\UserRegistrationService
         arguments: ['@domain.factory.normal_user', '@infra.repository.user', '@app.validator']
     #Endpoint Service 
     app.endpoint.bikers:
         class: Application\Service\Endpoint\BikersEndpointService
-        arguments: ['@app.action.bikers.post_action']
+        arguments: ['@app.action.bikers.post_action', '@app.action.bikers.get_action']
     #Endpoint Action
     app.action.bikers.post_action:
         class: Application\Service\Endpoint\Action\Biker\BikersPostAction
         arguments: ['@infra.repository.biker', '@app.validator']
+    app.action.bikers.get_action:
+        class: Application\Service\Endpoint\Action\Biker\BikersGetAction
+        arguments: ['@infra.repository.biker']
     #Validator
     app.validator:
         class: Application\Service\Validator\Validator
@@ -29,12 +32,13 @@ services:
         arguments: ['@infra.repository.user', '@app.authentication_token_factory']
     app.authentication_token_factory:
         class: Application\Factory\RandomAuthenticationTokenFactory
-    #Domain
+        
+    ##################Domain##################
     domain.factory.normal_user:
         class: Domain\Entity\Factory\NormalUserFactory
         arguments: ['@security.password_encoder']
         
-    #Infrastructure
+    ##################Infrastructure##################
     infra.token_authenticator:
         class: Infrastructure\Security\TokenAuthenticator
         arguments: ['@doctrine.orm.entity_manager', '@router']

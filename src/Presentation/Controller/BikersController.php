@@ -4,6 +4,7 @@ namespace Presentation\Controller;
 use Application\Command\Biker\PostBikerCommand;
 use Application\Dto\Biker\PostBikerDTO;
 use Application\Exception\ValidationFailedException;
+use Application\Service\Endpoint\BikersEndpointService;
 use Application\Service\Validator\Validator;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -26,8 +27,9 @@ class BikersController extends FOSRestController implements ClassResourceInterfa
             return $this->view($errors, Response::HTTP_BAD_REQUEST);
         }
         
-        $bikerEndpointActions = $this->get('app.endpoint.bikers');
-        $bikerCommand = new PostBikerCommand($bikerEndpointActions);
+        /* @var $bikersEndpointService BikersEndpointService */
+        $bikersEndpointService = $this->get('app.endpoint.bikers');
+        $bikerCommand = new PostBikerCommand($bikersEndpointService);
         try {
             $biker = $bikerCommand->execute($postBikerForm->getData());
         }
@@ -37,5 +39,12 @@ class BikersController extends FOSRestController implements ClassResourceInterfa
         }
         
         return $this->view($biker, Codes::HTTP_CREATED);
+    }
+    
+    public function getAction($id)
+    {
+        /* @var $bikersEndpointService BikersEndpointService */
+        $bikersEndpointService = $this->get('app.endpoint.bikers');
+        return $bikersEndpointService->get($id);
     }
 }

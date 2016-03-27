@@ -1,10 +1,9 @@
 <?php
 namespace Tests;
 
-interface PostRequest
+interface GetRequest
 {
-    public function post($uri, $headers, array $data);
+    public function get($uri, $headers);
     public function getStandardHeaders();
     public function getStandardHeadersWithAuthentication();
-    
 }
