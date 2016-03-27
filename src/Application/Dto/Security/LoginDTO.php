@@ -1,7 +1,7 @@
 <?php
 namespace Application\Dto\Security;
 
-class Login
+class LoginDTO
 {
     /**
      * @var string

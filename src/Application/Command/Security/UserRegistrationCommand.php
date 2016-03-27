@@ -1,29 +1,29 @@
 <?php
 namespace Application\Command\Security;
 
-use Application\Dto\Security\UserRegistration;
-use Application\Service\Security\RegisterUserService;
+use Application\Dto\Security\UserRegistrationDTO;
+use Application\Service\Security\UserRegistration;
 use Domain\Entity\User;
 
 class UserRegistrationCommand
 {
-    private $registerUserService;
+    private $userRegistration;
     
     /**
-     * @param RegisterUserService $registerUserService
+     * @param UserRegistration $userRegistration
      */
-    public function __construct(RegisterUserService $registerUserService)
+    public function __construct(UserRegistration $userRegistration)
     {
-        $this->registerUserService = $registerUserService;
+        $this->userRegistration = $userRegistration;
     }
     
     /**
-     * @param UserRegistration $registerUserDTO
+     * @param UserRegistrationDTO $registerUserDTO
      * @return User
      */
-    public function execute(UserRegistration $registerUserDTO)
+    public function execute(UserRegistrationDTO $registerUserDTO)
     {
-        $user = $this->registerUserService->registerUser(
+        $user = $this->userRegistration->registerUser(
             $registerUserDTO->getUsername(),
             $registerUserDTO->getEmail(),
             $registerUserDTO->getPassword()

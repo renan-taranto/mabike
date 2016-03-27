@@ -2,7 +2,7 @@
 namespace Presentation\Controller;
 
 use Application\Command\Security\UserRegistrationCommand;
-use Application\Dto\Security\UserRegistration;
+use Application\Dto\Security\UserRegistrationDTO;
 use Application\Exception\ValidationFailedException;
 use Application\Service\Validator\Validator;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -17,7 +17,7 @@ class RegistrationController extends FOSRestController
      */
     public function registrationAction(Request $request)
     {
-        $registrationForm = $this->createForm(RegistrationType::class, new UserRegistration());
+        $registrationForm = $this->createForm(RegistrationType::class, new UserRegistrationDTO());
         $registrationForm->submit($request->request->all());
 
         /* @var $validator Validator */
@@ -27,7 +27,7 @@ class RegistrationController extends FOSRestController
             return $this->view($errors, Response::HTTP_BAD_REQUEST);
         }
         
-        $registerUserService = $this->get('app.service.register_user');
+        $registerUserService = $this->get('app.user_registration');
         $registerUserCommand = new UserRegistrationCommand($registerUserService);
         try {
             $registerUserCommand->execute($registrationForm->getData());

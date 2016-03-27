@@ -1,7 +1,7 @@
 <?php
 namespace AppBundle\DataFixtures\ORM;
 
-use Application\Service\Security\RegisterUserService;
+use Application\Service\Security\UserRegistrationService;
 use DateTime;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -17,9 +17,9 @@ class LoadUserTestingData implements FixtureInterface, ContainerAwareInterface
     
     public function load(ObjectManager $manager)
     {
-        /* @var $registerUserService RegisterUserService */
-        $registerUserService = $this->container->get('app.service.register_user');
-        $user = $registerUserService->registerUser('test_user_1', 'testuser1@email.com', 123456);
+        /* @var $userRegistration UserRegistrationService */
+        $userRegistration = $this->container->get('app.user_registration');
+        $user = $userRegistration->registerUser('test_user_1', 'testuser1@email.com', 123456);
         $datetime = new DateTime('now');
         $datetime->modify('+1 day');
         $user->updateApiKey('testuserkey', $datetime);

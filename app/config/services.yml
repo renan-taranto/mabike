@@ -5,8 +5,8 @@ parameters:
 
 services:
     ###Application###
-    app.service.register_user:
-        class: Application\Service\Security\RegisterUserService
+    app.user_registration:
+        class: Application\Service\Security\UserRegistrationService
         arguments: ['@domain.factory.normal_user', '@infra.repository.user', '@app.validator']
     #Endpoint Service 
     app.endpoint.bikers:
@@ -20,7 +20,15 @@ services:
     app.validator:
         class: Application\Service\Validator\Validator
         arguments: ['@validator']
-        
+    #Security
+    app.login:
+        class: Application\Service\Security\StatelessLoginService
+        arguments: ['@infra.repository.user', '@infra.password_validator', '@app.user_token' ]
+    app.user_token:
+        class: Application\Service\Security\UserTokenService
+        arguments: ['@infra.repository.user', '@app.authentication_token_factory']
+    app.authentication_token_factory:
+        class: Application\Factory\RandomAuthenticationTokenFactory
     #Domain
     domain.factory.normal_user:
         class: Domain\Entity\Factory\NormalUserFactory
@@ -36,5 +44,7 @@ services:
     infra.repository.biker:
         class: Infrastructure\Repository\DoctrineBikerRepository
         arguments: ['@doctrine.orm.entity_manager']
-        
+    infra.password_validator:
+        class: Infrastructure\Security\SaltedPasswordValidator
+        arguments: ['@security.encoder_factory']
         

@@ -2,7 +2,7 @@
 namespace Tests\Application\Service;
 
 use Application\Exception\ValidationFailedException;
-use Application\Service\Security\RegisterUserService;
+use Application\Service\Security\UserRegistrationService;
 use Application\Service\Validator\ValidatorInterface;
 use Domain\Entity\Factory\UserFactory;
 use Domain\Entity\Repository\UserRepository;
@@ -23,7 +23,7 @@ class RegisterUserServiceTest extends \PHPUnit_Framework_TestCase
         $validator->expects($this->once())
             ->method('getErrors')
             ->will($this->returnValue(array()));
-        $registerUserService = new RegisterUserService($userFactory, $userRepository, $validator);
+        $registerUserService = new UserRegistrationService($userFactory, $userRepository, $validator);
         
         $this->setExpectedException(ValidationFailedException::class);
         
@@ -50,7 +50,7 @@ class RegisterUserServiceTest extends \PHPUnit_Framework_TestCase
             ->method('isValid')
             ->will($this->returnValue(true));
         
-        $registerUserService = new RegisterUserService($userFactory, $userRepository, $validator);
+        $registerUserService = new UserRegistrationService($userFactory, $userRepository, $validator);
         $registeredUser = $registerUserService->registerUser('user', 'email', 'pass');
         
         $this->assertEquals($user, $registeredUser);

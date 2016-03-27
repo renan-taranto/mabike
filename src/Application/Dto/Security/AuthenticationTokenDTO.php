@@ -3,7 +3,7 @@ namespace Application\Dto\Security;
 
 use DateTime;
 
-class AuthenticationToken
+class AuthenticationTokenDTO
 {
     /**
      * @var string

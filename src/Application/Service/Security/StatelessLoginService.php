@@ -1,13 +1,13 @@
 <?php
 namespace Application\Service\Security;
 
-use Application\Dto\Security\AuthenticationToken;
+use Application\Dto\Security\AuthenticationTokenDTO;
 use Application\Service\Security\PasswordValidator;
 use Application\Service\Security\UserTokenGenerator;
 use Domain\Entity\Repository\UserRepository;
 use Exception;
 
-class StatelessLoginService
+class StatelessLoginService implements LoginService
 {
     private $userRepository;
     private $passwordValidatorService;
@@ -25,7 +25,7 @@ class StatelessLoginService
     /**
      * @param type $username
      * @param type $password
-     * @return AuthenticationToken
+     * @return AuthenticationTokenDTO
      * @throws Exception
      */
     public function login($username, $password)

@@ -1,7 +1,7 @@
 <?php
 namespace Application\Service\Security;
 
-use Application\Dto\Security\AuthenticationToken;
+use Application\Dto\Security\AuthenticationTokenDTO;
 use Application\Factory\AuthenticationTokenFactory;
 use Application\Service\Security\UserTokenGenerator;
 use Domain\Entity\Repository\UserRepository;
@@ -29,7 +29,7 @@ class UserTokenService implements UserTokenGenerator
     /**
      * Creates a random token for the given user and persists it
      * @param User $user
-     * @return AuthenticationToken
+     * @return AuthenticationTokenDTO
      */
      
     public function createTokenForUser(User $user)
@@ -41,7 +41,7 @@ class UserTokenService implements UserTokenGenerator
     }
     
     /**
-     * @return AuthenticationToken
+     * @return AuthenticationTokenDTO
      */
     private function createToken()
     {

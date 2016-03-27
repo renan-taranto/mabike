@@ -2,7 +2,7 @@
 
 namespace Tests\Application\Service;
 
-use Application\Dto\Security\AuthenticationToken;
+use Application\Dto\Security\AuthenticationTokenDTO;
 use Application\Factory\AuthenticationTokenFactory;
 use Application\Service\Security\UserTokenService;
 use DateTime;
@@ -15,7 +15,7 @@ class UserTokenServiceTest extends \PHPUnit_Framework_TestCase
     {
         $key = 'z2a1$3A12';
         $dateTime = new DateTime('now');
-        $authToken =  new AuthenticationToken($key, $dateTime);
+        $authToken =  new AuthenticationTokenDTO($key, $dateTime);
         
         $userRepository = $this->getMock(UserRepository::class);
         

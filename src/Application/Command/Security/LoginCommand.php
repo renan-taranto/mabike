@@ -1,21 +1,21 @@
 <?php
 namespace Application\Command\Security;
 
-use Application\Dto\Security\Login;
-use Application\Service\Security\StatelessLoginService;
+use Application\Dto\Security\LoginDTO;
+use Application\Service\Security\LoginService;
 
 class LoginCommand
 {
-    private $statelessLoginService;
+    private $loginService;
     
-    public function __construct(StatelessLoginService $statelessLoginService)
+    public function __construct(LoginService $statelessLoginService)
     {
-        $this->statelessLoginService = $statelessLoginService;
+        $this->loginService = $statelessLoginService;
     }
 
-    public function execute(Login $login)
+    public function execute(LoginDTO $login)
     {
-        return $this->statelessLoginService->login(
+        return $this->loginService->login(
             $login->getUsername(),
             $login->getPassword());
     }

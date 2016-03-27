@@ -1,10 +1,15 @@
-Application\Dto\Biker\PostBiker:
+Application\Dto\Security\UserRegistrationDTO:
     properties:
-        name:
+        username:
             - NotBlank: ~
             - Length:
-                min: 8
+                min: 3
                 max: 50
+        password:
+            - NotBlank: ~
+            - Length:
+                min: 6
+                max: 4096
         email:
             - NotBlank: ~
             - Email:

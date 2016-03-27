@@ -2,7 +2,7 @@
 namespace Presentation\Controller;
 
 use Application\Command\Biker\PostBikerCommand;
-use Application\Dto\Biker\PostBiker;
+use Application\Dto\Biker\PostBikerDTO;
 use Application\Exception\ValidationFailedException;
 use Application\Service\Validator\Validator;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -16,7 +16,7 @@ class BikersController extends FOSRestController implements ClassResourceInterfa
 {
     public function postAction(Request $request)
     {
-        $postBikerForm = $this->createForm(PostBikerType::class, new PostBiker());
+        $postBikerForm = $this->createForm(PostBikerType::class, new PostBikerDTO());
         $postBikerForm->submit($request->request->all()); 
         
         /* @var $validator Validator */

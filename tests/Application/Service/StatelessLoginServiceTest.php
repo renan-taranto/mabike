@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Application\Service;
 
-use Application\Dto\Security\AuthenticationToken;
+use Application\Dto\Security\AuthenticationTokenDTO;
 use Application\Service\Security\PasswordValidator;
 use Application\Service\Security\UserTokenGenerator;
 use Application\Service\Security\StatelessLoginService;
@@ -14,7 +14,7 @@ class StatelessLoginServiceTest extends \PHPUnit_Framework_TestCase
 {
     public function testSuccessfullLogin()
     {
-        $authToken = new AuthenticationToken('sad23213s', new DateTime('now'));
+        $authToken = new AuthenticationTokenDTO('sad23213s', new DateTime('now'));
         
         $user = $this->getMockBuilder(User::class)
             ->disableOriginalConstructor()

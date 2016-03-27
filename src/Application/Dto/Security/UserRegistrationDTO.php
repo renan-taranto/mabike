@@ -1,7 +1,7 @@
 <?php
 namespace Application\Dto\Security;
 
-class UserRegistration
+class UserRegistrationDTO
 {
     private $username;
     private $email;

@@ -8,7 +8,7 @@ use Domain\Entity\Repository\UserRepository;
 use Domain\Entity\User;
 use Exception;
 
-class RegisterUserService
+class UserRegistrationService implements UserRegistration
 {
     private $userRepository;
     private $validator;

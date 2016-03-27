@@ -1,7 +1,7 @@
 <?php
 namespace Application\Factory;
 
-use Application\Dto\Security\AuthenticationToken;
+use Application\Dto\Security\AuthenticationTokenDTO;
 use DateInterval;
 use DateTime;
 use Infrastructure\Security\RandomKeyGenerator;
@@ -18,7 +18,7 @@ class RandomAuthenticationTokenFactory implements AuthenticationTokenFactory
     {
         $key = $this->createKey($keyLength);
         $expirationDateTime = $this->createExpirationDateTime($minutesBeforeExpiration);
-        return new AuthenticationToken($key, $expirationDateTime);
+        return new AuthenticationTokenDTO($key, $expirationDateTime);
     }
     
     /**
