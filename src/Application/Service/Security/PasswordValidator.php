@@ -1,5 +1,5 @@
 <?php
-namespace Application\Security;
+namespace Application\Service\Security;
 
 use Domain\Entity\User;
 

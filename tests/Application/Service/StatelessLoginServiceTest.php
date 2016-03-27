@@ -1,10 +1,10 @@
 <?php
 namespace Tests\Application\Service;
 
-use Application\Dto\AuthenticationToken;
-use Application\Security\PasswordValidator;
-use Application\Security\UserTokenGenerator;
-use Application\Service\StatelessLoginService;
+use Application\Dto\Security\AuthenticationToken;
+use Application\Service\Security\PasswordValidator;
+use Application\Service\Security\UserTokenGenerator;
+use Application\Service\Security\StatelessLoginService;
 use DateTime;
 use Domain\Entity\Repository\UserRepository;
 use Domain\Entity\User;

@@ -1,9 +1,9 @@
 <?php
 namespace Tests\Application\Command;
 
-use Application\Command\UserRegistrationCommand;
-use Application\Dto\UserRegistration;
-use Application\Service\RegisterUserService;
+use Application\Command\Security\UserRegistrationCommand;
+use Application\Dto\Security\UserRegistration;
+use Application\Service\Security\RegisterUserService;
 use Domain\Entity\User;
 
 class UserRegistrationCommandTest extends \PHPUnit_Framework_TestCase

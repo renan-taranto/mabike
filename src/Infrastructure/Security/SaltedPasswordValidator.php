@@ -1,7 +1,7 @@
 <?php
 namespace Infrastructure\Security;
 
-use Application\Security\PasswordValidator;
+use Application\Service\Security\PasswordValidator;
 use Domain\Entity\User;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 

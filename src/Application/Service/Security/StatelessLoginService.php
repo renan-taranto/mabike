@@ -1,9 +1,9 @@
 <?php
-namespace Application\Service;
+namespace Application\Service\Security;
 
-use Application\Dto\AuthenticationToken;
-use Application\Security\PasswordValidator;
-use Application\Security\UserTokenGenerator;
+use Application\Dto\Security\AuthenticationToken;
+use Application\Service\Security\PasswordValidator;
+use Application\Service\Security\UserTokenGenerator;
 use Domain\Entity\Repository\UserRepository;
 use Exception;
 

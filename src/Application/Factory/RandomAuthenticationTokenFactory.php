@@ -1,7 +1,7 @@
 <?php
 namespace Application\Factory;
 
-use Application\Dto\AuthenticationToken;
+use Application\Dto\Security\AuthenticationToken;
 use DateInterval;
 use DateTime;
 use Infrastructure\Security\RandomKeyGenerator;

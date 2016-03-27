@@ -1,9 +1,9 @@
 <?php
-namespace Application\Service;
+namespace Application\Service\Security;
 
-use Application\Dto\AuthenticationToken;
+use Application\Dto\Security\AuthenticationToken;
 use Application\Factory\AuthenticationTokenFactory;
-use Application\Security\UserTokenGenerator;
+use Application\Service\Security\UserTokenGenerator;
 use Domain\Entity\Repository\UserRepository;
 use Domain\Entity\User;
 

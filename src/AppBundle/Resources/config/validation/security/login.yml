@@ -1,4 +1,4 @@
-Application\Dto\Login:
+Application\Dto\Security\Login:
     properties:
         username:
             - NotBlank: ~

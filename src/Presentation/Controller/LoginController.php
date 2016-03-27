@@ -1,11 +1,11 @@
 <?php
 namespace Presentation\Controller;
 
-use Application\Command\LoginCommand;
-use Application\Dto\Login;
+use Application\Command\Security\LoginCommand;
+use Application\Dto\Security\Login;
 use Application\Factory\RandomAuthenticationTokenFactory;
-use Application\Service\StatelessLoginService;
-use Application\Service\UserTokenService;
+use Application\Service\Security\StatelessLoginService;
+use Application\Service\Security\UserTokenService;
 use Application\Service\Validator\Validator;
 use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Controller\FOSRestController;

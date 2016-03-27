@@ -1,8 +1,8 @@
 <?php
-namespace Application\Command;
+namespace Application\Command\Security;
 
-use Application\Dto\Login;
-use Application\Service\StatelessLoginService;
+use Application\Dto\Security\Login;
+use Application\Service\Security\StatelessLoginService;
 
 class LoginCommand
 {

@@ -6,7 +6,7 @@ parameters:
 services:
     ###Application###
     app.service.register_user:
-        class: Application\Service\RegisterUserService
+        class: Application\Service\Security\RegisterUserService
         arguments: ['@domain.factory.normal_user', '@infra.repository.user', '@app.validator']
     #Endpoint Service 
     app.endpoint.bikers:

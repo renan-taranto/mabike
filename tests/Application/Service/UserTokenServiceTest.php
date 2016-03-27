@@ -2,9 +2,9 @@
 
 namespace Tests\Application\Service;
 
-use Application\Dto\AuthenticationToken;
+use Application\Dto\Security\AuthenticationToken;
 use Application\Factory\AuthenticationTokenFactory;
-use Application\Service\UserTokenService;
+use Application\Service\Security\UserTokenService;
 use DateTime;
 use Domain\Entity\Repository\UserRepository;
 use Domain\Entity\User;

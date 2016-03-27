@@ -1,8 +1,8 @@
 <?php
-namespace Application\Command;
+namespace Application\Command\Security;
 
-use Application\Dto\UserRegistration;
-use Application\Service\RegisterUserService;
+use Application\Dto\Security\UserRegistration;
+use Application\Service\Security\RegisterUserService;
 use Domain\Entity\User;
 
 class UserRegistrationCommand

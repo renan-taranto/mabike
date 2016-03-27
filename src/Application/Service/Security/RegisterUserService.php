@@ -1,5 +1,5 @@
 <?php
-namespace Application\Service;
+namespace Application\Service\Security;
 
 use Application\Exception\ValidationFailedException;
 use Application\Service\Validator\ValidatorInterface;

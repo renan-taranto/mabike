@@ -5,15 +5,15 @@ use Application\Service\Endpoint\Action\Biker\BikersPostActionInterface;
 
 class BikersEndpointService
 {
-    private $bikerPostAction;
+    private $bikersPostAction;
     
     public function __construct(BikersPostActionInterface $bikerPostAction)
     {
-        $this->bikerPostAction = $bikerPostAction;
+        $this->bikersPostAction = $bikerPostAction;
     }
     
     public function post($name, $email)
     {
-        return $this->bikerPostAction->post($name, $email);
+        return $this->bikersPostAction->post($name, $email);
     }
 }

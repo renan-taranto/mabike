@@ -1,5 +1,5 @@
 <?php
-namespace Application\Dto;
+namespace Application\Dto\Security;
 
 class UserRegistration
 {

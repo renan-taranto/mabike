@@ -1,8 +1,8 @@
 <?php
 namespace Presentation\Controller;
 
-use Application\Command\UserRegistrationCommand;
-use Application\Dto\UserRegistration;
+use Application\Command\Security\UserRegistrationCommand;
+use Application\Dto\Security\UserRegistration;
 use Application\Exception\ValidationFailedException;
 use Application\Service\Validator\Validator;
 use FOS\RestBundle\Controller\FOSRestController;

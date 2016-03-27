@@ -1,10 +1,10 @@
 <?php
 namespace Tests\Application\Command;
 
-use Application\Command\LoginCommand;
-use Application\Dto\AuthenticationToken;
-use Application\Dto\Login;
-use Application\Service\StatelessLoginService;
+use Application\Command\Security\LoginCommand;
+use Application\Dto\Security\AuthenticationToken;
+use Application\Dto\Security\Login;
+use Application\Service\Security\StatelessLoginService;
 use DateTime;
 
 class LoginCommandTest extends \PHPUnit_Framework_TestCase

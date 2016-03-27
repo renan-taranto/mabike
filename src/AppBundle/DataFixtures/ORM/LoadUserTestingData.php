@@ -1,7 +1,7 @@
 <?php
 namespace AppBundle\DataFixtures\ORM;
 
-use Application\Service\RegisterUserService;
+use Application\Service\Security\RegisterUserService;
 use DateTime;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;

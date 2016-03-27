@@ -2,7 +2,7 @@
 namespace Tests\Application\Service;
 
 use Application\Exception\ValidationFailedException;
-use Application\Service\RegisterUserService;
+use Application\Service\Security\RegisterUserService;
 use Application\Service\Validator\ValidatorInterface;
 use Domain\Entity\Factory\UserFactory;
 use Domain\Entity\Repository\UserRepository;
