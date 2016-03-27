@@ -1,10 +1,10 @@
 <?php
 namespace Application\Service\Endpoint\Action\Biker;
 
+use Application\Exception\ValidationFailedException;
+use Application\Service\Validator\ValidatorInterface;
 use Domain\Entity\Biker;
 use Domain\Entity\Repository\BikerRepository;
-use Exception;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class BikersPostAction implements BikersPostActionInterface
 {
@@ -21,9 +21,8 @@ class BikersPostAction implements BikersPostActionInterface
     {
         $biker = new Biker($name, $email);
         
-        $errors = $this->validator->validate($biker);
-        if (count($errors)) {
-            throw new Exception($errors[0]->getMessage());
+        if (!$this->validator->isValid($biker)) {
+            throw new ValidationFailedException($this->validator->getErrors($biker));
         }
         
         $biker = $this->bikerRepository->add($biker);

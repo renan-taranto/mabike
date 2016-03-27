@@ -3,11 +3,12 @@ namespace Presentation\Controller;
 
 use Application\Command\UserRegistrationCommand;
 use Application\Dto\UserRegistration;
-use Exception;
+use Application\Exception\ValidationFailedException;
+use Application\Service\Validator\Validator;
 use FOS\RestBundle\Controller\FOSRestController;
 use Presentation\Form\RegistrationType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpFoundation\Response;
 
 class RegistrationController extends FOSRestController
 {
@@ -16,23 +17,27 @@ class RegistrationController extends FOSRestController
      */
     public function registrationAction(Request $request)
     {
-        $form = $this->createForm(RegistrationType::class, new UserRegistration());
-        $form->submit($request->request->all());
+        $registrationForm = $this->createForm(RegistrationType::class, new UserRegistration());
+        $registrationForm->submit($request->request->all());
 
-        if (!$form->isValid()) {
-            return $form;
+        /* @var $validator Validator */
+        $validator = $this->get('app.validator');
+        if (!$validator->isValid($registrationForm->getData())) {
+            $errors = $validator->getErrors($registrationForm->getData());
+            return $this->view($errors, Response::HTTP_BAD_REQUEST);
         }
         
         $registerUserService = $this->get('app.service.register_user');
         $registerUserCommand = new UserRegistrationCommand($registerUserService);
         try {
-            $registerUserCommand->execute($form->getData());
-        } catch (Exception $ex) {
-            throw new BadRequestHttpException($ex->getMessage());
+            $registerUserCommand->execute($registrationForm->getData());
+        } catch (ValidationFailedException $ex) {
+            $view = $this->view($ex->getErrors(), Response::HTTP_BAD_REQUEST);
+            return $view;
         }
 
         $data = array(
-            'code' => 200,
+            'code' => Response::HTTP_OK,
             'message' => 'User successfully registered.',
             'login_url' => $this->generateUrl('api_v1_login')
         );

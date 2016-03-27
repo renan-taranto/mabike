@@ -62,7 +62,7 @@ class LoginControllerTest extends WebTestCase
 
         $content = json_decode($response->getContent(), true);
         $this->assertContains('This value should not be blank.',
-            $content['errors']['children']['username']['errors'][0]);
+            $content['errors']['username'][0]);
         
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
@@ -76,7 +76,7 @@ class LoginControllerTest extends WebTestCase
 
         $content = json_decode($response->getContent(), true);
         $this->assertContains('This value should not be blank.',
-            $content['errors']['children']['password']['errors'][0]);
+            $content['errors']['password'][0]);
         
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }

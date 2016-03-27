@@ -4,19 +4,22 @@ parameters:
 #    parameter_name: value
 
 services:
-    #Application
+    ###Application###
     app.service.register_user:
         class: Application\Service\RegisterUserService
-        arguments: ['@domain.factory.normal_user', '@infra.repository.user', '@validator']
+        arguments: ['@domain.factory.normal_user', '@infra.repository.user', '@app.validator']
     #Endpoint Service 
     app.endpoint.bikers:
         class: Application\Service\Endpoint\BikersEndpointService
         arguments: ['@app.action.bikers.post_action']
-    
     #Endpoint Action
     app.action.bikers.post_action:
         class: Application\Service\Endpoint\Action\Biker\BikersPostAction
-        arguments: ['@infra.repository.biker', '@validator']
+        arguments: ['@infra.repository.biker', '@app.validator']
+    #Validator
+    app.validator:
+        class: Application\Service\Validator\Validator
+        arguments: ['@validator']
         
     #Domain
     domain.factory.normal_user:

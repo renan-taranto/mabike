@@ -5,4 +5,4 @@ Domain\Entity\Biker:
             message: 'Name already in use.'
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
             fields: [email]
-            message: 'E-email address already in use.'
+            message: 'E-mail address already in use.'

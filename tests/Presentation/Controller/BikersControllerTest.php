@@ -45,7 +45,7 @@ class BikersControllerTest extends WebTestCase
         $content = json_decode($response->getContent(), true);
         
         $this->assertContains('This value should not be blank.',
-            $content['errors']['children']['name']['errors'][0]);
+            $content['errors']['name'][0]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
     
@@ -60,7 +60,7 @@ class BikersControllerTest extends WebTestCase
         $content = json_decode($response->getContent(), true);
         
         $this->assertContains('This value should not be blank.',
-            $content['errors']['children']['email']['errors'][0]);
+            $content['errors']['email'][0]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
     
@@ -72,12 +72,11 @@ class BikersControllerTest extends WebTestCase
         $data = array(
             'name' => 'new test biker',
             'email' => 'testbiker@email.com');
+        
         $response = $post->post(self::$URI, $post->getStandardHeadersWithAuthentication(), $data);
         $content = json_decode($response->getContent(), true);
         
-        $this->assertContains(
-                'E-email address already in use.', $content['message']
-        );
+        $this->assertContains('E-mail address already in use.', $content['errors']['email'][0]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
     
@@ -89,13 +88,11 @@ class BikersControllerTest extends WebTestCase
         $data = array(
             'name' => 'Test Biker',
             'email' => 'testnewbiker@email.com');
-        $response = $post->post(self::$URI, $post->getStandardHeadersWithAuthentication(), $data);
         
+        $response = $post->post(self::$URI, $post->getStandardHeadersWithAuthentication(), $data);
         $content = json_decode($response->getContent(), true);
         
-        $this->assertContains(
-                'Name already in use.', $content['message']
-        );
+        $this->assertContains('Name already in use.', $content['errors']['name'][0]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
     
@@ -103,19 +100,14 @@ class BikersControllerTest extends WebTestCase
     {
         $client = static::createClient();
         
-        
         $post = new JsonPostRequest($client);
         $data = array('name' => str_repeat('u', 7));
+        
         $response = $post->post(self::$URI, $post->getStandardHeadersWithAuthentication(), $data);
-
         $content = json_decode($response->getContent(), true);
         
-        $this->assertContains(
-                'Validation Failed', $content['message']
-        );
-        $this->assertContains(
-                'This value is too short.', $content['errors']['children']['name']['errors'][0]
-        );
+        $this->assertContains('Validation Failed', $content['message']);
+        $this->assertContains('This value is too short.', $content['errors']['name'][0]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
     
@@ -125,16 +117,12 @@ class BikersControllerTest extends WebTestCase
         
         $post = new JsonPostRequest($client);
         $data = array('name' => str_repeat('u', 51));
+        
         $response = $post->post(self::$URI, $post->getStandardHeadersWithAuthentication(), $data);
-
         $content = json_decode($response->getContent(), true);
         
-        $this->assertContains(
-                'Validation Failed', $content['message']
-        );
-        $this->assertContains(
-                'This value is too long.', $content['errors']['children']['name']['errors'][0]
-        );
+        $this->assertContains('Validation Failed', $content['message']);
+        $this->assertContains('This value is too long.', $content['errors']['name'][0]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 }

@@ -6,15 +6,17 @@ use Application\Dto\Login;
 use Application\Factory\RandomAuthenticationTokenFactory;
 use Application\Service\StatelessLoginService;
 use Application\Service\UserTokenService;
+use Application\Service\Validator\Validator;
 use Doctrine\ORM\EntityManager;
+use FOS\RestBundle\Controller\FOSRestController;
 use Infrastructure\Repository\DoctrineUserRepository;
 use Infrastructure\Security\SaltedPasswordValidator;
 use Presentation\Form\LoginType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class LoginController extends Controller
+class LoginController extends FOSRestController
 {
     /**
      * @FOS\RestBundle\Controller\Annotations\Post()
@@ -24,8 +26,11 @@ class LoginController extends Controller
         $loginForm = $this->createForm(LoginType::class, new Login());
         $loginForm->submit($request->request->all()); 
 
-        if (!$loginForm->isValid()) {
-            return $loginForm;
+        /* @var $validator Validator */
+        $validator = $this->get('app.validator');
+        if (!$validator->isValid($loginForm->getData())) {
+            $errors = $validator->getErrors($loginForm->getData());
+            return $this->view($errors, Response::HTTP_BAD_REQUEST);
         }
         
         $em = $this->getDoctrine()->getManager();

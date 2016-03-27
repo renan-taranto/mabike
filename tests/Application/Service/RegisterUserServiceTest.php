@@ -1,12 +1,12 @@
 <?php
 namespace Tests\Application\Service;
 
+use Application\Exception\ValidationFailedException;
 use Application\Service\RegisterUserService;
+use Application\Service\Validator\ValidatorInterface;
 use Domain\Entity\Factory\UserFactory;
 use Domain\Entity\Repository\UserRepository;
 use Domain\Entity\User;
-use Symfony\Component\Validator\ConstraintViolationInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RegisterUserServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -15,19 +15,17 @@ class RegisterUserServiceTest extends \PHPUnit_Framework_TestCase
         $userFactory = $this->getMock(UserFactory::class);
         
         $userRepository = $this->getMock(UserRepository::class);
-        
-        $constraintViolation = $this->getMock(ConstraintViolationInterface::class);
-        $constraintViolation->expects($this->once())
-            ->method('getMessage')
-            ->will($this->returnValue('error1'));
-        
+                
         $validator = $this->getMock(ValidatorInterface::class);
         $validator->expects($this->once())
-            ->method('validate')
-            ->will($this->returnValue(array($constraintViolation)));
+            ->method('isValid')
+            ->will($this->returnValue(false));
+        $validator->expects($this->once())
+            ->method('getErrors')
+            ->will($this->returnValue(array()));
         $registerUserService = new RegisterUserService($userFactory, $userRepository, $validator);
         
-        $this->setExpectedException('Exception');
+        $this->setExpectedException(ValidationFailedException::class);
         
         $registerUserService->registerUser('user', 'email', 'pass');
     }
@@ -48,6 +46,9 @@ class RegisterUserServiceTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($user));
         
         $validator = $this->getMock(ValidatorInterface::class);
+        $validator->expects($this->once())
+            ->method('isValid')
+            ->will($this->returnValue(true));
         
         $registerUserService = new RegisterUserService($userFactory, $userRepository, $validator);
         $registeredUser = $registerUserService->registerUser('user', 'email', 'pass');

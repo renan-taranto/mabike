@@ -18,161 +18,134 @@ class RegistrationControllerTest extends WebTestCase
 
     public function testSuccesfullyRegisterUser()
     {
+        $client = static::createClient();
+        $post = new JsonPostRequest($client);
         $data = array(
             'username' => 'user',
             'email' => 'user@email.com',
             'password' => 'userpass');
-        $client = static::createClient();
-        $post = new JsonPostRequest($client);
-
         $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
+        
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 
     public function testEmailAlreadyInUseReturnsBadRequest()
     {
+        $client = static::createClient();
+        $post = new JsonPostRequest($client);
         $data = array(
             'username' => 'test_user_1',
             'email' => 'testuser1@email.com',
             'password' => 'userpass');
-        $client = static::createClient();
-        $post = new JsonPostRequest($client);
-
         $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
         $content = json_decode($response->getContent(), true);
-        $this->assertContains(
-                'E-email address already in use.', $content['message']
-        );
+        
+        $this->assertContains('E-email address already in use.', $content['errors']['email'][0]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
     public function testUsernameAlreadyInUserReturnsBadRequest()
     {
+        $client = static::createClient();
+        $post = new JsonPostRequest($client);
         $data = array(
             'username' => 'test_user_1',
             'email' => 'newemail@email.com',
             'password' => 'userpass');
-        $client = static::createClient();
-        $post = new JsonPostRequest($client);
-
         $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
         $content = json_decode($response->getContent(), true);
-        $this->assertContains(
-                'Username already in use.', $content['message']
-        );
+        
+        $this->assertContains('Username already in use.', $content['errors']['username'][0]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
     public function testUsernameBelowMinLengthReturnsBadRequest()
     {
-        $data = array('username' => 'us');
         $client = static::createClient();
         $post = new JsonPostRequest($client);
+        $data = array('username' => 'us');
         $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
-
         $content = json_decode($response->getContent(), true);
-        $this->assertContains(
-                'Validation Failed', $content['message']
-        );
-        $this->assertContains(
-                'This value is too short.', $content['errors']['children']['username']['errors'][0]
-        );
+
+        $this->assertContains('Validation Failed', $content['message']);
+        $this->assertContains('This value is too short.', $content['errors']['username'][0]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
     public function testUsernameOverMaxLengthReturnsBadRequest()
     {
-        $data = array('username' => str_repeat('u', 51));
         $client = static::createClient();
+        $data = array('username' => str_repeat('u', 51));
         $post = new JsonPostRequest($client);
         $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
-
         $content = json_decode($response->getContent(), true);
-        $this->assertContains(
-                'Validation Failed', $content['message']
-        );
-        $this->assertContains(
-                'This value is too long.', $content['errors']['children']['username']['errors'][0]
-        );
+
+        $this->assertContains('Validation Failed', $content['message']);
+        $this->assertContains('This value is too long.', $content['errors']['username'][0]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
     public function testInvalidEmailReturnsBadRequest()
     {
-        $data = array('email' => 'user@email');
         $client = static::createClient();
         $post = new JsonPostRequest($client);
+        $data = array('email' => 'user@email');
         $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
-
         $content = json_decode($response->getContent(), true);
-        $this->assertContains(
-                'Validation Failed', $content['message']
-        );
-        $this->assertContains(
-                'Invalid e-mail address.', $content['errors']['children']['email']['errors']
-        );
+
+        $this->assertContains('Validation Failed', $content['message']);
+        $this->assertContains('Invalid e-mail address.', $content['errors']['email'][0]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
     public function testPasswordBelowMinLengthReturnsBadRequest()
     {
-        $data = array('password' => 12345);
         $client = static::createClient();
         $post = new JsonPostRequest($client);
+        $data = array('password' => 12345);
         $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
 
         $content = json_decode($response->getContent(), true);
-        $this->assertContains(
-                'Validation Failed', $content['message']
-        );
-        $this->assertContains(
-                'This value is too short.', $content['errors']['children']['password']['errors'][0]
-        );
+        
+        $this->assertContains('Validation Failed', $content['message']);
+        $this->assertContains('This value is too short.', $content['errors']['password'][0]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
     public function testPasswordOverMaxLengthReturnsBadRequest()
     {
-        $data = array('password' => str_repeat('p', 4097));
         $client = static::createClient();
         $post = new JsonPostRequest($client);
+        $data = array('password' => str_repeat('p', 4097));
         $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
-
         $content = json_decode($response->getContent(), true);
-        $this->assertContains(
-                'Validation Failed', $content['message']
-        );
-        $this->assertContains(
-                'This value is too long.', $content['errors']['children']['password']['errors'][0]
-        );
+
+        $this->assertContains('Validation Failed', $content['message']);
+        $this->assertContains('This value is too long.', $content['errors']['password'][0]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
     
     public function testBlankUsernameReturnsBadRequest()
     {
-        $data = array('username' => '');
         $client = static::createClient();
         $post = new JsonPostRequest($client);
+        $data = array('username' => '');
         $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
-
         $content = json_decode($response->getContent(), true);
-        $this->assertContains('This value should not be blank.',
-            $content['errors']['children']['username']['errors'][0]);
-        
+
+        $this->assertContains('This value should not be blank.',$content['errors']['username'][0]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
     
     public function testBlankPasswordReturnsBadRequest()
     {
-        $data = array('username' => '');
         $client = static::createClient();
         $post = new JsonPostRequest($client);
+        $data = array('username' => '');
         $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
-
         $content = json_decode($response->getContent(), true);
-        $this->assertContains('This value should not be blank.',
-            $content['errors']['children']['password']['errors'][0]);
         
+        $this->assertContains('This value should not be blank.',$content['errors']['password'][0]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 }

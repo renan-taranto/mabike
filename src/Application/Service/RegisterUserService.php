@@ -1,11 +1,12 @@
 <?php
 namespace Application\Service;
 
+use Application\Exception\ValidationFailedException;
+use Application\Service\Validator\ValidatorInterface;
 use Domain\Entity\Factory\UserFactory;
 use Domain\Entity\Repository\UserRepository;
 use Domain\Entity\User;
 use Exception;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RegisterUserService
 {
@@ -33,10 +34,11 @@ class RegisterUserService
     public function registerUser($username, $email, $password)
     {
         $user = $this->userFactory->createUser($username, $email, $password);
-        $errors = $this->validator->validate($user);
-        if (count($errors)) {
-            throw new Exception($errors[0]->getMessage());
+        
+        if (!$this->validator->isValid($user)) {
+            throw new ValidationFailedException($this->validator->getErrors($user));
         }
+        
         return $this->userRepository->addUser($user);
     }
 }

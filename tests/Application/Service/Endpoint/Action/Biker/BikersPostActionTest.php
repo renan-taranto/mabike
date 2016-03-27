@@ -1,14 +1,13 @@
 <?php
 namespace Tests\Application\Service\Endpoint\Action\Biker;
 
+use Application\Exception\ValidationFailedException;
 use Application\Service\Endpoint\Action\Biker\BikersPostAction;
+use Application\Service\Validator\ValidatorInterface;
 use Domain\Entity\Biker;
 use Domain\Entity\Repository\BikerRepository;
-use Exception;
-use Symfony\Component\Validator\ConstraintViolationInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class BikerPostActionTest extends \PHPUnit_Framework_TestCase
+class BikersPostActionTest extends \PHPUnit_Framework_TestCase
 {
     public function testSuccessfullyPostBiker()
     {
@@ -23,10 +22,11 @@ class BikerPostActionTest extends \PHPUnit_Framework_TestCase
         
         $validator = $this->getMock(ValidatorInterface::class);
         $validator->expects($this->once())
-            ->method('validate')
-            ->will($this->returnValue(array()));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         
         $bikerPostAction = new BikersPostAction($bikerRepository, $validator);
+        
         $returnedBiker = $bikerPostAction->post('Test Biker', 'testbike@email.com');
         $this->assertInstanceOf(Biker::class, $returnedBiker);
     }
@@ -35,18 +35,17 @@ class BikerPostActionTest extends \PHPUnit_Framework_TestCase
     {
         $bikerRepository = $this->getMock(BikerRepository::class);
         
-        $constraintViolationInterface = $this->getMock(ConstraintViolationInterface::class);
-        $constraintViolationInterface->expects($this->once())
-            ->method('getMessage');
-        
         $validator = $this->getMock(ValidatorInterface::class);
         $validator->expects($this->once())
-            ->method('validate')
-            ->will($this->returnValue(array($constraintViolationInterface)));
+            ->method('isValid')
+            ->will($this->returnValue(false));
+        $validator->expects($this->once())
+            ->method('getErrors')
+            ->will($this->returnValue(array()));
         
         $bikerPostAction = new BikersPostAction($bikerRepository, $validator);
         
-        $this->setExpectedException(Exception::class);
+        $this->setExpectedException(ValidationFailedException::class);
         
         $bikerPostAction->post('anyInvalidName', 'anyInvalidEmail');
     }
