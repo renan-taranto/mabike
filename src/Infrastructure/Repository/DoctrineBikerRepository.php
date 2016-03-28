@@ -34,6 +34,12 @@ class DoctrineBikerRepository implements BikerRepository
         return $doctrineRepository->findAll();
     }
 
+    public function update(Biker $biker)
+    {
+        $this->em->flush($biker);
+        return $biker;
+    }
+    
     /**
      * @return Repository
      */
@@ -41,5 +47,6 @@ class DoctrineBikerRepository implements BikerRepository
     {
         return $this->em->getRepository('Domain:Biker');
     }
+
 
 }

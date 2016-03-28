@@ -1,0 +1,14 @@
+Application\Dto\Biker\PutBikerDTO:
+    properties:
+        id:
+            - NotBlank: ~
+        name:
+            - NotBlank: ~
+            - Length:
+                min: 8
+                max: 50
+        email:
+            - NotBlank: ~
+            - Email:
+                message: Invalid e-mail address.
+                checkMX: true

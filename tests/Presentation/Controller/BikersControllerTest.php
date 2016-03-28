@@ -7,6 +7,7 @@ use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\JsonGetRequest;
 use Tests\JsonPostRequest;
+use Tests\JsonPutRequest;
 
 class BikersControllerTest extends WebTestCase
 {
@@ -35,7 +36,7 @@ class BikersControllerTest extends WebTestCase
         $this->assertContains($email, $content['email']);
     }
     
-    public function testBlankNameReturnsBadRequest()
+    public function testPostBlankNameReturnsBadRequest()
     {
         $client = static::createClient();
         
@@ -50,7 +51,7 @@ class BikersControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
     
-    public function testBlankEmailReturnsBadRequest()
+    public function testPostBlankEmailReturnsBadRequest()
     {
         $client = static::createClient();
         
@@ -65,7 +66,7 @@ class BikersControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
     
-    public function testEmailAlreadyInUseReturnsBadRequest()
+    public function testPostEmailAlreadyInUseReturnsBadRequest()
     {
         $client = static::createClient();
         
@@ -81,7 +82,7 @@ class BikersControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
     
-    public function testNameAlreadyInUseReturnsBadRequest()
+    public function testPostNameAlreadyInUseReturnsBadRequest()
     {
         $client = static::createClient();
         
@@ -97,7 +98,7 @@ class BikersControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
     
-    public function testNameBelowMinLengthReturnsBadRequest()
+    public function testPostNameBelowMinLengthReturnsBadRequest()
     {
         $client = static::createClient();
         
@@ -112,7 +113,7 @@ class BikersControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
     
-    public function testNameOverMinLengthReturnsBadRequest()
+    public function testPostNameOverMinLengthReturnsBadRequest()
     {
         $client = static::createClient();
         $post = new JsonPostRequest($client);
@@ -166,5 +167,56 @@ class BikersControllerTest extends WebTestCase
         $expectedBiker2 = array('id' => 2, 'name' => 'Test Biker2', 'email' => 'testbiker2@email.com');
         $this->assertEquals(array($expectedBiker1, $expectedBiker2), $content);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+    
+    public function testPutSuccessfullyPutBiker()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonPutRequest($client);
+        
+        $id = 1;
+        $data = array('id' => $id, 'name' => 'Test Update Biker', 'email' => 'testupdatebiker@email.com');
+        $response = $getRequest->put(self::$URI . '/' . $id , $getRequest->getStandardHeadersWithAuthentication(), $data);
+        $content = json_decode($response->getContent(), true);
+        $expectedBiker = array('id' => $id, 'name' => 'Test Update Biker', 'email' => 'testupdatebiker@email.com');
+        $this->assertEquals($expectedBiker, $content);
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+    
+    public function testPutReturnsNotFound()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonPutRequest($client);
+        $id = 999999;
+        $data = array('id' => $id, 'name' => 'Test Update Biker', 'email' => 'testupdatebiker@email.com');
+        $response = $getRequest->put(self::$URI . '/' . $id , $getRequest->getStandardHeadersWithAuthentication(), $data);
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+    
+    public function testPutReturnsBadRequest()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonPutRequest($client);
+        $id = 1;
+        $data = array();
+        $response = $getRequest->put(self::$URI . '/' . $id , $getRequest->getStandardHeadersWithAuthentication(), $data);
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+    }
+    
+    public function testPutNameAlreadyInUseReturnsBadRequest()
+    {
+        $client = static::createClient();
+        
+        $getRequest = new JsonPutRequest($client);
+        $id = 2;
+        $data = array(
+            'id' => $id,
+            'name' => 'Test Biker',
+            'email' => 'testnewbiker@email.com');
+        
+        $response = $getRequest->put(self::$URI . '/' . $id , $getRequest->getStandardHeadersWithAuthentication(), $data);
+        $content = json_decode($response->getContent(), true);
+        $this->assertContains('Name already in use.', $content['errors']['name'][0]);
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 }

@@ -4,22 +4,26 @@ namespace Application\Service\Endpoint;
 use Application\Service\Endpoint\Action\Biker\BikersCgetActionInterface;
 use Application\Service\Endpoint\Action\Biker\BikersGetActionInterface;
 use Application\Service\Endpoint\Action\Biker\BikersPostActionInterface;
+use Application\Service\Endpoint\Action\Biker\BikersPutActionInterface;
 
 class BikersEndpointService
 {
     private $bikersPostAction;
     private $bikersGetAction;
     private $bikersCgetAction;
+    private $bikersPutAction;
     
     public function __construct(
         BikersPostActionInterface $bikerPostAction,
         BikersGetActionInterface $bikersGetAtcion,
-        BikersCgetActionInterface $bikersCgetAction
+        BikersCgetActionInterface $bikersCgetAction,
+        BikersPutActionInterface $bikersPutAction
     )
     {
         $this->bikersPostAction = $bikerPostAction;
         $this->bikersGetAction = $bikersGetAtcion;
         $this->bikersCgetAction = $bikersCgetAction;
+        $this->bikersPutAction = $bikersPutAction;
     }
     
     public function post($name, $email)
@@ -35,5 +39,10 @@ class BikersEndpointService
     public function getAll()
     {
         return $this->bikersCgetAction->get();
+    }
+    
+    public function put($id, $name, $email)
+    {
+        return $this->bikersPutAction->put($id, $name, $email);
     }
 }
