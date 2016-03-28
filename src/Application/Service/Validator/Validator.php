@@ -2,6 +2,7 @@
 namespace Application\Service\Validator;
 
 use Exception;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface as SymfonyValidatorInterface;
 
@@ -38,7 +39,7 @@ class Validator implements ValidatorInterface
         $constraintViolationList = $this->symfonyValidatorComponent->validate($object);
         $errorMessagesByFields = $this->getErrorMessagesByFields($constraintViolationList);
         
-        return array_merge(array('message' => 'Validation Failed'), array('errors' => $errorMessagesByFields));
+        return array_merge(array('code' => Response::HTTP_BAD_REQUEST,'message' => 'Validation Failed'), array('errors' => $errorMessagesByFields));
     }
     
     private function getErrorMessagesByFields(ConstraintViolationListInterface $constraintViolationList)

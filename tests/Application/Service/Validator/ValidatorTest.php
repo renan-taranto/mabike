@@ -2,6 +2,8 @@
 namespace Tests\Application\Service;
 
 use Application\Service\Validator\Validator;
+use stdClass;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -37,9 +39,10 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         
         $validator = new Validator($symfonyValidatorComponent);
         
-        $errors = $validator->getErrors(new \stdClass());
+        $errors = $validator->getErrors(new stdClass());
         
         $expectedArray = array(
+            'code' => Response::HTTP_BAD_REQUEST,
             'message' => 'Validation Failed',
             'errors' => array('name' => array('This value should not be blank.')));
         
@@ -53,7 +56,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             ->method('validate')
             ->will($this->returnValue(array(1)));
         $validator = new Validator($symfonyValidatorComponent);
-        $this->assertFalse($validator->isValid(new \stdClass()));
+        $this->assertFalse($validator->isValid(new stdClass()));
     }
     
     public function testIsValidReturnsTrue()
@@ -63,6 +66,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             ->method('validate')
             ->will($this->returnValue(null));
         $validator = new Validator($symfonyValidatorComponent);
-        $this->assertTrue($validator->isValid(new \stdClass()));
+        $this->assertTrue($validator->isValid(new stdClass()));
     }
 }
