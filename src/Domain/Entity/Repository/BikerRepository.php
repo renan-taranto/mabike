@@ -7,4 +7,5 @@ interface BikerRepository
 {
     public function add(Biker $biker);
     public function get($id);
+    public function getAll();
 }

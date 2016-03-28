@@ -24,7 +24,7 @@ class DoctrineBikerRepositoryTest extends WebTestCase
     {
         $em = $this->getEntityManager();
         $doctrineBikerRepository = new DoctrineBikerRepository($em);
-        $this->assertNull($doctrineBikerRepository->get(2));
+        $this->assertNull($doctrineBikerRepository->get(232123));
     }
     
     public function testAddBiker()
@@ -33,7 +33,7 @@ class DoctrineBikerRepositoryTest extends WebTestCase
         $doctrineBikerRepository = new DoctrineBikerRepository($em);
         $biker = new Biker('test user 2', 'testuser2@email.com');
         $doctrineBikerRepository->add($biker);
-        $this->assertInstanceOf(Biker::class, $doctrineBikerRepository->get(2));
+        $this->assertInstanceOf(Biker::class, $doctrineBikerRepository->get(3));
     }
     
     private function getEntityManager()

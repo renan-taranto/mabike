@@ -115,7 +115,6 @@ class BikersControllerTest extends WebTestCase
     public function testNameOverMinLengthReturnsBadRequest()
     {
         $client = static::createClient();
-        
         $post = new JsonPostRequest($client);
         $data = array('name' => str_repeat('u', 51));
         
@@ -142,13 +141,30 @@ class BikersControllerTest extends WebTestCase
     public function testGetReturnsNotFoundException()
     {
         $client = static::createClient();
-        
         $getRequest = new JsonGetRequest($client);
-        $response = $getRequest->get(self::$URI . '/2', $getRequest->getStandardHeadersWithAuthentication());
+        
+        $id = 123124213;
+        $response = $getRequest->get(self::$URI . '/' . $id, $getRequest->getStandardHeadersWithAuthentication());
         $content = json_decode($response->getContent(), true);
         
-        $expectedArray = array('code' => Response::HTTP_NOT_FOUND, 'message' => "The Biker resource of id '2' was not found.");
+        $expectedArray = array(
+            'code' => Response::HTTP_NOT_FOUND,
+            'message' => "The Biker resource of id '" . $id . "' was not found.");
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
         $this->assertEquals($expectedArray, $content);
+    }
+    
+    public function testCgetReturnsBikers()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonGetRequest($client);
+        
+        $response = $getRequest->get(self::$URI, $getRequest->getStandardHeadersWithAuthentication());
+        $content = json_decode($response->getContent(), true);
+        
+        $expectedBiker1 = array('id' => 1, 'name' => 'Test Biker', 'email' => 'testbiker@email.com');
+        $expectedBiker2 = array('id' => 2, 'name' => 'Test Biker2', 'email' => 'testbiker2@email.com');
+        $this->assertEquals(array($expectedBiker1, $expectedBiker2), $content);
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 }

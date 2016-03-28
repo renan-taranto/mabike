@@ -27,6 +27,12 @@ class DoctrineBikerRepository implements BikerRepository
         $doctrineRepository = $this->getDoctrineUserRepository();
         return $doctrineRepository->find($id);
     }
+    
+    public function getAll()
+    {
+        $doctrineRepository = $this->getDoctrineUserRepository();
+        return $doctrineRepository->findAll();
+    }
 
     /**
      * @return Repository

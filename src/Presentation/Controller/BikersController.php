@@ -47,4 +47,12 @@ class BikersController extends FOSRestController implements ClassResourceInterfa
         $bikersEndpointService = $this->get('app.endpoint.bikers');
         return $bikersEndpointService->get($id);
     }
+    
+    public function cgetAction()
+    {
+        /* @var $bikersEndpointService BikersEndpointService */
+        $bikersEndpointService = $this->get('app.endpoint.bikers');
+        return $bikersEndpointService->getAll();
+        
+    }
 }
