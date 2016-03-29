@@ -1,7 +1,7 @@
 <?php
 namespace Application\Dto\Biker;
 
-class PostBikerDTO
+class BikerDTO
 {
     private $name;
     private $email;

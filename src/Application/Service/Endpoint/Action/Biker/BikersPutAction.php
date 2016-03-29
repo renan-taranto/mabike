@@ -1,7 +1,7 @@
 <?php
 namespace Application\Service\Endpoint\Action\Biker;
 
-use Application\Dto\Biker\PutBikerDTO;
+use Application\Dto\Biker\BikerDTO;
 use Application\Exception\ValidationFailedException;
 use Application\Service\ParametersBinder\ParametersBinder;
 use Application\Service\Validator\ValidatorInterface;
@@ -26,7 +26,7 @@ class BikersPutAction implements BikersPutActionInterface
     
     public function put($id, array $requestBodyParameters)
     {        
-        $putBikerDTO = $this->parametersBinder->bind($requestBodyParameters, new PutBikerDTO());
+        $putBikerDTO = $this->parametersBinder->bind($requestBodyParameters, new BikerDTO());
         $this->validateRequestAsDTO($putBikerDTO);
         $biker = $this->bikerRepository->get($id);
         if (empty($biker)) {

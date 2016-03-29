@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Application\Service\Endpoint\Action\Biker;
 
+use Application\Dto\Biker\BikerDTO;
 use Application\Dto\Biker\PutBikerDTO;
 use Application\Exception\ValidationFailedException;
 use Application\Service\Endpoint\Action\Biker\BikersPutAction;
@@ -13,7 +14,7 @@ class BikersPutActionTest extends \PHPUnit_Framework_TestCase
 {
     public function testSuccessfullyPutBiker()
     {
-        $putBikerDTO = $this->getMock(PutBikerDTO::class);
+        $putBikerDTO = $this->getMock(BikerDTO::class);
         $parametersBinder = $this->getMock(ParametersBinder::class);
         $parametersBinder->expects($this->once())
             ->method('bind')
@@ -45,7 +46,7 @@ class BikersPutActionTest extends \PHPUnit_Framework_TestCase
     
     public function testInvalidRequestParamsThrowsException()
     {
-        $putBikerDTO = $this->getMock(PutBikerDTO::class);
+        $putBikerDTO = $this->getMock(BikerDTO::class);
         $parametersBinder = $this->getMock(ParametersBinder::class);
         $parametersBinder->expects($this->once())
             ->method('bind')
@@ -68,7 +69,7 @@ class BikersPutActionTest extends \PHPUnit_Framework_TestCase
     
     public function testBusinessRulesViolationsThrowsException()
     {
-        $putBikerDTO = $this->getMock(PutBikerDTO::class);
+        $putBikerDTO = $this->getMock(BikerDTO::class);
         $parametersBinder = $this->getMock(ParametersBinder::class);
         $parametersBinder->expects($this->once())
             ->method('bind')

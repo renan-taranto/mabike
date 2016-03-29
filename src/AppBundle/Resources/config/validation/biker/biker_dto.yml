@@ -1,4 +1,4 @@
-Application\Dto\Biker\PostBikerDTO:
+Application\Dto\Biker\BikerDTO:
     properties:
         name:
             - NotBlank: ~

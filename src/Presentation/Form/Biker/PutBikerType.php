@@ -1,10 +1,10 @@
 <?php
 namespace Presentation\Form\Biker;
 
+use Application\Dto\Biker\BikerDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Application\Dto\Biker\PutBikerDTO;
 
 class PutBikerType extends AbstractType
 {
@@ -18,6 +18,6 @@ class PutBikerType extends AbstractType
     
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array('allow_extra_fields' => true, 'data_class' => PutBikerDTO::class));
+        $resolver->setDefaults(array('allow_extra_fields' => true, 'data_class' => BikerDTO::class));
     }
 }

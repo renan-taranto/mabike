@@ -2,16 +2,15 @@
 namespace Presentation\Controller;
 
 use Application\Command\Biker\PostBikerCommand;
-use Application\Dto\Biker\PostBikerDTO;
-use Application\Dto\Biker\PutBikerDTO;
+use Application\Dto\Biker\BikerDTO;
 use Application\Exception\ValidationFailedException;
+use Application\Service\Endpoint\Action\Biker\BikersPutActionInterface;
 use Application\Service\Endpoint\BikersEndpointService;
 use Application\Service\Validator\Validator;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Util\Codes;
 use Presentation\Form\Biker\PostBikerType;
-use Presentation\Form\Biker\PutBikerType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,7 +18,7 @@ class BikersController extends FOSRestController implements ClassResourceInterfa
 {
     public function postAction(Request $request)
     {
-        $postBikerForm = $this->createForm(PostBikerType::class, new PostBikerDTO());
+        $postBikerForm = $this->createForm(PostBikerType::class, new BikerDTO());
         $postBikerForm->submit($request->request->all()); 
         
         /* @var $validator Validator */
@@ -59,16 +58,16 @@ class BikersController extends FOSRestController implements ClassResourceInterfa
     
     public function putAction($id, Request $request)
     {
-        /* @var $bikersEndpointService BikersEndpointService */
-        $bikersEndpointService = $this->get('app.endpoint.bikers');
+        /* @var $bikersPutAction BikersPutActionInterface */
+        $bikersPutAction = $this->get('app.action.bikers.put_action');
         try {
-            $biker = $bikersEndpointService->put($id, $request->request->all());
+            $biker = $bikersPutAction->put($id, $request->request->all());
         }
         catch (ValidationFailedException $ex) {
             $view = $this->view($ex->getErrors(), Response::HTTP_BAD_REQUEST);
             return $view;
         }
         
-        return $this->view($biker, Codes::HTTP_OK);
+        return $biker;
     }
 }

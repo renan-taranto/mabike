@@ -5,9 +5,6 @@ parameters:
 
 services:
     ##################Application##################
-    app.user_registration:
-        class: Application\Service\Security\UserRegistrationService
-        arguments: ['@domain.factory.normal_user', '@infra.repository.user', '@app.validator']
     #Endpoint Service 
     app.endpoint.bikers:
         class: Application\Service\Endpoint\BikersEndpointService
@@ -30,6 +27,9 @@ services:
         class: Application\Service\Validator\Validator
         arguments: ['@validator']
     #Security
+    app.user_registration:
+        class: Application\Service\Security\UserRegistrationService
+        arguments: ['@domain.factory.normal_user', '@infra.repository.user', '@app.validator']
     app.login:
         class: Application\Service\Security\StatelessLoginService
         arguments: ['@infra.repository.user', '@infra.password_validator', '@app.user_token' ]
