@@ -1,6 +1,7 @@
 <?php
 namespace Application\Service\Validator;
 
+use Application\Exception\ValidationFailedException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface as SymfonyValidatorInterface;
@@ -17,6 +18,14 @@ class Validator implements ValidatorInterface
     public function __construct(SymfonyValidatorInterface $symfonyValidatorComponent)
     {
         $this->symfonyValidatorComponent = $symfonyValidatorComponent;
+    }
+    
+    public function throwValidationFailedIfNotValid($object)
+    {
+        if (!$this->isValid($object)) {
+            $errors = $this->getErrors($object);
+            throw new ValidationFailedException($errors);
+        }    
     }
     
     public function isValid($object)
