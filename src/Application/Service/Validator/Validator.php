@@ -1,7 +1,6 @@
 <?php
 namespace Application\Service\Validator;
 
-use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface as SymfonyValidatorInterface;
@@ -33,7 +32,7 @@ class Validator implements ValidatorInterface
     public function getErrors($object)
     {
         if ($this->isValid($object)) {
-            throw new Exception('Object is valid and has no errors');
+            return;
         }
         
         $constraintViolationList = $this->symfonyValidatorComponent->validate($object);

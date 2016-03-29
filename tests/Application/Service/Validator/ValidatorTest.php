@@ -68,4 +68,14 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $validator = new Validator($symfonyValidatorComponent);
         $this->assertTrue($validator->isValid(new stdClass()));
     }
+    
+    public function testGetErrorsReturnsNull()
+    {
+        $symfonyValidatorComponent = $this->getMock(ValidatorInterface::class);
+        $symfonyValidatorComponent->expects($this->any())
+            ->method('validate')
+            ->will($this->returnValue(null));
+        $validator = new Validator($symfonyValidatorComponent);
+        $this->assertNull($validator->getErrors(new stdClass()));
+    }
 }
