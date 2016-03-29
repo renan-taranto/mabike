@@ -10,7 +10,7 @@ use Application\Service\Validator\Validator;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Util\Codes;
-use Presentation\Form\Biker\PostBikerType;
+use Presentation\Form\Biker\BikerDTOType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,7 +18,7 @@ class BikersController extends FOSRestController implements ClassResourceInterfa
 {
     public function postAction(Request $request)
     {
-        $postBikerForm = $this->createForm(PostBikerType::class, new BikerDTO());
+        $postBikerForm = $this->createForm(BikerDTOType::class, new BikerDTO());
         $postBikerForm->submit($request->request->all()); 
         
         /* @var $validator Validator */

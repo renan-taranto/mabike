@@ -41,7 +41,7 @@ services:
     #Parameters Binder
     app.parameters_binder.put_biker:
         class: Application\Service\ParametersBinder\FormParametersBinder
-        arguments: ['@form.factory', 'Presentation\Form\Biker\PutBikerType']
+        arguments: ['@form.factory', 'Presentation\Form\Biker\BikerDTOType']
         
     ##################Domain##################
     domain.factory.normal_user:
