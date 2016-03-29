@@ -2,7 +2,6 @@
 namespace Presentation\Controller;
 
 use Application\Command\Biker\PostBikerCommand;
-use Application\Command\Biker\PutBikerCommand;
 use Application\Dto\Biker\PostBikerDTO;
 use Application\Dto\Biker\PutBikerDTO;
 use Application\Exception\ValidationFailedException;
@@ -60,22 +59,10 @@ class BikersController extends FOSRestController implements ClassResourceInterfa
     
     public function putAction($id, Request $request)
     {
-        $putBikerForm = $this->createForm(PutBikerType::class, new PutBikerDTO());
-        $parameters = array_merge(array('id' => $id), $request->request->all());
-        $putBikerForm->submit($parameters); 
-        
-        /* @var $validator Validator */
-        $validator = $this->get('app.validator');
-        if (!$validator->isValid($putBikerForm->getData())) {
-            $errors = $validator->getErrors($putBikerForm->getData());
-            return $this->view($errors, Response::HTTP_BAD_REQUEST);
-        }
-        
         /* @var $bikersEndpointService BikersEndpointService */
         $bikersEndpointService = $this->get('app.endpoint.bikers');
-        $bikerCommand = new PutBikerCommand($bikersEndpointService);
         try {
-            $biker = $bikerCommand->execute($putBikerForm->getData());
+            $biker = $bikersEndpointService->put($id, $request->request->all());
         }
         catch (ValidationFailedException $ex) {
             $view = $this->view($ex->getErrors(), Response::HTTP_BAD_REQUEST);

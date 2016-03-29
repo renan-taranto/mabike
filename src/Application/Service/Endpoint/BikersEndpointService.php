@@ -41,8 +41,8 @@ class BikersEndpointService
         return $this->bikersCgetAction->get();
     }
     
-    public function put($id, $name, $email)
+    public function put($id, array $requestBodyParameters)
     {
-        return $this->bikersPutAction->put($id, $name, $email);
+        return $this->bikersPutAction->put($id, $requestBodyParameters);
     }
 }

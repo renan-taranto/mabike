@@ -1,7 +1,5 @@
 Application\Dto\Biker\PutBikerDTO:
     properties:
-        id:
-            - NotBlank: ~
         name:
             - NotBlank: ~
             - Length:

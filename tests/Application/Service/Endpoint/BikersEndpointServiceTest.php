@@ -92,7 +92,7 @@ class BikersEndpointServiceTest extends \PHPUnit_Framework_TestCase
                 
         $bikersEndpointService = 
             new BikersEndpointService($bikerPostAction, $bikersGetAction, $bikersCgetAction, $bikersPutAction);
-        $returnedBiker = $bikersEndpointService->put(1, 'Updated Bike', 'updatedbiker@email.com');
+        $returnedBiker = $bikersEndpointService->put(1, array('name' => 'Updated Biker', 'email' => 'updatedbiker@email.com'));
         $this->assertEquals($expectedBiker, $returnedBiker);
     }
 }

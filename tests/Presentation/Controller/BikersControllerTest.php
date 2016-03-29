@@ -175,7 +175,7 @@ class BikersControllerTest extends WebTestCase
         $getRequest = new JsonPutRequest($client);
         
         $id = 1;
-        $data = array('id' => $id, 'name' => 'Test Update Biker', 'email' => 'testupdatebiker@email.com');
+        $data = array('name' => 'Test Update Biker', 'email' => 'testupdatebiker@email.com');
         $response = $getRequest->put(self::$URI . '/' . $id , $getRequest->getStandardHeadersWithAuthentication(), $data);
         $content = json_decode($response->getContent(), true);
         $expectedBiker = array('id' => $id, 'name' => 'Test Update Biker', 'email' => 'testupdatebiker@email.com');
@@ -188,7 +188,7 @@ class BikersControllerTest extends WebTestCase
         $client = static::createClient();
         $getRequest = new JsonPutRequest($client);
         $id = 999999;
-        $data = array('id' => $id, 'name' => 'Test Update Biker', 'email' => 'testupdatebiker@email.com');
+        $data = array('name' => 'Test Update Biker', 'email' => 'testupdatebiker@email.com');
         $response = $getRequest->put(self::$URI . '/' . $id , $getRequest->getStandardHeadersWithAuthentication(), $data);
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }

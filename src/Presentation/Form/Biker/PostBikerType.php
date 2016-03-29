@@ -1,6 +1,7 @@
 <?php
 namespace Presentation\Form\Biker;
 
+use Application\Dto\Biker\PostBikerDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,6 +18,6 @@ class PostBikerType extends AbstractType
     
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array('allow_extra_fields' => true));
+        $resolver->setDefaults(array('allow_extra_fields' => true, 'data_class' => PostBikerDTO::class));
     }
 }

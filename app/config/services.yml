@@ -24,7 +24,7 @@ services:
         arguments: ['@infra.repository.biker']
     app.action.bikers.put_action:
         class: Application\Service\Endpoint\Action\Biker\BikersPutAction
-        arguments: ['@infra.repository.biker', '@app.validator']
+        arguments: ['@app.parameters_binder.put_biker', '@app.validator', '@infra.repository.biker']
     #Validator
     app.validator:
         class: Application\Service\Validator\Validator
@@ -38,6 +38,10 @@ services:
         arguments: ['@infra.repository.user', '@app.authentication_token_factory']
     app.authentication_token_factory:
         class: Application\Factory\RandomAuthenticationTokenFactory
+    #Parameters Binder
+    app.parameters_binder.put_biker:
+        class: Application\Service\ParametersBinder\FormParametersBinder
+        arguments: ['@form.factory', 'Presentation\Form\Biker\PutBikerType']
         
     ##################Domain##################
     domain.factory.normal_user:
