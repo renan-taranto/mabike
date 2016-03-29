@@ -13,4 +13,5 @@ interface BikerRepository
     public function get($id);
     public function getAll();
     public function update(Biker $biker);
+    public function addAtId(Biker $biker, $id);
 }

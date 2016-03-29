@@ -7,6 +7,7 @@ use Application\Exception\ValidationFailedException;
 use Application\Service\Endpoint\Action\Biker\BikersPutActionInterface;
 use Application\Service\Endpoint\BikersEndpointService;
 use Application\Service\Validator\Validator;
+use Domain\Entity\Repository\BikerRepository;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Util\Codes;
@@ -58,6 +59,13 @@ class BikersController extends FOSRestController implements ClassResourceInterfa
     
     public function putAction($id, Request $request)
     {
+        $responseStatusCode = Response::HTTP_OK;
+        /* @var $bikerRepository BikerRepository */
+        $bikerRepository = $this->get('infra.repository.biker');
+        if (empty($bikerRepository->get($id))) {
+            $responseStatusCode = Response::HTTP_CREATED;
+        }
+        
         /* @var $bikersPutAction BikersPutActionInterface */
         $bikersPutAction = $this->get('app.action.bikers.put_action');
         try {
@@ -68,6 +76,7 @@ class BikersController extends FOSRestController implements ClassResourceInterfa
             return $view;
         }
         
-        return $biker;
+        $view = $this->view($biker, $responseStatusCode);
+        return $view;
     }
 }

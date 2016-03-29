@@ -21,9 +21,6 @@ class BikersPutActionTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($bikerDTO));
         
         $validator = $this->getMock(ValidatorInterface::class);
-        $validator->expects($this->any())
-            ->method('isValid')
-            ->will($this->returnValue(true));
         
         $biker = new Biker('anyname', 'anyemail');
         $bikerRepository = $this->getMock(BikerRepository::class);
@@ -58,12 +55,6 @@ class BikersPutActionTest extends \PHPUnit_Framework_TestCase
             ->will($this->throwException(new ValidationFailedException(array())));
         
         $bikerRepository = $this->getMock(BikerRepository::class);
-        $biker = $this->getMockBuilder(Biker::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $bikerRepository->expects($this->once())
-            ->method('get')
-            ->will($this->returnValue($biker));
         
         $bikersPutAction = new BikersPutAction($parametersBinder, $validator, $bikerRepository);
         $this->setExpectedException(ValidationFailedException::class);
@@ -93,5 +84,28 @@ class BikersPutActionTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(ValidationFailedException::class);
         $data = array('name' => 'Any Name Already in use', 'email' => 'Any Email already in use');
         $returnedBiker = $bikersPutAction->put(1, $data);
+    }
+    
+    public function testPutToNewURI()
+    {
+        $bikerDTO = $this->getMock(BikerDTO::class);
+        $parametersBinder = $this->getMock(ParametersBinder::class);
+        $parametersBinder->expects($this->once())
+            ->method('bind')
+            ->will($this->returnValue($bikerDTO));
+        
+        $validator = $this->getMock(ValidatorInterface::class);
+        
+        $bikerRepository = $this->getMock(BikerRepository::class);
+        
+        $biker = $this->getMockBuilder(Biker::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        $bikerRepository->expects($this->once())
+            ->method('addAtId')
+            ->will($this->returnValue($biker));
+        
+        $bikersPutAction = new BikersPutAction($parametersBinder, $validator, $bikerRepository);
+        $this->assertEquals($biker, $bikersPutAction->put(9999, array()));
     }
 }

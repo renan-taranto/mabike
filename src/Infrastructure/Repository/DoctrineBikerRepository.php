@@ -3,6 +3,7 @@
 namespace Infrastructure\Repository;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Domain\Entity\Biker;
 use Domain\Entity\Repository\BikerRepository;
 
@@ -37,6 +38,16 @@ class DoctrineBikerRepository implements BikerRepository
     public function update(Biker $biker)
     {
         $this->em->flush($biker);
+        return $biker;
+    }
+    
+    public function addAtId(Biker $biker, $id)
+    {
+        $biker->setId($id);
+        $this->em->persist($biker);
+        $metadata = $this->em->getClassMetadata(Biker::class);
+        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+        $this->em->flush();
         return $biker;
     }
     
