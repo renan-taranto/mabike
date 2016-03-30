@@ -1,4 +1,4 @@
-Domain\Entity\Biker:
+Rtaranto\Domain\Entity\Biker:
     constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
             fields: [name]

@@ -1,4 +1,4 @@
-Domain\Entity\User:
+Rtaranto\Domain\Entity\User:
     type: entity
     table: null
     id:

@@ -1,7 +1,7 @@
-Domain\Entity\Motorcycle:
+Rtaranto\Domain\Entity\Motorcycle:
     type: entity
     table: null
-    repositoryClass: Domain\Entity\Repository\MotorcycleRepository
+    repositoryClass: Rtaranto\Domain\Entity\Repository\MotorcycleRepository
     id:
         id:
             type: integer

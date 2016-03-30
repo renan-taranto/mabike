@@ -3,7 +3,7 @@ namespace AppBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Domain\Entity\Biker;
+use Rtaranto\Domain\Entity\Biker;
 
 class LoadBikerTestingData implements FixtureInterface
 {

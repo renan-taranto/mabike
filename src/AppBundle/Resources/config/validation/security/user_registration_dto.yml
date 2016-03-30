@@ -1,4 +1,4 @@
-Application\Dto\Security\UserRegistrationDTO:
+Rtaranto\Application\Dto\Security\UserRegistrationDTO:
     properties:
         username:
             - NotBlank: ~

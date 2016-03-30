@@ -1,19 +1,19 @@
 api_v1_login:
     type: rest
-    resource: Presentation\Controller\LoginController 
+    resource: Rtaranto\Presentation\Controller\LoginController 
     name_prefix: "api_v1_"
     
 api_v1_registration:
     type: rest
-    resource: Presentation\Controller\RegistrationController
+    resource: Rtaranto\Presentation\Controller\RegistrationController
     name_prefix: "api_v1_"
     
 api_v1_entry_point:
     type: rest
-    resource: Presentation\Controller\EntryPointController
+    resource: Rtaranto\Presentation\Controller\EntryPointController
     name_prefix: "api_v1_"
     
 api_bikers:
     type:         rest
-    resource:     Presentation\Controller\BikersController
+    resource:     Rtaranto\Presentation\Controller\BikersController
     name_prefix:  api_v1_

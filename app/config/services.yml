@@ -4,61 +4,61 @@ parameters:
 #    parameter_name: value
 
 services:
-    ##################Application##################
+    ##################Rtaranto\Application##################
     #Endpoint Service 
     app.endpoint.bikers:
-        class: Application\Service\Endpoint\BikersEndpointService
+        class: Rtaranto\Application\Service\Endpoint\BikersEndpointService
         arguments: ['@app.action.bikers.post_action', '@app.action.bikers.get_action', '@app.action.bikers.cget_action', '@app.action.bikers.put_action']
     #Endpoint Action
     app.action.bikers.post_action:
-        class: Application\Service\Endpoint\Action\Biker\BikersPostAction
+        class: Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPostAction
         arguments: ['@infra.repository.biker', '@app.validator']
     app.action.bikers.get_action:
-        class: Application\Service\Endpoint\Action\Biker\BikersGetAction
+        class: Rtaranto\Application\Service\Endpoint\Action\Biker\BikersGetAction
         arguments: ['@infra.repository.biker']
     app.action.bikers.cget_action:
-        class: Application\Service\Endpoint\Action\Biker\BikersCgetAction
+        class: Rtaranto\Application\Service\Endpoint\Action\Biker\BikersCgetAction
         arguments: ['@infra.repository.biker']
     app.action.bikers.put_action:
-        class: Application\Service\Endpoint\Action\Biker\BikersPutAction
+        class: Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPutAction
         arguments: ['@app.parameters_binder.put_biker', '@app.validator', '@infra.repository.biker']
     #Validator
     app.validator:
-        class: Application\Service\Validator\Validator
+        class: Rtaranto\Application\Service\Validator\Validator
         arguments: ['@validator']
     #Security
     app.user_registration:
-        class: Application\Service\Security\UserRegistrationService
+        class: Rtaranto\Application\Service\Security\UserRegistrationService
         arguments: ['@domain.factory.normal_user', '@infra.repository.user', '@app.validator']
     app.login:
-        class: Application\Service\Security\StatelessLoginService
+        class: Rtaranto\Application\Service\Security\StatelessLoginService
         arguments: ['@infra.repository.user', '@infra.password_validator', '@app.user_token' ]
     app.user_token:
-        class: Application\Service\Security\UserTokenService
+        class: Rtaranto\Application\Service\Security\UserTokenService
         arguments: ['@infra.repository.user', '@app.authentication_token_factory']
     app.authentication_token_factory:
-        class: Application\Factory\RandomAuthenticationTokenFactory
+        class: Rtaranto\Application\Factory\RandomAuthenticationTokenFactory
     #Parameters Binder
     app.parameters_binder.put_biker:
-        class: Application\Service\ParametersBinder\FormParametersBinder
-        arguments: ['@form.factory', 'Presentation\Form\Biker\BikerDTOType']
+        class: Rtaranto\Application\Service\ParametersBinder\FormParametersBinder
+        arguments: ['@form.factory', 'Rtaranto\Presentation\Form\Biker\BikerDTOType']
         
     ##################Domain##################
     domain.factory.normal_user:
-        class: Domain\Entity\Factory\NormalUserFactory
+        class: Rtaranto\Domain\Entity\Factory\NormalUserFactory
         arguments: ['@security.password_encoder']
         
-    ##################Infrastructure##################
+    ##################Rtaranto\Infrastructure##################
     infra.token_authenticator:
-        class: Infrastructure\Security\TokenAuthenticator
+        class: Rtaranto\Infrastructure\Security\TokenAuthenticator
         arguments: ['@doctrine.orm.entity_manager', '@router']
     infra.repository.user:
-        class: Infrastructure\Repository\DoctrineUserRepository
+        class: Rtaranto\Infrastructure\Repository\DoctrineUserRepository
         arguments: ['@doctrine.orm.entity_manager']
     infra.repository.biker:
-        class: Infrastructure\Repository\DoctrineBikerRepository
+        class: Rtaranto\Infrastructure\Repository\DoctrineBikerRepository
         arguments: ['@doctrine.orm.entity_manager']
     infra.password_validator:
-        class: Infrastructure\Security\SaltedPasswordValidator
+        class: Rtaranto\Infrastructure\Security\SaltedPasswordValidator
         arguments: ['@security.encoder_factory']
         

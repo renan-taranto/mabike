@@ -1,4 +1,4 @@
-Domain\Entity\User:
+Rtaranto\Domain\Entity\User:
     constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
             fields: [email]

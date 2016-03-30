@@ -62,7 +62,7 @@ doctrine:
         mappings: 
             Domain: 
                 type: yml 
-                prefix: Domain\Entity
+                prefix: Rtaranto\Domain\Entity
                 is_bundle: false
                 dir: %kernel.root_dir%/../src/AppBundle/Resources/config/doctrine
 
