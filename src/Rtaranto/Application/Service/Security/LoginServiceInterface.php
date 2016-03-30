@@ -1,7 +1,7 @@
 <?php
 namespace Rtaranto\Application\Service\Security;
 
-interface LoginService
+interface LoginServiceInterface
 {
     public function login($username, $password);
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Rtaranto\Application\Service\ParametersBinder;
 
-interface ParametersBinder
+interface ParametersBinderInterface
 {
     public function bind(array $parameters, $object);
 }

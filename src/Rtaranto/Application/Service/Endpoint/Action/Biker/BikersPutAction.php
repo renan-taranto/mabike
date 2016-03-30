@@ -2,7 +2,7 @@
 namespace Rtaranto\Application\Service\Endpoint\Action\Biker;
 
 use Rtaranto\Application\Dto\Biker\BikerDTO;
-use Rtaranto\Application\Service\ParametersBinder\ParametersBinder;
+use Rtaranto\Application\Service\ParametersBinder\ParametersBinderInterface;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Repository\BikerRepository;
@@ -14,7 +14,7 @@ class BikersPutAction implements BikersPutActionInterface
     private $bikerRepository;
     
     public function __construct(
-        ParametersBinder $parametersBinder,
+        ParametersBinderInterface $parametersBinder,
         ValidatorInterface $validator,
         BikerRepository $bikerRepository
     ) {

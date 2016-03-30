@@ -8,7 +8,7 @@ use Rtaranto\Domain\Entity\Repository\UserRepository;
 use Rtaranto\Domain\Entity\User;
 use Exception;
 
-class UserRegistrationService implements UserRegistration
+class UserRegistrationService implements UserRegistrationInterface
 {
     private $userRepository;
     private $validator;

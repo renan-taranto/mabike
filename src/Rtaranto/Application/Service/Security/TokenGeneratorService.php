@@ -2,12 +2,12 @@
 namespace Rtaranto\Application\Service\Security;
 
 use Rtaranto\Application\Dto\Security\AuthenticationTokenDTO;
-use Rtaranto\Application\Factory\AuthenticationTokenFactory;
-use Rtaranto\Application\Service\Security\UserTokenGenerator;
+use Rtaranto\Application\Factory\AuthenticationTokenFactoryInterface;
+use Rtaranto\Application\Service\Security\TokenGeneratorInterface;
 use Rtaranto\Domain\Entity\Repository\UserRepository;
 use Rtaranto\Domain\Entity\User;
 
-class UserTokenService implements UserTokenGenerator
+class TokenGeneratorService implements TokenGeneratorInterface
 {
     private static $KEY_LENGTH = 255;
     private static $MINUTES_BEFORE_EXPIRATION = 15;
@@ -16,11 +16,11 @@ class UserTokenService implements UserTokenGenerator
     
     /**
      * @param UserRepository $userRepository
-     * @param AuthenticationTokenFactory $authenticationTokenFactory
+     * @param AuthenticationTokenFactoryInterface $authenticationTokenFactory
      */
     public function __construct(
         UserRepository $userRepository,
-        AuthenticationTokenFactory $authenticationTokenFactory
+        AuthenticationTokenFactoryInterface $authenticationTokenFactory
     ) {
         $this->userRepository = $userRepository;
         $this->authenticationTokenFactory = $authenticationTokenFactory;

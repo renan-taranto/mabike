@@ -2,13 +2,13 @@
 namespace Rtaranto\Application\Command\Security;
 
 use Rtaranto\Application\Dto\Security\LoginDTO;
-use Rtaranto\Application\Service\Security\LoginService;
+use Rtaranto\Application\Service\Security\LoginServiceInterface;
 
 class LoginCommand
 {
     private $loginService;
     
-    public function __construct(LoginService $statelessLoginService)
+    public function __construct(LoginServiceInterface $statelessLoginService)
     {
         $this->loginService = $statelessLoginService;
     }

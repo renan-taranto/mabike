@@ -21,7 +21,7 @@ services:
         arguments: ['@infra.repository.biker']
     app.action.bikers.put_action:
         class: Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPutAction
-        arguments: ['@app.parameters_binder.put_biker', '@app.validator', '@infra.repository.biker']
+        arguments: ['@app.parameters_binder.biker', '@app.validator', '@infra.repository.biker']
     #Validator
     app.validator:
         class: Rtaranto\Application\Service\Validator\Validator
@@ -34,13 +34,13 @@ services:
         class: Rtaranto\Application\Service\Security\StatelessLoginService
         arguments: ['@infra.repository.user', '@infra.password_validator', '@app.user_token' ]
     app.user_token:
-        class: Rtaranto\Application\Service\Security\UserTokenService
+        class: Rtaranto\Application\Service\Security\TokenGeneratorService
         arguments: ['@infra.repository.user', '@app.authentication_token_factory']
     app.authentication_token_factory:
-        class: Rtaranto\Application\Factory\RandomAuthenticationTokenFactory
+        class: Rtaranto\Application\Factory\AuthenticationTokenFactory
     #Parameters Binder
-    app.parameters_binder.put_biker:
-        class: Rtaranto\Application\Service\ParametersBinder\FormParametersBinder
+    app.parameters_binder.biker:
+        class: Rtaranto\Application\Service\ParametersBinder\ParametersBinder
         arguments: ['@form.factory', 'Rtaranto\Presentation\Form\Biker\BikerDTOType']
         
     ##################Domain##################

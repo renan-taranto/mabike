@@ -2,7 +2,7 @@
 namespace Rtaranto\Application\Command\Security;
 
 use Rtaranto\Application\Dto\Security\UserRegistrationDTO;
-use Rtaranto\Application\Service\Security\UserRegistration;
+use Rtaranto\Application\Service\Security\UserRegistrationInterface;
 use Rtaranto\Domain\Entity\User;
 
 class UserRegistrationCommand
@@ -10,9 +10,9 @@ class UserRegistrationCommand
     private $userRegistration;
     
     /**
-     * @param UserRegistration $userRegistration
+     * @param UserRegistrationInterface $userRegistration
      */
-    public function __construct(UserRegistration $userRegistration)
+    public function __construct(UserRegistrationInterface $userRegistration)
     {
         $this->userRegistration = $userRegistration;
     }

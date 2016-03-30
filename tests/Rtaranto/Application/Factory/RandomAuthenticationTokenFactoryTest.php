@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Rtaranto\Application\Factory;
 
-use Rtaranto\Application\Factory\RandomAuthenticationTokenFactory;
+use Rtaranto\Application\Factory\AuthenticationTokenFactory;
 use DateInterval;
 use DateTime;
 use InvalidArgumentException;
@@ -12,7 +12,7 @@ class RandomAuthenticationTokenFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $tokenLength = 148;
         $minutesBeforeExpiration = 12;
-        $factory = new RandomAuthenticationTokenFactory();
+        $factory = new AuthenticationTokenFactory();
         $authTokenDTO = $factory->create($tokenLength, $minutesBeforeExpiration);
         
         $expectedDateTime = new DateTime('now');
@@ -24,7 +24,7 @@ class RandomAuthenticationTokenFactoryTest extends \PHPUnit_Framework_TestCase
     
     public function testInvalidMinutesBeforeExpiration()
     {
-        $factory = new RandomAuthenticationTokenFactory();
+        $factory = new AuthenticationTokenFactory();
         
         $this->setExpectedException(InvalidArgumentException::class);
         $factory->create(123, -1);

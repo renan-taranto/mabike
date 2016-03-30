@@ -1,11 +1,11 @@
 <?php
 namespace Rtaranto\Infrastructure\Security;
 
-use Rtaranto\Application\Service\Security\PasswordValidator;
+use Rtaranto\Application\Service\Security\PasswordValidatorInterface;
 use Rtaranto\Domain\Entity\User;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
-class SaltedPasswordValidator implements PasswordValidator
+class SaltedPasswordValidator implements PasswordValidatorInterface
 {
     private $encoderFactory;
     

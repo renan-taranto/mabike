@@ -4,7 +4,7 @@ namespace Tests\Rtaranto\Application\Service\Endpoint\Action\Biker;
 use Rtaranto\Application\Dto\Biker\BikerDTO;
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPutAction;
-use Rtaranto\Application\Service\ParametersBinder\ParametersBinder;
+use Rtaranto\Application\Service\ParametersBinder\ParametersBinderInterface;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Repository\BikerRepository;
@@ -14,7 +14,7 @@ class BikersPutActionTest extends \PHPUnit_Framework_TestCase
     public function testSuccessfullyPutBiker()
     {
         $bikerDTO = $this->getMock(BikerDTO::class);
-        $parametersBinder = $this->getMock(ParametersBinder::class);
+        $parametersBinder = $this->getMock(ParametersBinderInterface::class);
         $parametersBinder->expects($this->once())
             ->method('bind')
             ->will($this->returnValue($bikerDTO));
@@ -43,7 +43,7 @@ class BikersPutActionTest extends \PHPUnit_Framework_TestCase
     public function testInvalidRequestParamsThrowsValidationFailed()
     {
         $bikerDTO = $this->getMock(BikerDTO::class);
-        $parametersBinder = $this->getMock(ParametersBinder::class);
+        $parametersBinder = $this->getMock(ParametersBinderInterface::class);
         $parametersBinder->expects($this->once())
             ->method('bind')
             ->will($this->returnValue($bikerDTO));
@@ -63,7 +63,7 @@ class BikersPutActionTest extends \PHPUnit_Framework_TestCase
     public function testBusinessRulesViolationsThrowsValidationFailed()
     {
         $bikerDTO = $this->getMock(BikerDTO::class);
-        $parametersBinder = $this->getMock(ParametersBinder::class);
+        $parametersBinder = $this->getMock(ParametersBinderInterface::class);
         $parametersBinder->expects($this->once())
             ->method('bind')
             ->will($this->returnValue($bikerDTO));
@@ -88,7 +88,7 @@ class BikersPutActionTest extends \PHPUnit_Framework_TestCase
     public function testPutToNewURI()
     {
         $bikerDTO = $this->getMock(BikerDTO::class);
-        $parametersBinder = $this->getMock(ParametersBinder::class);
+        $parametersBinder = $this->getMock(ParametersBinderInterface::class);
         $parametersBinder->expects($this->once())
             ->method('bind')
             ->will($this->returnValue($bikerDTO));

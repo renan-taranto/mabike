@@ -3,7 +3,7 @@ namespace Rtaranto\Application\Service\Security;
 
 use Rtaranto\Domain\Entity\User;
 
-interface UserTokenGenerator
+interface TokenGeneratorInterface
 {
     public function createTokenForUser(User $user);
 }

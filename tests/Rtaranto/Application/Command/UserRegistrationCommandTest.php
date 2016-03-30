@@ -3,7 +3,7 @@ namespace Tests\Rtaranto\Application\Command;
 
 use Rtaranto\Application\Command\Security\UserRegistrationCommand;
 use Rtaranto\Application\Dto\Security\UserRegistrationDTO;
-use Rtaranto\Application\Service\Security\UserRegistration;
+use Rtaranto\Application\Service\Security\UserRegistrationInterface;
 use Rtaranto\Domain\Entity\User;
 
 class UserRegistrationCommandTest extends \PHPUnit_Framework_TestCase
@@ -20,7 +20,7 @@ class UserRegistrationCommandTest extends \PHPUnit_Framework_TestCase
             $registerUserDTO->getEmail(),
             $registerUserDTO->getPassword());
         
-        $userRegistration = $this->getMock(UserRegistration::class);
+        $userRegistration = $this->getMock(UserRegistrationInterface::class);
         $userRegistration->expects($this->once())
             ->method('registerUser')
             ->will($this->returnValue($user));

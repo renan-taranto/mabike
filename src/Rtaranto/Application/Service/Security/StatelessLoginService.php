@@ -2,12 +2,12 @@
 namespace Rtaranto\Application\Service\Security;
 
 use Rtaranto\Application\Dto\Security\AuthenticationTokenDTO;
-use Rtaranto\Application\Service\Security\PasswordValidator;
-use Rtaranto\Application\Service\Security\UserTokenGenerator;
+use Rtaranto\Application\Service\Security\PasswordValidatorInterface;
+use Rtaranto\Application\Service\Security\TokenGeneratorInterface;
 use Rtaranto\Domain\Entity\Repository\UserRepository;
 use Exception;
 
-class StatelessLoginService implements LoginService
+class StatelessLoginService implements LoginServiceInterface
 {
     private $userRepository;
     private $passwordValidatorService;
@@ -15,8 +15,8 @@ class StatelessLoginService implements LoginService
     
     public function __construct(
         UserRepository $userRepository,
-        PasswordValidator $passwordValidator,
-        UserTokenGenerator $userTokenGenerator
+        PasswordValidatorInterface $passwordValidator,
+        TokenGeneratorInterface $userTokenGenerator
     ) {
         $this->userRepository = $userRepository;
         $this->passwordValidatorService = $passwordValidator;

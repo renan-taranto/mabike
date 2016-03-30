@@ -3,7 +3,7 @@ namespace Rtaranto\Application\Service\ParametersBinder;
 
 use Symfony\Component\Form\FormFactoryInterface;
 
-class FormParametersBinder implements ParametersBinder
+class ParametersBinder implements ParametersBinderInterface
 {
     private $formFactory;
     private $formTypeClassName;
