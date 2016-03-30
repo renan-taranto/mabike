@@ -7,7 +7,7 @@ use Rtaranto\Application\Service\Security\TokenGeneratorInterface;
 use Rtaranto\Domain\Entity\Repository\UserRepository;
 use Rtaranto\Domain\Entity\User;
 
-class TokenGeneratorService implements TokenGeneratorInterface
+class TokenGenerator implements TokenGeneratorInterface
 {
     private static $KEY_LENGTH = 255;
     private static $MINUTES_BEFORE_EXPIRATION = 15;

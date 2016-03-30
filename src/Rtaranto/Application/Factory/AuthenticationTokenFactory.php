@@ -2,7 +2,8 @@
 namespace Rtaranto\Application\Factory;
 
 use Rtaranto\Application\Dto\Security\AuthenticationTokenDTO;
-use Rtaranto\Infrastructure\Security\RandomKeyGenerator;
+use Rtaranto\Application\Service\Security\RandomKeyGenerator;
+
 use DateInterval;
 use DateTime;
 use InvalidArgumentException;

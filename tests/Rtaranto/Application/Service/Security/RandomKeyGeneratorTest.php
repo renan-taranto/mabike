@@ -1,7 +1,7 @@
 <?php
-namespace Tests\Rtaranto\Infrastructure\Security;
+namespace Tests\Rtaranto\Application\Service\Security;
 
-use Rtaranto\Infrastructure\Security\RandomKeyGenerator;
+use Rtaranto\Application\Service\Security\RandomKeyGenerator;
 
 class RandomKeyGeneratorTest extends \PHPUnit_Framework_TestCase
 {

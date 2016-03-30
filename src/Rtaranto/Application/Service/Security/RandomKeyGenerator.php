@@ -1,5 +1,5 @@
 <?php
-namespace Rtaranto\Infrastructure\Security;
+namespace Rtaranto\Application\Service\Security;
 
 use InvalidArgumentException;
 

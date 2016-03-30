@@ -1,9 +1,9 @@
 <?php
-namespace Tests\Rtaranto\Application\Service;
+namespace Tests\Rtaranto\Application\Service\Security;
 
 use Rtaranto\Application\Dto\Security\AuthenticationTokenDTO;
 use Rtaranto\Application\Factory\AuthenticationTokenFactoryInterface;
-use Rtaranto\Application\Service\Security\TokenGeneratorService;
+use Rtaranto\Application\Service\Security\TokenGenerator;
 use Rtaranto\Domain\Entity\Repository\UserRepository;
 use Rtaranto\Domain\Entity\User;
 use DateTime;
@@ -24,7 +24,7 @@ class UserTokenServiceTest extends \PHPUnit_Framework_TestCase
             ->method('create')
             ->will($this->returnValue($authToken));
                 
-        $userTokenService = $this->getMockBuilder(TokenGeneratorService::class)
+        $userTokenService = $this->getMockBuilder(TokenGenerator::class)
             ->setMethods(array('saveChanges'))
             ->setConstructorArgs(array($userRepository, $tokenFactory))
             ->getMock();

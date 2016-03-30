@@ -1,8 +1,6 @@
 <?php
-namespace Rtaranto\Infrastructure\Security;
+namespace Rtaranto\Application\Service\Security;
 
-use DateTime;
-use Doctrine\ORM\EntityManager;
 use Rtaranto\Domain\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,6 +12,8 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use DateTime;
+use Doctrine\ORM\EntityManager;
 
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {

@@ -1,5 +1,5 @@
 <?php
-namespace Rtaranto\Infrastructure\Security;
+namespace Rtaranto\Application\Service\Security;
 
 use Rtaranto\Application\Service\Security\PasswordValidatorInterface;
 use Rtaranto\Domain\Entity\User;

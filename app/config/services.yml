@@ -32,12 +32,15 @@ services:
         arguments: ['@domain.factory.normal_user', '@infra.repository.user', '@app.validator']
     app.login:
         class: Rtaranto\Application\Service\Security\StatelessLoginService
-        arguments: ['@infra.repository.user', '@infra.password_validator', '@app.user_token' ]
-    app.user_token:
-        class: Rtaranto\Application\Service\Security\TokenGeneratorService
+        arguments: ['@infra.repository.user', '@infra.password_validator', '@app.token_generator' ]
+    app.token_generator:
+        class: Rtaranto\Application\Service\Security\TokenGenerator
         arguments: ['@infra.repository.user', '@app.authentication_token_factory']
     app.authentication_token_factory:
         class: Rtaranto\Application\Factory\AuthenticationTokenFactory
+    app.token_authenticator:
+        class: Rtaranto\Application\Service\Security\TokenAuthenticator
+        arguments: ['@doctrine.orm.entity_manager', '@router']
     #Parameters Binder
     app.parameters_binder.biker:
         class: Rtaranto\Application\Service\ParametersBinder\ParametersBinder
@@ -49,9 +52,6 @@ services:
         arguments: ['@security.password_encoder']
         
     ##################Rtaranto\Infrastructure##################
-    infra.token_authenticator:
-        class: Rtaranto\Infrastructure\Security\TokenAuthenticator
-        arguments: ['@doctrine.orm.entity_manager', '@router']
     infra.repository.user:
         class: Rtaranto\Infrastructure\Repository\DoctrineUserRepository
         arguments: ['@doctrine.orm.entity_manager']
@@ -59,6 +59,6 @@ services:
         class: Rtaranto\Infrastructure\Repository\DoctrineBikerRepository
         arguments: ['@doctrine.orm.entity_manager']
     infra.password_validator:
-        class: Rtaranto\Infrastructure\Security\SaltedPasswordValidator
+        class: Rtaranto\Application\Service\Security\SaltedPasswordValidator
         arguments: ['@security.encoder_factory']
         

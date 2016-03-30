@@ -30,7 +30,7 @@ security:
         main:
             guard:
                 authenticators:
-                    - infra.token_authenticator
+                    - app.token_authenticator
             stateless: true        
                     
                     
