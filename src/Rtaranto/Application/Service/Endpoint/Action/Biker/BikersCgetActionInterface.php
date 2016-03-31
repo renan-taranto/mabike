@@ -3,5 +3,5 @@ namespace Rtaranto\Application\Service\Endpoint\Action\Biker;
 
 interface BikersCgetActionInterface
 {
-    public function get();
+    public function getAll();
 }

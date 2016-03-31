@@ -4,9 +4,10 @@ namespace Rtaranto\Presentation\Controller;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Rtaranto\Application\Exception\ValidationFailedException;
+use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersCgetActionInterface;
+use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersGetActionInterface;
 use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPostActionInterface;
 use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPutActionInterface;
-use Rtaranto\Application\Service\Endpoint\BikersEndpointService;
 use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,16 +32,16 @@ class BikersController extends FOSRestController implements ClassResourceInterfa
     
     public function getAction($id)
     {
-        /* @var $bikersEndpointService BikersEndpointService */
-        $bikersEndpointService = $this->get('app.endpoint.bikers');
-        return $bikersEndpointService->get($id);
+        /* @var $bikersGetAction BikersGetActionInterface */
+        $bikersGetAction = $this->get('app.action.bikers.get_action');
+        return $bikersGetAction->get($id);
     }
     
     public function cgetAction()
     {
-        /* @var $bikersEndpointService BikersEndpointService */
-        $bikersEndpointService = $this->get('app.endpoint.bikers');
-        return $bikersEndpointService->getAll();
+        /* @var $bikersCgetAction BikersCgetActionInterface */
+        $bikersCgetAction = $this->get('app.action.bikers.cget_action');
+        return $bikersCgetAction->getAll();
     }
     
     public function putAction($id, Request $request)

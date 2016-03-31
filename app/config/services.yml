@@ -5,10 +5,6 @@ parameters:
 
 services:
     ##################Rtaranto\Application##################
-    #Endpoint Service 
-    app.endpoint.bikers:
-        class: Rtaranto\Application\Service\Endpoint\BikersEndpointService
-        arguments: ['@app.action.bikers.get_action', '@app.action.bikers.cget_action']
     #Endpoint Action
     app.action.bikers.post_action:
         class: Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPostAction

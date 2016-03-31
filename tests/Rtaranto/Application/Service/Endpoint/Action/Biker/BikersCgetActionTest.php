@@ -18,7 +18,7 @@ class BikersCgetActionTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($bikers));
         
         $cgetAction = new BikersCgetAction($bikerRepository);
-        $collection = $cgetAction->get();
+        $collection = $cgetAction->getAll();
         
         $this->assertEquals($bikers, $collection);
     }

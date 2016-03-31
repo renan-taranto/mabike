@@ -12,7 +12,7 @@ class BikersCgetAction implements BikersCgetActionInterface
         $this->bikerRepository = $bikerRepository;
     }
     
-    public function get()
+    public function getAll()
     {
         return $this->bikerRepository->getAll();
     }
