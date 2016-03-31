@@ -5,7 +5,7 @@ use Rtaranto\Application\Dto\Security\AuthenticationTokenDTO;
 use Rtaranto\Application\Service\Security\PasswordValidatorInterface;
 use Rtaranto\Application\Service\Security\TokenGeneratorInterface;
 use Rtaranto\Application\Service\Security\StatelessLoginService;
-use Rtaranto\Domain\Entity\Repository\UserRepository;
+use Rtaranto\Domain\Entity\Repository\UserRepositoryInterface;
 use Rtaranto\Domain\Entity\User;
 use DateTime;
 use Exception;
@@ -19,7 +19,7 @@ class StatelessLoginServiceTest extends \PHPUnit_Framework_TestCase
         $user = $this->getMockBuilder(User::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $userRepository = $this->getMock(UserRepository::class);
+        $userRepository = $this->getMock(UserRepositoryInterface::class);
         $userRepository->method('findByUsername')
             ->will($this->returnValue($user));
         
@@ -43,7 +43,7 @@ class StatelessLoginServiceTest extends \PHPUnit_Framework_TestCase
     
     public function testThrowExceptionIfUserNotFound()
     {
-        $userRepository = $this->getMock(UserRepository::class);
+        $userRepository = $this->getMock(UserRepositoryInterface::class);
         $userRepository->method('findByUsername')
             ->will($this->returnValue(null));
         
@@ -65,7 +65,7 @@ class StatelessLoginServiceTest extends \PHPUnit_Framework_TestCase
         $user = $this->getMockBuilder(User::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $userRepository = $this->getMock(UserRepository::class);
+        $userRepository = $this->getMock(UserRepositoryInterface::class);
         $userRepository->method('findByUsername')
             ->will($this->returnValue($user));
         

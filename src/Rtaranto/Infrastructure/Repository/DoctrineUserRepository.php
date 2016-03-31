@@ -3,10 +3,10 @@ namespace Rtaranto\Infrastructure\Repository;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Repository;
-use Rtaranto\Domain\Entity\Repository\UserRepository;
+use Rtaranto\Domain\Entity\Repository\UserRepositoryInterface;
 use Rtaranto\Domain\Entity\User;
 
-class DoctrineUserRepository implements UserRepository
+class DoctrineUserRepository implements UserRepositoryInterface
 {
     private $em;
     

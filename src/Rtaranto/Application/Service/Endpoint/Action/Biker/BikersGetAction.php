@@ -3,14 +3,14 @@ namespace Rtaranto\Application\Service\Endpoint\Action\Biker;
 
 use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersGetActionInterface;
 use Rtaranto\Domain\Entity\Biker;
-use Rtaranto\Domain\Entity\Repository\BikerRepository;
+use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BikersGetAction implements BikersGetActionInterface
 {
     private $bikerRepository;
     
-    public function __construct(BikerRepository $bikerRepository)
+    public function __construct(BikerRepositoryInterface $bikerRepository)
     {
         $this->bikerRepository = $bikerRepository;
     }

@@ -4,7 +4,7 @@ namespace Tests\Rtaranto\Application\Service\Security;
 use Rtaranto\Application\Dto\Security\AuthenticationTokenDTO;
 use Rtaranto\Application\Factory\AuthenticationTokenFactoryInterface;
 use Rtaranto\Application\Service\Security\TokenGenerator;
-use Rtaranto\Domain\Entity\Repository\UserRepository;
+use Rtaranto\Domain\Entity\Repository\UserRepositoryInterface;
 use Rtaranto\Domain\Entity\User;
 use DateTime;
 
@@ -16,7 +16,7 @@ class UserTokenServiceTest extends \PHPUnit_Framework_TestCase
         $dateTime = new DateTime('now');
         $authToken =  new AuthenticationTokenDTO($key, $dateTime);
         
-        $userRepository = $this->getMock(UserRepository::class);
+        $userRepository = $this->getMock(UserRepositoryInterface::class);
         
         $tokenFactory = $this->getMockBuilder(AuthenticationTokenFactoryInterface::class)
             ->getMock();

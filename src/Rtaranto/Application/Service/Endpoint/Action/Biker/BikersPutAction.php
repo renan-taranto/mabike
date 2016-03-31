@@ -5,7 +5,7 @@ use Rtaranto\Application\Dto\Biker\BikerDTO;
 use Rtaranto\Application\Service\ParametersBinder\ParametersBinderInterface;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\Biker;
-use Rtaranto\Domain\Entity\Repository\BikerRepository;
+use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
 
 class BikersPutAction implements BikersPutActionInterface
 {
@@ -16,7 +16,7 @@ class BikersPutAction implements BikersPutActionInterface
     public function __construct(
         ParametersBinderInterface $parametersBinder,
         ValidatorInterface $validator,
-        BikerRepository $bikerRepository
+        BikerRepositoryInterface $bikerRepository
     ) {
         $this->parametersBinder = $parametersBinder;
         $this->validator = $validator;

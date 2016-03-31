@@ -10,7 +10,7 @@ use Rtaranto\Application\Exception\ValidationFailedException;
 use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPutActionInterface;
 use Rtaranto\Application\Service\Endpoint\BikersEndpointService;
 use Rtaranto\Application\Service\Validator\Validator;
-use Rtaranto\Domain\Entity\Repository\BikerRepository;
+use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
 use Rtaranto\Presentation\Form\Biker\BikerDTOType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,7 +60,7 @@ class BikersController extends FOSRestController implements ClassResourceInterfa
     public function putAction($id, Request $request)
     {
         $responseStatusCode = Response::HTTP_OK;
-        /* @var $bikerRepository BikerRepository */
+        /* @var $bikerRepository BikerRepositoryInterface */
         $bikerRepository = $this->get('infra.repository.biker');
         if (empty($bikerRepository->get($id))) {
             $responseStatusCode = Response::HTTP_CREATED;

@@ -4,7 +4,7 @@ namespace Rtaranto\Application\Service\Security;
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\Factory\UserFactory;
-use Rtaranto\Domain\Entity\Repository\UserRepository;
+use Rtaranto\Domain\Entity\Repository\UserRepositoryInterface;
 use Rtaranto\Domain\Entity\User;
 use Exception;
 
@@ -16,7 +16,7 @@ class UserRegistrationService implements UserRegistrationInterface
     
     public function __construct(
         UserFactory $userFactory,
-        UserRepository $userRepository,
+        UserRepositoryInterface $userRepository,
         ValidatorInterface $validator
     ) {
         $this->userFactory = $userFactory;

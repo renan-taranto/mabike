@@ -3,7 +3,7 @@ namespace Tests\Rtaranto\Application\Service\Endpoint\Action\Biker;
 
 use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersGetAction;
 use Rtaranto\Domain\Entity\Biker;
-use Rtaranto\Domain\Entity\Repository\BikerRepository;
+use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BikersGetActionTest extends \PHPUnit_Framework_TestCase
@@ -14,7 +14,7 @@ class BikersGetActionTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         
-        $bikerRepository = $this->getMock(BikerRepository::class);
+        $bikerRepository = $this->getMock(BikerRepositoryInterface::class);
         $bikerRepository->expects($this->once())
             ->method('get')
             ->will($this->returnValue($biker));
@@ -25,7 +25,7 @@ class BikersGetActionTest extends \PHPUnit_Framework_TestCase
     
     public function testBikerNotFoundThrowsException()
     {
-        $bikerRepository = $this->getMock(BikerRepository::class);
+        $bikerRepository = $this->getMock(BikerRepositoryInterface::class);
         $bikerRepository->expects($this->once())
             ->method('get')
             ->will($this->returnValue(null));

@@ -1,13 +1,13 @@
 <?php
 namespace Rtaranto\Application\Service\Endpoint\Action\Biker;
 
-use Rtaranto\Domain\Entity\Repository\BikerRepository;
+use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
 
 class BikersCgetAction implements BikersCgetActionInterface
 {
     private $bikerRepository;
     
-    public function __construct(BikerRepository $bikerRepository)
+    public function __construct(BikerRepositoryInterface $bikerRepository)
     {
         $this->bikerRepository = $bikerRepository;
     }

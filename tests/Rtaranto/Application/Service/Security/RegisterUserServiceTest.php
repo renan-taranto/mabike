@@ -5,7 +5,7 @@ use Rtaranto\Application\Exception\ValidationFailedException;
 use Rtaranto\Application\Service\Security\UserRegistrationService;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\Factory\UserFactory;
-use Rtaranto\Domain\Entity\Repository\UserRepository;
+use Rtaranto\Domain\Entity\Repository\UserRepositoryInterface;
 use Rtaranto\Domain\Entity\User;
 
 class RegisterUserServiceTest extends \PHPUnit_Framework_TestCase
@@ -14,7 +14,7 @@ class RegisterUserServiceTest extends \PHPUnit_Framework_TestCase
     {
         $userFactory = $this->getMock(UserFactory::class);
         
-        $userRepository = $this->getMock(UserRepository::class);
+        $userRepository = $this->getMock(UserRepositoryInterface::class);
                 
         $validator = $this->getMock(ValidatorInterface::class);
         $validator->expects($this->once())
@@ -40,7 +40,7 @@ class RegisterUserServiceTest extends \PHPUnit_Framework_TestCase
             ->method('createUser')
             ->will($this->returnValue($user));
         
-        $userRepository = $this->getMock(UserRepository::class);
+        $userRepository = $this->getMock(UserRepositoryInterface::class);
         $userRepository->expects($this->once())
             ->method('addUser')
             ->will($this->returnValue($user));

@@ -4,7 +4,7 @@ namespace Rtaranto\Application\Service\Security;
 use Rtaranto\Application\Dto\Security\AuthenticationTokenDTO;
 use Rtaranto\Application\Factory\AuthenticationTokenFactoryInterface;
 use Rtaranto\Application\Service\Security\TokenGeneratorInterface;
-use Rtaranto\Domain\Entity\Repository\UserRepository;
+use Rtaranto\Domain\Entity\Repository\UserRepositoryInterface;
 use Rtaranto\Domain\Entity\User;
 
 class TokenGenerator implements TokenGeneratorInterface
@@ -15,11 +15,11 @@ class TokenGenerator implements TokenGeneratorInterface
     private $authenticationTokenFactory;
     
     /**
-     * @param UserRepository $userRepository
+     * @param UserRepositoryInterface $userRepository
      * @param AuthenticationTokenFactoryInterface $authenticationTokenFactory
      */
     public function __construct(
-        UserRepository $userRepository,
+        UserRepositoryInterface $userRepository,
         AuthenticationTokenFactoryInterface $authenticationTokenFactory
     ) {
         $this->userRepository = $userRepository;

@@ -4,9 +4,9 @@ namespace Rtaranto\Infrastructure\Repository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Rtaranto\Domain\Entity\Biker;
-use Rtaranto\Domain\Entity\Repository\BikerRepository;
+use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
 
-class DoctrineBikerRepository implements BikerRepository
+class DoctrineBikerRepository implements BikerRepositoryInterface
 {
     private $em;
 

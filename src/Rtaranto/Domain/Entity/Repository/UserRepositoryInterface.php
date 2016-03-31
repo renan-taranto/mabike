@@ -3,7 +3,7 @@ namespace Rtaranto\Domain\Entity\Repository;
 
 use Rtaranto\Domain\Entity\User;
 
-interface UserRepository
+interface UserRepositoryInterface
 {
     public function addUser(User $user);
     public function updateUser(User $user);

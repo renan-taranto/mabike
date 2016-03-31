@@ -7,7 +7,7 @@ use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPutAction;
 use Rtaranto\Application\Service\ParametersBinder\ParametersBinderInterface;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\Biker;
-use Rtaranto\Domain\Entity\Repository\BikerRepository;
+use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
 
 class BikersPutActionTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,7 +22,7 @@ class BikersPutActionTest extends \PHPUnit_Framework_TestCase
         $validator = $this->getMock(ValidatorInterface::class);
         
         $biker = new Biker('anyname', 'anyemail');
-        $bikerRepository = $this->getMock(BikerRepository::class);
+        $bikerRepository = $this->getMock(BikerRepositoryInterface::class);
         $bikerRepository->expects($this->once())
             ->method('get')
             ->will($this->returnValue($biker));
@@ -53,7 +53,7 @@ class BikersPutActionTest extends \PHPUnit_Framework_TestCase
             ->method('throwValidationFailedIfNotValid')
             ->will($this->throwException(new ValidationFailedException(array())));
         
-        $bikerRepository = $this->getMock(BikerRepository::class);
+        $bikerRepository = $this->getMock(BikerRepositoryInterface::class);
         
         $bikersPutAction = new BikersPutAction($parametersBinder, $validator, $bikerRepository);
         $this->setExpectedException(ValidationFailedException::class);
@@ -73,7 +73,7 @@ class BikersPutActionTest extends \PHPUnit_Framework_TestCase
             ->method('throwValidationFailedIfNotValid')
             ->will($this->throwException(new ValidationFailedException(array())));
         
-        $bikerRepository = $this->getMock(BikerRepository::class);
+        $bikerRepository = $this->getMock(BikerRepositoryInterface::class);
         $biker = new Biker('anyname', 'anyemail');
         $bikerRepository->expects($this->once())
             ->method('get')
@@ -95,7 +95,7 @@ class BikersPutActionTest extends \PHPUnit_Framework_TestCase
         
         $validator = $this->getMock(ValidatorInterface::class);
         
-        $bikerRepository = $this->getMock(BikerRepository::class);
+        $bikerRepository = $this->getMock(BikerRepositoryInterface::class);
         
         $biker = $this->getMockBuilder(Biker::class)
                 ->disableOriginalConstructor()

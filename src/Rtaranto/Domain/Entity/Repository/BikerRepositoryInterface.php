@@ -3,7 +3,7 @@ namespace Rtaranto\Domain\Entity\Repository;
 
 use Rtaranto\Domain\Entity\Biker;
 
-interface BikerRepository
+interface BikerRepositoryInterface
 {
     public function add(Biker $biker);
     /**
