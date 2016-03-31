@@ -4,8 +4,8 @@ namespace Rtaranto\Application\Service\Endpoint\Action\Biker;
 interface BikersPostActionInterface
 {
     /**
-     * @param string $name
-     * @param string $email
+     * @param array $requestBodyParameters
+     * @return Biker $biker
      */
-    public function post($name, $email);
+    public function post(array $requestBodyParameters);
 }

@@ -85,7 +85,7 @@ class BikersPutActionTest extends \PHPUnit_Framework_TestCase
         $returnedBiker = $bikersPutAction->put(1, $data);
     }
     
-    public function testPutToNewURI()
+    public function testPutCreatesNewBiker()
     {
         $bikerDTO = $this->getMock(BikerDTO::class);
         $parametersBinder = $this->getMock(ParametersBinderInterface::class);

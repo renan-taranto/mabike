@@ -8,11 +8,11 @@ services:
     #Endpoint Service 
     app.endpoint.bikers:
         class: Rtaranto\Application\Service\Endpoint\BikersEndpointService
-        arguments: ['@app.action.bikers.post_action', '@app.action.bikers.get_action', '@app.action.bikers.cget_action', '@app.action.bikers.put_action']
+        arguments: ['@app.action.bikers.get_action', '@app.action.bikers.cget_action']
     #Endpoint Action
     app.action.bikers.post_action:
         class: Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPostAction
-        arguments: ['@infra.repository.biker', '@app.validator']
+        arguments: ['@app.parameters_binder.biker', '@app.validator', '@infra.repository.biker']
     app.action.bikers.get_action:
         class: Rtaranto\Application\Service\Endpoint\Action\Biker\BikersGetAction
         arguments: ['@infra.repository.biker']
