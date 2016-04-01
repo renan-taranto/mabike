@@ -31,6 +31,8 @@ class BikersControllerTest extends WebTestCase
         $response = $post->post(self::$URI, $post->getStandardHeadersWithAuthentication(), $data);
         $content = json_decode($response->getContent(), true);
         
+        $this->assertTrue($response->headers->contains('Content-Type','application/json'));
+        $this->assertNotEmpty($response->headers->get('Location'));
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
         $this->assertContains($name, $content['name']);
         $this->assertContains($email, $content['email']);

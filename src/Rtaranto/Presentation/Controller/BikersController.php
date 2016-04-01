@@ -26,8 +26,10 @@ class BikersController extends FOSRestController implements ClassResourceInterfa
             return $view;
         }
         
-        $view = $this->view($biker, Response::HTTP_CREATED);
-        return $view;
+        $location = $this->createLocationHeaderContent($biker->getId(), $request);
+        $view = $this->view($biker, Response::HTTP_CREATED, array('Location' => $location));
+        
+       return $view;
     }
     
     public function getAction($id)
@@ -65,5 +67,14 @@ class BikersController extends FOSRestController implements ClassResourceInterfa
         
         $view = $this->view($biker, $responseStatusCode);
         return $view;
+    }
+    
+    private function createLocationHeaderContent($id, $request)
+    {
+        $routeParameters = array(
+            'id'      => $id,
+            '_format' => $request->get('_format')
+        );
+        return $this->generateUrl('api_v1_get_bikers', $routeParameters);
     }
 }
