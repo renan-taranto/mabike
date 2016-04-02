@@ -15,9 +15,6 @@ services:
     app.action.bikers.cget_action:
         class: Rtaranto\Application\Service\Endpoint\Action\Biker\BikersCgetAction
         arguments: ['@infra.repository.biker']
-    app.action.bikers.put_action:
-        class: Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPutAction
-        arguments: ['@app.parameters_binder.biker', '@app.validator', '@infra.repository.biker']
     app.action.bikers.patch_action:
         class: Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPatchAction
         arguments: ['@app.parameters_binder.biker', '@app.validator', '@infra.repository.biker']

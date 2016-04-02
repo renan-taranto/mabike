@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Tests\JsonGetRequest;
 use Tests\JsonPatchRequest;
 use Tests\JsonPostRequest;
-use Tests\JsonPutRequest;
 
 class BikersControllerTest extends WebTestCase
 {
@@ -170,61 +169,6 @@ class BikersControllerTest extends WebTestCase
         $expectedBiker2 = array('id' => 2, 'name' => 'Test Biker2', 'email' => 'testbiker2@email.com');
         $this->assertEquals(array($expectedBiker1, $expectedBiker2), $content);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-    }
-    
-    public function testPutSuccessfullyPutBiker()
-    {
-        $client = static::createClient();
-        $getRequest = new JsonPutRequest($client);
-        
-        $id = 1;
-        $data = array('name' => 'Test Update Biker', 'email' => 'testupdatebiker@email.com');
-        $response = $getRequest->put(self::$URI . '/' . $id , $getRequest->getStandardHeadersWithAuthentication(), $data);
-        $content = json_decode($response->getContent(), true);
-        $expectedBiker = array('id' => $id, 'name' => 'Test Update Biker', 'email' => 'testupdatebiker@email.com');
-        $this->assertEquals($expectedBiker, $content);
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-    }
-    
-    public function testPutReturnsBadRequest()
-    {
-        $client = static::createClient();
-        $getRequest = new JsonPutRequest($client);
-        $id = 1;
-        $data = array();
-        $response = $getRequest->put(self::$URI . '/' . $id , $getRequest->getStandardHeadersWithAuthentication(), $data);
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-    }
-    
-    public function testPutNameAlreadyInUseReturnsBadRequest()
-    {
-        $client = static::createClient();
-        
-        $getRequest = new JsonPutRequest($client);
-        $id = 2;
-        $data = array(
-            'id' => $id,
-            'name' => 'Test Biker',
-            'email' => 'testnewbiker@email.com');
-        
-        $response = $getRequest->put(self::$URI . '/' . $id , $getRequest->getStandardHeadersWithAuthentication(), $data);
-        $content = json_decode($response->getContent(), true);
-        $this->assertContains('Name already in use.', $content['errors']['name'][0]);
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-    }
-    
-    public function testPutSuccessfullyCreateNewBikerAtGivenURI()
-    {
-        $client = static::createClient();
-        $getRequest = new JsonPutRequest($client);
-        
-        $id = 100;
-        $data = array('id' => $id, 'name' => 'Test Create Biker With Put', 'email' => 'testupdatebiker@email.com');
-        $response = $getRequest->put(self::$URI . '/' . $id , $getRequest->getStandardHeadersWithAuthentication(), $data);
-        $content = json_decode($response->getContent(), true);
-        $expectedContent = array('id' => $id, 'name' => 'Test Create Biker With Put', 'email' => 'testupdatebiker@email.com');
-        $this->assertEquals($expectedContent, $content);
-        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
     }
     
     public function testPatchUpdatesAllBikerProperties()
