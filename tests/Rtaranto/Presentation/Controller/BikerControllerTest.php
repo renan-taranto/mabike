@@ -9,7 +9,7 @@ use Tests\JsonGetRequest;
 use Tests\JsonPatchRequest;
 use Tests\JsonPostRequest;
 
-class BikersControllerTest extends WebTestCase
+class BikerControllerTest extends WebTestCase
 {
     private static $URI = 'api/v1/bikers';
     
@@ -224,5 +224,14 @@ class BikersControllerTest extends WebTestCase
         $data = array('name' => 'sn');
         $response = $getRequest->patch(self::$URI . '/' . $id, $getRequest->getStandardHeadersWithAuthentication(), $data);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+    }
+    
+    public function testOptionsResponseContainsAllowHeader()
+    {
+        $client = static::createClient();
+        $headers = array('HTTP_X-AUTH-TOKEN' => 'testuserkey');
+        $client->request('OPTIONS', self::$URI, array(), array(), $headers);
+        $response = $client->getResponse();
+        $this->assertNotNull($response->headers->get('Allow'));
     }
 }

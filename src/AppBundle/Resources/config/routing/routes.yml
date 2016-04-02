@@ -15,5 +15,5 @@ api_v1_entry_point:
     
 api_bikers:
     type:         rest
-    resource:     Rtaranto\Presentation\Controller\BikersController
+    resource:     Rtaranto\Presentation\Controller\BikerController
     name_prefix:  api_v1_

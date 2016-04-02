@@ -11,7 +11,7 @@ use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPostActionInterface
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class BikersController extends FOSRestController implements ClassResourceInterface
+class BikerController extends FOSRestController implements ClassResourceInterface
 {
     public function postAction(Request $request)
     {
@@ -58,6 +58,13 @@ class BikersController extends FOSRestController implements ClassResourceInterfa
         }
         return $biker;
         
+    }
+    
+    public function optionsAction()
+    {
+        $response = new Response();
+        $response->headers->set('Allow', 'POST, GET, HEAD, OPTIONS');
+        return $response;
     }
     
     private function createLocationHeaderContent($id, $request)
