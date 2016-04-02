@@ -7,6 +7,16 @@ class BikerDTO
     private $email;
     
     /**
+     * @param string $name
+     * @param string $email
+     */
+    public function __construct($name = null, $email = null)
+    {
+        $this->name = $name;
+        $this->email = $email;
+    }
+    
+    /**
      * @return string
      */
     public function getName()

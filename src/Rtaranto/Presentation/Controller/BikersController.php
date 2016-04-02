@@ -6,6 +6,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersCgetActionInterface;
 use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersGetActionInterface;
+use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPatchActionInterface;
 use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPostActionInterface;
 use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPutActionInterface;
 use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
@@ -67,6 +68,21 @@ class BikersController extends FOSRestController implements ClassResourceInterfa
         
         $view = $this->view($biker, $responseStatusCode);
         return $view;
+    }
+    
+    public function patchAction($id, Request $request)
+    {
+        /* @var $bikersPatchAction BikersPatchActionInterface */
+        $bikersPatchAction = $this->get('app.action.bikers.patch_action');
+        try {
+            $biker = $bikersPatchAction->patch($id, $request->request->all());
+        }
+        catch (ValidationFailedException $ex) {
+            $view = $this->view($ex->getErrors(), Response::HTTP_BAD_REQUEST);
+            return $view;
+        }
+        return $biker;
+        
     }
     
     private function createLocationHeaderContent($id, $request)

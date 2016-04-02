@@ -6,6 +6,7 @@ use AppBundle\DataFixtures\ORM\LoadUserTestingData;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\JsonGetRequest;
+use Tests\JsonPatchRequest;
 use Tests\JsonPostRequest;
 use Tests\JsonPutRequest;
 
@@ -221,8 +222,63 @@ class BikersControllerTest extends WebTestCase
         $data = array('id' => $id, 'name' => 'Test Create Biker With Put', 'email' => 'testupdatebiker@email.com');
         $response = $getRequest->put(self::$URI . '/' . $id , $getRequest->getStandardHeadersWithAuthentication(), $data);
         $content = json_decode($response->getContent(), true);
-        $expectedBiker = array('id' => $id, 'name' => 'Test Create Biker With Put', 'email' => 'testupdatebiker@email.com');
-        $this->assertEquals($expectedBiker, $content);
+        $expectedContent = array('id' => $id, 'name' => 'Test Create Biker With Put', 'email' => 'testupdatebiker@email.com');
+        $this->assertEquals($expectedContent, $content);
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
+    }
+    
+    public function testPatchUpdatesAllBikerProperties()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonPatchRequest($client);
+        
+        $id = 1;
+        $name = 'New Name';
+        $email = 'email@gmail.com';
+        $data = array('name' => $name, 'email' => $email);
+        $expectedContent = array('id' => $id, 'name' => $name, 'email' => $email);
+        
+        $response = $getRequest->patch(self::$URI . '/' . $id, $getRequest->getStandardHeadersWithAuthentication(), $data);
+        $content = json_decode($response->getContent(), true);
+        
+        $this->assertEquals($expectedContent, $content);
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+    
+    public function testPatchUpdatesSingleBikerProperty()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonPatchRequest($client);
+        
+        $id = 1;
+        $name = 'New Name';
+        $data = array('name' => $name);
+        $expectedContent = array('id' => $id, 'name' => $name, 'email' => 'testbiker@email.com');
+        
+        $response = $getRequest->patch(self::$URI . '/' . $id, $getRequest->getStandardHeadersWithAuthentication(), $data);
+        $content = json_decode($response->getContent(), true);
+        $this->assertEquals($expectedContent, $content);
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+    
+    public function testPatchReturnsNotFound()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonPatchRequest($client);
+        
+        $id = 100;
+        
+        $response = $getRequest->patch(self::$URI . '/' . $id, $getRequest->getStandardHeadersWithAuthentication(), array());
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+    
+    public function testPatchReturnsBadRequest()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonPatchRequest($client);
+        $id = 1;
+        $data = array('name' => 'sn');
+        $response = $getRequest->patch(self::$URI . '/' . $id, $getRequest->getStandardHeadersWithAuthentication(), $data);
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 }
