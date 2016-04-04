@@ -2,7 +2,6 @@
 namespace Rtaranto\Infrastructure\Repository;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
 
@@ -40,16 +39,6 @@ class DoctrineBikerRepository implements BikerRepositoryInterface
         return $biker;
     }
     
-    public function addAtId(Biker $biker, $id)
-    {
-        $biker->setId($id);
-        $this->em->persist($biker);
-        $metadata = $this->em->getClassMetadata(Biker::class);
-        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-        $this->em->flush();
-        return $biker;
-    }
-    
     /**
      * @return Repository
      */
@@ -57,6 +46,4 @@ class DoctrineBikerRepository implements BikerRepositoryInterface
     {
         return $this->em->getRepository('Domain:Biker');
     }
-
-
 }

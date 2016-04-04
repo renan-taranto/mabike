@@ -43,6 +43,36 @@ class BikersPatchActionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedBiker, $returnedBiker);
     }
     
+    public function testPatchReplacesNamePropertyOnly()
+    {
+        $bikerDTO = $this->getMock(BikerDTO::class);
+        $parametersBinder = $this->getMock(ParametersBinderInterface::class);
+        $parametersBinder->expects($this->once())
+            ->method('bindIgnoringMissingFields')
+            ->will($this->returnValue($bikerDTO));
+        
+        $validator = $this->getMock(ValidatorInterface::class);
+        
+        $newName = 'Patched Name';
+        $updatedBiker = new Biker($newName, 'testbiker@email.com');
+        $biker = $this->getMockBuilder(Biker::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        $bikerRepository = $this->getMock(BikerRepositoryInterface::class);
+        $bikerRepository->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue($biker));
+        $bikerRepository->expects($this->once())
+            ->method('update')
+            ->will($this->returnValue($updatedBiker));
+        
+        $bikersPatchAction = new BikersPatchAction($parametersBinder, $validator, $bikerRepository);
+        $requestContentParameters = array('name' => $newName);
+        $expectedBiker = new Biker($newName, 'testbiker@email.com');
+        $returnedBiker = $bikersPatchAction->patch(1, $requestContentParameters);
+        $this->assertEquals($expectedBiker, $returnedBiker);
+    }
+    
     public function testPatchWithInvalidRequestParamsThrowsInvalidValues()
     {
         $bikerDTO = $this->getMock(BikerDTO::class);

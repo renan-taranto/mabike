@@ -24,10 +24,4 @@ interface BikerRepositoryInterface
      * @return Biker
      */
     public function update(Biker $biker);
-    /**
-     * @param Biker $biker
-     * @param type $id
-     * @return Biker
-     */
-    public function addAtId(Biker $biker, $id);
 }

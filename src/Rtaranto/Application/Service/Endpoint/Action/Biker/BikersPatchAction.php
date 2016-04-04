@@ -29,8 +29,9 @@ class BikersPatchAction implements BikersPatchActionInterface
     {
         $biker = $this->findBikerOrThrowNotFound($id);
 
+        $bikerDTO = new BikerDTO($biker->getName(), $biker->getEmail());
         /* @var $bikerDTO BikerDTO */
-        $bikerDTO = $this->parametersBinder->bindIgnoringMissingFields($requestBodyParameters, new BikerDTO($biker->getName(), $biker->getEmail()));
+        $bikerDTO = $this->parametersBinder->bindIgnoringMissingFields($requestBodyParameters, $bikerDTO);
         $this->validator->throwValidationFailedIfNotValid($bikerDTO);
         
         $patchBikerCommand = new PatchBikerCommand($biker);
