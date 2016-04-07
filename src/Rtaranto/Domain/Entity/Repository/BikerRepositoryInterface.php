@@ -24,4 +24,8 @@ interface BikerRepositoryInterface
      * @return Biker
      */
     public function update(Biker $biker);
+    /**
+     * @param integer $id
+     */
+    public function delete($id);
 }

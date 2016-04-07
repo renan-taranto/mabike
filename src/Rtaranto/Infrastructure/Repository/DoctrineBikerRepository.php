@@ -38,6 +38,13 @@ class DoctrineBikerRepository implements BikerRepositoryInterface
         $this->em->flush($biker);
         return $biker;
     }
+
+    public function delete($id)
+    {
+        $biker = $this->get($id);
+        $this->em->remove($biker);
+        $this->em->flush();
+    }
     
     /**
      * @return Repository

@@ -8,6 +8,7 @@ use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersCgetActionInterface
 use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersGetActionInterface;
 use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPatchActionInterface;
 use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPostActionInterface;
+use Rtaranto\Application\Service\Endpoint\Action\Biker\DeleteBikerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -63,8 +64,16 @@ class BikerController extends FOSRestController implements ClassResourceInterfac
     public function optionsAction()
     {
         $response = new Response();
-        $response->headers->set('Allow', 'POST, GET, HEAD, OPTIONS');
+        $response->headers->set('Allow', 'POST, GET, OPTIONS');
         return $response;
+    }
+    
+    public function deleteAction($id)
+    {
+        /* @var $deleteBiker DeleteBikerInterface */
+        $deleteBiker = $this->get('app.bikers.delete');
+        $deleteBiker->delete($id);
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
     
     private function createLocationHeaderContent($id, $request)
@@ -73,6 +82,6 @@ class BikerController extends FOSRestController implements ClassResourceInterfac
             'id'      => $id,
             '_format' => $request->get('_format')
         );
-        return $this->generateUrl('api_v1_get_bikers', $routeParameters);
+        return $this->generateUrl('api_v1_get_biker', $routeParameters);
     }
 }

@@ -18,6 +18,9 @@ services:
     app.action.bikers.patch_action:
         class: Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPatchAction
         arguments: ['@app.parameters_binder.biker', '@app.validator', '@infra.repository.biker']
+    app.bikers.delete:
+        class: Rtaranto\Application\Service\Endpoint\Action\Biker\DeleteBiker
+        arguments: ['@infra.repository.biker']
     #Validator
     app.validator:
         class: Rtaranto\Application\Service\Validator\Validator

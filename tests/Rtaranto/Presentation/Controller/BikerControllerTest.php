@@ -5,6 +5,7 @@ use AppBundle\DataFixtures\ORM\LoadBikerTestingData;
 use AppBundle\DataFixtures\ORM\LoadUserTestingData;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
+use Tests\DeleteRequestImpl;
 use Tests\JsonGetRequest;
 use Tests\JsonPatchRequest;
 use Tests\JsonPostRequest;
@@ -233,5 +234,43 @@ class BikerControllerTest extends WebTestCase
         $client->request('OPTIONS', self::$URI, array(), array(), $headers);
         $response = $client->getResponse();
         $this->assertNotNull($response->headers->get('Allow'));
+    }
+    
+    public function testSuccessfullyDeleteBiker()
+    {
+        $client = static::createClient();
+        $deleteRequest = new DeleteRequestImpl($client);
+        $id = 1;
+        $deleteResponse = $deleteRequest->delete(
+            $this->getUrl('api_v1_get_biker', array('id' => $id)),
+            $deleteRequest->getAuthenticationHeader()
+        );
+        
+        $getRequest = new JsonGetRequest($client);
+        $getResponse = $getRequest->get(
+            $this->getUrl('api_v1_get_biker', array('id' => $id)),
+            $getRequest->getStandardHeadersWithAuthentication()
+        );
+        $content = json_decode($getResponse->getContent(), true);
+        
+        $expectedArray = array(
+            'code' => Response::HTTP_NOT_FOUND,
+            'message' => "The Biker resource of id '" . $id . "' was not found."
+        );
+        $this->assertEquals(Response::HTTP_NO_CONTENT, $deleteResponse->getStatusCode());
+        $this->assertEquals($expectedArray, $content);
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $getResponse->getStatusCode());
+    }
+    
+    public function testDeleteBikerReturnNotFoundResponse()
+    {
+        $client = static::createClient();
+        $deleteRequest = new DeleteRequestImpl($client);
+        $id = 100000;
+        $response = $deleteRequest->delete(
+            $this->getUrl('api_v1_get_biker', array('id' => $id)),
+            $deleteRequest->getAuthenticationHeader()
+        );
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
 }
