@@ -12,15 +12,15 @@ services:
     app.action.bikers.get_action:
         class: Rtaranto\Application\Service\Endpoint\Action\Biker\BikersGetAction
         arguments: ['@infra.repository.biker']
-    app.action.bikers.cget_action:
-        class: Rtaranto\Application\Service\Endpoint\Action\Biker\BikersCgetAction
-        arguments: ['@infra.repository.biker']
     app.action.bikers.patch_action:
         class: Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPatchAction
         arguments: ['@app.parameters_binder.biker', '@app.validator', '@infra.repository.biker']
     app.bikers.delete:
         class: Rtaranto\Application\Service\Endpoint\Action\Biker\DeleteBiker
         arguments: ['@infra.repository.biker']
+    app.action.cget_bikers_factory:
+        class: Rtaranto\Application\Service\Endpoint\Action\Factory\CgetBikersActionFactory
+        
     #Validator
     app.validator:
         class: Rtaranto\Application\Service\Validator\Validator

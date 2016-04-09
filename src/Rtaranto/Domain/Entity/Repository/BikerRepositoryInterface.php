@@ -18,7 +18,7 @@ interface BikerRepositoryInterface
     /**
      * @return array
      */
-    public function getAll();
+    public function getAll($filters = array(), $orderBy = null, $limit = null, $offset = null);
     /**
      * @param Biker $biker
      * @return Biker

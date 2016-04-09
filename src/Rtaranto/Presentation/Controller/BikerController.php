@@ -2,13 +2,14 @@
 namespace Rtaranto\Presentation\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Rtaranto\Application\Exception\ValidationFailedException;
-use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersCgetActionInterface;
 use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersGetActionInterface;
 use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPatchActionInterface;
 use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPostActionInterface;
 use Rtaranto\Application\Service\Endpoint\Action\Biker\DeleteBikerInterface;
+use Rtaranto\Application\Service\Endpoint\Action\Factory\CgetActionFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,7 +19,7 @@ class BikerController extends FOSRestController implements ClassResourceInterfac
     {
         /* @var $bikersPostAction BikersPostActionInterface */
         $bikersPostAction = $this->get('app.action.bikers.post_action');
-        try {            
+        try {
             $biker = $bikersPostAction->post($request->request->all());
         }
         catch (ValidationFailedException $ex) {
@@ -29,7 +30,7 @@ class BikerController extends FOSRestController implements ClassResourceInterfac
         $location = $this->createLocationHeaderContent($biker->getId(), $request);
         $view = $this->view($biker, Response::HTTP_CREATED, array('Location' => $location));
         
-       return $view;
+        return $view;
     }
     
     public function getAction($id)
@@ -39,10 +40,12 @@ class BikerController extends FOSRestController implements ClassResourceInterfac
         return $bikersGetAction->get($id);
     }
     
-    public function cgetAction()
+    public function cgetAction(ParamFetcher $paramFetcher)
     {
-        /* @var $bikersCgetAction BikersCgetActionInterface */
-        $bikersCgetAction = $this->get('app.action.bikers.cget_action');
+        /* @var $cGetBikersFactory CgetActionFactoryInterface */
+        $cGetBikersFactory = $this->get('app.action.cget_bikers_factory');
+        $em = $this->getDoctrine()->getManager();
+        $bikersCgetAction = $cGetBikersFactory->createCgetAction($em, $paramFetcher);
         return $bikersCgetAction->getAll();
     }
     
@@ -58,7 +61,6 @@ class BikerController extends FOSRestController implements ClassResourceInterfac
             return $view;
         }
         return $biker;
-        
     }
     
     public function optionsAction()

@@ -27,10 +27,10 @@ class DoctrineBikerRepository implements BikerRepositoryInterface
         return $doctrineRepository->find($id);
     }
     
-    public function getAll()
+    public function getAll($filters = array(), $orderBy = null, $limit = null, $offset = null)
     {
         $doctrineRepository = $this->getDoctrineUserRepository();
-        return $doctrineRepository->findAll();
+        return $doctrineRepository->findBy($filters, $orderBy, $limit, $offset);
     }
 
     public function update(Biker $biker)

@@ -172,6 +172,61 @@ class BikerControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
     
+    public function testCgetReturnsBikersWithLimitQueryParam()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonGetRequest($client);
+        $response = $getRequest->get(self::$URI . '?&limit=1', $getRequest->getStandardHeadersWithAuthentication());
+        $content = json_decode($response->getContent(), true);
+        $expectedBiker = array('id' => 1, 'name' => 'Test Biker', 'email' => 'testbiker@email.com');
+        $this->assertEquals(array($expectedBiker), $content);
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+    
+    public function testCgetReturnsBikersWithOrderByQueryParam()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonGetRequest($client);
+        $response = $getRequest->get(self::$URI . '?&orderBy[id]=desc', $getRequest->getStandardHeadersWithAuthentication());
+        $content = json_decode($response->getContent(), true);
+        $expectedBiker = array('id' => 2, 'name' => 'Test Biker2', 'email' => 'testbiker2@email.com');
+        $this->assertEquals($expectedBiker, $content[0]);
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+    
+    public function testCgetReturnsBikersWithOffsetQueryParam()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonGetRequest($client);
+        $response = $getRequest->get(self::$URI . '?&offset=1', $getRequest->getStandardHeadersWithAuthentication());
+        $content = json_decode($response->getContent(), true);
+        $expectedBiker = array('id' => 2, 'name' => 'Test Biker2', 'email' => 'testbiker2@email.com');
+        $this->assertEquals($expectedBiker, $content[0]);
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+    
+    public function testCgetReturnsBikersWithFiltersQueryParam()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonGetRequest($client);
+        $response = $getRequest->get(self::$URI . '?&filters[name]=Test Biker2', $getRequest->getStandardHeadersWithAuthentication());
+        $content = json_decode($response->getContent(), true);
+        $expectedBiker = array('id' => 2, 'name' => 'Test Biker2', 'email' => 'testbiker2@email.com');
+        $this->assertEquals($expectedBiker, $content[0]);
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+    
+    public function testCgetReturnsBikersWithMultipleQueryParams()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonGetRequest($client);
+        $response = $getRequest->get(self::$URI . '?&offset=0&limit=1', $getRequest->getStandardHeadersWithAuthentication());
+        $content = json_decode($response->getContent(), true);
+        $expectedBiker = array('id' => 1, 'name' => 'Test Biker', 'email' => 'testbiker@email.com');
+        $this->assertEquals($expectedBiker, $content[0]);
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+    
     public function testPatchUpdatesAllBikerProperties()
     {
         $client = static::createClient();

@@ -4,6 +4,7 @@ namespace Tests\Rtaranto\Application\Service\Endpoint\Action\Biker;
 use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersCgetAction;
 use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
+use Rtaranto\Presentation\Controller\QueryParam\QueryParamsFetcherInterface;
 
 class BikersCgetActionTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,7 +18,9 @@ class BikersCgetActionTest extends \PHPUnit_Framework_TestCase
             ->method('getAll')
             ->will($this->returnValue($bikers));
         
-        $cgetAction = new BikersCgetAction($bikerRepository);
+        $queryParamFetcher = $this->getMock(QueryParamsFetcherInterface::class);
+        
+        $cgetAction = new BikersCgetAction($bikerRepository, $queryParamFetcher);
         $collection = $cgetAction->getAll();
         
         $this->assertEquals($bikers, $collection);
