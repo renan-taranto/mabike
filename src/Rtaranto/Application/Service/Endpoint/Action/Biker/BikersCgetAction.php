@@ -19,10 +19,10 @@ class BikersCgetAction implements BikersCgetActionInterface
     
     public function getAll()
     {
-        $filters = $this->queryParamsFetcher->getParam('filters', true, null);
-        $orderBy = $this->queryParamsFetcher->getParam('orderBy', true, null);
-        $limit = $this->queryParamsFetcher->getParam('limit');
-        $offset = $this->queryParamsFetcher->getParam('offset');
+        $filters = $this->queryParamsFetcher->getFiltersParam();
+        $orderBy = $this->queryParamsFetcher->getOrderByParam();
+        $limit = $this->queryParamsFetcher->getLimitParam();
+        $offset = $this->queryParamsFetcher->getOffsetParam();
         return $this->bikerRepository->getAll($filters, $orderBy, $limit, $offset);
     }
 }
