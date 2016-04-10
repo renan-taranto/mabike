@@ -32,11 +32,19 @@ class BikerControllerTest extends WebTestCase
         $response = $post->post(self::$URI, $post->getStandardHeadersWithAuthentication(), $data);
         $content = json_decode($response->getContent(), true);
         
-        $this->assertTrue($response->headers->contains('Content-Type','application/json'));
-        $returnedLocationHeader = $response->headers->get('Location');
-        $expectedLocationHeader  = $this->getUrl('api_v1_get_biker', array('id' => 3));
-        $this->assertEquals($expectedLocationHeader, $returnedLocationHeader);
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
+        
+        
+        $this->assertTrue($response->headers->contains('Content-Type','application/json'));
+        
+        $returnedLocationHeader = $response->headers->get('Location');
+        $expectedLocationHeader = $this->getUrl('api_v1_get_biker', array('id' => 3));
+        $this->assertEquals($expectedLocationHeader, $returnedLocationHeader);
+        
+        $returnedAllowHeaderAsArray = explode(',', $response->headers->get('Allow'));
+        $expectedAllowHeaders = array('POST', 'OPTIONS', 'GET');
+        $this->assertEquals(sort($expectedAllowHeaders), sort($returnedAllowHeaderAsArray));
+        
         $this->assertContains($name, $content['name']);
         $this->assertContains($email, $content['email']);
     }
@@ -138,9 +146,15 @@ class BikerControllerTest extends WebTestCase
         
         $getRequest = new JsonGetRequest($client);
         $response = $getRequest->get(self::$URI . '/1', $getRequest->getStandardHeadersWithAuthentication());
+        
         $content = json_decode($response->getContent(), true);
         $expected = array('id' => 1, 'name' => 'Test Biker', 'email' => 'testbiker@email.com');
         $this->assertEquals($expected, $content);
+        
+        $returnedAllowHeaderAsArray = explode(',', $response->headers->get('Allow'));
+        $expectedAllowHeaders = array('PATCH', 'DELETE', 'GET');
+        $this->assertEquals(sort($expectedAllowHeaders), sort($returnedAllowHeaderAsArray));
+        
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
     
@@ -153,11 +167,16 @@ class BikerControllerTest extends WebTestCase
         $response = $getRequest->get(self::$URI . '/' . $id, $getRequest->getStandardHeadersWithAuthentication());
         $content = json_decode($response->getContent(), true);
         
-        $expectedArray = array(
+        $expectedContent = array(
             'code' => Response::HTTP_NOT_FOUND,
             'message' => "The Biker resource of id '" . $id . "' was not found.");
+        $this->assertEquals($expectedContent, $content);
+        
+        $returnedAllowHeaderAsArray = explode(',', $response->headers->get('Allow'));
+        $expectedAllowHeaders = array('POST', 'OPTIONS', 'GET');
+        $this->assertEquals(sort($expectedAllowHeaders), sort($returnedAllowHeaderAsArray));
+        
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-        $this->assertEquals($expectedArray, $content);
     }
     
     public function testCgetReturnsBikers()
@@ -241,10 +260,15 @@ class BikerControllerTest extends WebTestCase
         $expectedContent = array('id' => $id, 'name' => $name, 'email' => $email);
         
         $response = $getRequest->patch(self::$URI . '/' . $id, $getRequest->getStandardHeadersWithAuthentication(), $data);
-        $content = json_decode($response->getContent(), true);
-        
-        $this->assertEquals($expectedContent, $content);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        
+        $content = json_decode($response->getContent(), true);
+        $this->assertEquals($expectedContent, $content);
+        
+        $returnedAllowHeaderAsArray = explode(',', $response->headers->get('Allow'));
+        $expectedAllowHeaders = array('PATCH', 'DELETE', 'GET');
+        $this->assertEquals(sort($expectedAllowHeaders), sort($returnedAllowHeaderAsArray));
+        
     }
     
     public function testPatchUpdatesSingleBikerProperty()
@@ -258,9 +282,14 @@ class BikerControllerTest extends WebTestCase
         $expectedContent = array('id' => $id, 'name' => $name, 'email' => 'testbiker@email.com');
         
         $response = $getRequest->patch(self::$URI . '/' . $id, $getRequest->getStandardHeadersWithAuthentication(), $data);
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        
         $content = json_decode($response->getContent(), true);
         $this->assertEquals($expectedContent, $content);
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        
+        $returnedAllowHeaderAsArray = explode(',', $response->headers->get('Allow'));
+        $expectedAllowHeaders = array('PATCH', 'DELETE', 'GET');
+        $this->assertEquals(sort($expectedAllowHeaders), sort($returnedAllowHeaderAsArray));
     }
     
     public function testPatchReturnsNotFound()
@@ -284,13 +313,16 @@ class BikerControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
     
-    public function testOptionsResponseContainsAllowHeader()
+    public function testOptionsResponseContainsCorrectAllowHeader()
     {
         $client = static::createClient();
         $headers = array('HTTP_X-AUTH-TOKEN' => 'testuserkey');
         $client->request('OPTIONS', self::$URI, array(), array(), $headers);
+        
         $response = $client->getResponse();
-        $this->assertNotNull($response->headers->get('Allow'));
+        $returnedAllowHeaderAsArray = explode(',', $response->headers->get('Allow'));
+        $expectedAllowHeaders = array('OPTIONS', 'POST', 'GET');
+        $this->assertEquals(sort($expectedAllowHeaders), sort($returnedAllowHeaderAsArray));
     }
     
     public function testSuccessfullyDeleteBiker()
@@ -308,14 +340,20 @@ class BikerControllerTest extends WebTestCase
             $this->getUrl('api_v1_get_biker', array('id' => $id)),
             $getRequest->getStandardHeadersWithAuthentication()
         );
-        $content = json_decode($getResponse->getContent(), true);
         
-        $expectedArray = array(
+        $content = json_decode($getResponse->getContent(), true);
+        $expectedContent = array(
             'code' => Response::HTTP_NOT_FOUND,
             'message' => "The Biker resource of id '" . $id . "' was not found."
         );
+        $this->assertEquals($expectedContent, $content);
+        
         $this->assertEquals(Response::HTTP_NO_CONTENT, $deleteResponse->getStatusCode());
-        $this->assertEquals($expectedArray, $content);
+        
+        $returnedAllowHeaderAsArray = explode(',', $deleteResponse->headers->get('Allow'));
+        $expectedAllowHeaders = array('PATCH', 'DELETE', 'GET');
+        $this->assertEquals(sort($expectedAllowHeaders), sort($returnedAllowHeaderAsArray));
+        
         $this->assertEquals(Response::HTTP_NOT_FOUND, $getResponse->getStatusCode());
     }
     
