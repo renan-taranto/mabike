@@ -1,5 +1,5 @@
 <?php
-namespace Rtaranto\Application\Factory;
+namespace Rtaranto\Application\Service\Security\Factory;
 
 interface AuthenticationTokenFactoryInterface
 {

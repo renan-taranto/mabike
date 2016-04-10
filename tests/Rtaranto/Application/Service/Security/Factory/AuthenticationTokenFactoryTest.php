@@ -1,12 +1,12 @@
 <?php
-namespace Tests\Rtaranto\Application\Factory;
+namespace Tests\Rtaranto\Application\Service\Security\Factory;
 
-use Rtaranto\Application\Factory\AuthenticationTokenFactory;
 use DateInterval;
 use DateTime;
 use InvalidArgumentException;
+use Rtaranto\Application\Service\Security\Factory\AuthenticationTokenFactory;
 
-class RandomAuthenticationTokenFactoryTest extends \PHPUnit_Framework_TestCase
+class AuthenticationTokenFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testSuccesfullyCreateAuthenticationToken()
     {

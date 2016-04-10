@@ -44,7 +44,7 @@ services:
         class: Rtaranto\Application\Service\Security\TokenGenerator
         arguments: ['@infra.repository.user', '@app.authentication_token_factory']
     app.authentication_token_factory:
-        class: Rtaranto\Application\Factory\AuthenticationTokenFactory
+        class: Rtaranto\Application\Service\Security\Factory\AuthenticationTokenFactory
     app.token_authenticator:
         class: Rtaranto\Application\Service\Security\TokenAuthenticator
         arguments: ['@doctrine.orm.entity_manager', '@router']

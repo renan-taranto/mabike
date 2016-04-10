@@ -1,14 +1,14 @@
 <?php
 namespace Tests\Rtaranto\Application\Service\Security;
 
+use DateTime;
 use Rtaranto\Application\Dto\Security\AuthenticationTokenDTO;
-use Rtaranto\Application\Factory\AuthenticationTokenFactoryInterface;
+use Rtaranto\Application\Service\Security\Factory\AuthenticationTokenFactoryInterface;
 use Rtaranto\Application\Service\Security\TokenGenerator;
 use Rtaranto\Domain\Entity\Repository\UserRepositoryInterface;
 use Rtaranto\Domain\Entity\User;
-use DateTime;
 
-class UserTokenServiceTest extends \PHPUnit_Framework_TestCase
+class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testSuccessfullyTokenCreation()
     {

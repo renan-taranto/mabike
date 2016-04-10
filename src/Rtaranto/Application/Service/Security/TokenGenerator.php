@@ -2,7 +2,7 @@
 namespace Rtaranto\Application\Service\Security;
 
 use Rtaranto\Application\Dto\Security\AuthenticationTokenDTO;
-use Rtaranto\Application\Factory\AuthenticationTokenFactoryInterface;
+use Rtaranto\Application\Service\Security\Factory\AuthenticationTokenFactoryInterface;
 use Rtaranto\Application\Service\Security\TokenGeneratorInterface;
 use Rtaranto\Domain\Entity\Repository\UserRepositoryInterface;
 use Rtaranto\Domain\Entity\User;
