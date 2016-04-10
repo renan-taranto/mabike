@@ -13,11 +13,11 @@ use Symfony\Component\Validator\Validator\ValidatorInterface as SymfonyValidator
  */
 class Validator implements ValidatorInterface
 {
-    private $symfonyValidatorComponent;
+    private $symfonyValidator;
     
-    public function __construct(SymfonyValidatorInterface $symfonyValidatorComponent)
+    public function __construct(SymfonyValidatorInterface $symfonyValidator)
     {
-        $this->symfonyValidatorComponent = $symfonyValidatorComponent;
+        $this->symfonyValidator = $symfonyValidator;
     }
     
     public function throwValidationFailedIfNotValid($object)
@@ -30,7 +30,7 @@ class Validator implements ValidatorInterface
     
     public function isValid($object)
     {
-        $errors = $this->symfonyValidatorComponent->validate($object);
+        $errors = $this->symfonyValidator->validate($object);
         
         if(count($errors) > 0) {
             return false;
@@ -44,7 +44,7 @@ class Validator implements ValidatorInterface
             return;
         }
         
-        $constraintViolationList = $this->symfonyValidatorComponent->validate($object);
+        $constraintViolationList = $this->symfonyValidator->validate($object);
         $errorMessagesByFields = $this->getErrorMessagesByFields($constraintViolationList);
         
         return array_merge(array('code' => Response::HTTP_BAD_REQUEST,'message' => 'Validation Failed'), array('errors' => $errorMessagesByFields));

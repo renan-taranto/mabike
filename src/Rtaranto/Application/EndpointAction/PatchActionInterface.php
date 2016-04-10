@@ -1,9 +1,9 @@
 <?php
-namespace Rtaranto\Application\Service\Endpoint\Action\Biker;
+namespace Rtaranto\Application\EndpointAction;
 
 use Rtaranto\Domain\Entity\Biker;
 
-interface BikersPatchActionInterface
+interface PatchActionInterface
 {
     /**
      * @param integer $id

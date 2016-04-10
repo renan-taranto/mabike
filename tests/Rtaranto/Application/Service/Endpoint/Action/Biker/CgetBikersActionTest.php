@@ -1,12 +1,12 @@
 <?php
 namespace Tests\Rtaranto\Application\Service\Endpoint\Action\Biker;
 
-use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersCgetAction;
+use Rtaranto\Application\EndpointAction\Biker\CgetBikersAction;
 use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
 use Rtaranto\Presentation\Controller\QueryParam\QueryParamsFetcherInterface;
 
-class BikersCgetActionTest extends \PHPUnit_Framework_TestCase
+class CgetBikersActionTest extends \PHPUnit_Framework_TestCase
 {
     public function testCgetReturnsCollection()
     {
@@ -20,8 +20,8 @@ class BikersCgetActionTest extends \PHPUnit_Framework_TestCase
         
         $queryParamFetcher = $this->getMock(QueryParamsFetcherInterface::class);
         
-        $cgetAction = new BikersCgetAction($bikerRepository, $queryParamFetcher);
-        $collection = $cgetAction->getAll();
+        $cgetAction = new CgetBikersAction($bikerRepository, $queryParamFetcher);
+        $collection = $cgetAction->cGet();
         
         $this->assertEquals($bikers, $collection);
     }

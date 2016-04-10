@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Rtaranto\Application\Service\Endpoint\Action\Biker;
 
-use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersGetAction;
+use Rtaranto\Application\EndpointAction\Biker\GetBikerAction;
 use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -19,7 +19,7 @@ class BikersGetActionTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->will($this->returnValue($biker));
         
-        $bikersGetAction = new BikersGetAction($bikerRepository);
+        $bikersGetAction = new GetBikerAction($bikerRepository);
         $this->assertInstanceOf(Biker::class, $bikersGetAction->get(1));
     }
     
@@ -32,7 +32,7 @@ class BikersGetActionTest extends \PHPUnit_Framework_TestCase
         
         $this->setExpectedException(NotFoundHttpException::class);
         
-        $bikersGetAction = new BikersGetAction($bikerRepository);
+        $bikersGetAction = new GetBikerAction($bikerRepository);
         $bikersGetAction->get(1);
     }
 }

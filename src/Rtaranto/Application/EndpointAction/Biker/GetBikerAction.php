@@ -1,33 +1,33 @@
 <?php
-namespace Rtaranto\Application\Service\Endpoint\Action\Biker;
+namespace Rtaranto\Application\EndpointAction\Biker;
 
+use Rtaranto\Application\EndpointAction\GetActionInterface;
+use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class DeleteBiker implements DeleteBikerInterface
+class GetBikerAction implements GetActionInterface
 {
     private $bikerRepository;
-
+    
     public function __construct(BikerRepositoryInterface $bikerRepository)
     {
         $this->bikerRepository = $bikerRepository;
     }
-
-    public function delete($id)
-    {
-        $this->throwExceptionIfBikerNotFound($id);
-        $this->bikerRepository->delete($id);
-    }
-
+    
     /**
      * @param integer $id
-     * @throws NotFoundHttpException
+     * @return Biker
      */
-    private function throwExceptionIfBikerNotFound($id)
+    public function get($id)
     {
-        if (empty($this->bikerRepository->get($id))) {
-            throw new NotFoundHttpException(
+        $biker = $this->bikerRepository->get($id);
+        
+        if (empty($biker)) {
+           throw new NotFoundHttpException(
                 sprintf('The Biker resource of id \'%s\' was not found.', $id));
         }
+        
+        return $biker;
     }
 }

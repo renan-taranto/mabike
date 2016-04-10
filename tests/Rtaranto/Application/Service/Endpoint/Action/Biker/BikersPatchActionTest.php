@@ -2,9 +2,9 @@
 namespace Tests\Rtaranto\Application\Service\Endpoint\Action\Biker;
 
 use Rtaranto\Application\Dto\Biker\BikerDTO;
+use Rtaranto\Application\EndpointAction\Biker\PatchBikerAction;
 use Rtaranto\Application\Exception\ValidationFailedException;
-use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPatchAction;
-use Rtaranto\Application\Service\ParametersBinder\ParametersBinderInterface;
+use Rtaranto\Application\ParametersBinder\ParametersBinderInterface;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
@@ -36,7 +36,7 @@ class BikersPatchActionTest extends \PHPUnit_Framework_TestCase
             ->method('update')
             ->will($this->returnValue($updatedBiker));
         
-        $bikersPatchAction = new BikersPatchAction($parametersBinder, $validator, $bikerRepository);
+        $bikersPatchAction = new PatchBikerAction($parametersBinder, $validator, $bikerRepository);
         $requestContentParameters = array('name' => $newName, 'email' => $newEmail);
         $expectedBiker = new Biker($newName, $newEmail);
         $returnedBiker = $bikersPatchAction->patch(1, $requestContentParameters);
@@ -66,7 +66,7 @@ class BikersPatchActionTest extends \PHPUnit_Framework_TestCase
             ->method('update')
             ->will($this->returnValue($updatedBiker));
         
-        $bikersPatchAction = new BikersPatchAction($parametersBinder, $validator, $bikerRepository);
+        $bikersPatchAction = new PatchBikerAction($parametersBinder, $validator, $bikerRepository);
         $requestContentParameters = array('name' => $newName);
         $expectedBiker = new Biker($newName, 'testbiker@email.com');
         $returnedBiker = $bikersPatchAction->patch(1, $requestContentParameters);
@@ -96,7 +96,7 @@ class BikersPatchActionTest extends \PHPUnit_Framework_TestCase
         
         $this->setExpectedException(ValidationFailedException::class);
         
-        $bikersPatchAction = new BikersPatchAction($parametersBinder, $validator, $bikerRepository);
+        $bikersPatchAction = new PatchBikerAction($parametersBinder, $validator, $bikerRepository);
         $bikersPatchAction->patch(1, array());
     }
     
@@ -105,7 +105,7 @@ class BikersPatchActionTest extends \PHPUnit_Framework_TestCase
         $parametersBinder = $this->getMock(ParametersBinderInterface::class);
         $validator = $this->getMock(ValidatorInterface::class);
         $bikerRepository = $this->getMock(BikerRepositoryInterface::class);
-        $bikersPatchAction = new BikersPatchAction($parametersBinder, $validator, $bikerRepository);
+        $bikersPatchAction = new PatchBikerAction($parametersBinder, $validator, $bikerRepository);
         
         $this->setExpectedException(NotFoundHttpException::class);
         
@@ -135,7 +135,7 @@ class BikersPatchActionTest extends \PHPUnit_Framework_TestCase
         
         $this->setExpectedException(ValidationFailedException::class);
         
-        $bikersPatchAction = new BikersPatchAction($parametersBinder, $validator, $bikerRepository);
+        $bikersPatchAction = new PatchBikerAction($parametersBinder, $validator, $bikerRepository);
         $bikersPatchAction->patch(1, array());
     }
 }

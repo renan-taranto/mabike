@@ -4,22 +4,30 @@ parameters:
 #    parameter_name: value
 
 services:
-    ##################Rtaranto\Application##################
+    ##################Application##################
     #Endpoint Action
     app.action.bikers.post_action:
-        class: Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPostAction
-        arguments: ['@app.parameters_binder.biker', '@app.validator', '@infra.repository.biker']
+        class: Rtaranto\Application\EndpointAction\Biker\PostBikerAction
+        factory: ["@app.action.post_biker_factory", createPostAction]
     app.action.bikers.get_action:
-        class: Rtaranto\Application\Service\Endpoint\Action\Biker\BikersGetAction
+        class: Rtaranto\Application\EndpointAction\Biker\GetBikerAction
         arguments: ['@infra.repository.biker']
     app.action.bikers.patch_action:
-        class: Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPatchAction
-        arguments: ['@app.parameters_binder.biker', '@app.validator', '@infra.repository.biker']
-    app.bikers.delete:
-        class: Rtaranto\Application\Service\Endpoint\Action\Biker\DeleteBiker
+        class: Rtaranto\Application\EndpointAction\Biker\PatchBikerAction
+        factory: ["@app.action.patch_biker_factory", createPatchAction]
+    app.bikers.delete_action:
+        class: Rtaranto\Application\EndpointAction\Biker\DeleteBikerAction
         arguments: ['@infra.repository.biker']
+    #Endpoint Action Factory
     app.action.cget_bikers_factory:
-        class: Rtaranto\Application\Service\Endpoint\Action\Factory\CgetBikersActionFactory
+        class: Rtaranto\Application\EndpointAction\Factory\Biker\CgetBikersActionFactory
+        arguments: ['@doctrine.orm.entity_manager']
+    app.action.patch_biker_factory:
+        class: Rtaranto\Application\EndpointAction\Factory\Biker\PatchBikerActionFactory
+        arguments: ['@form.factory', '@validator', '@doctrine.orm.entity_manager']
+    app.action.post_biker_factory:
+        class: Rtaranto\Application\EndpointAction\Factory\Biker\PostBikerActionFactory
+        arguments: ['@form.factory', '@validator', '@doctrine.orm.entity_manager']
         
     #Validator
     app.validator:
@@ -40,10 +48,6 @@ services:
     app.token_authenticator:
         class: Rtaranto\Application\Service\Security\TokenAuthenticator
         arguments: ['@doctrine.orm.entity_manager', '@router']
-    #Parameters Binder
-    app.parameters_binder.biker:
-        class: Rtaranto\Application\Service\ParametersBinder\ParametersBinder
-        arguments: ['@form.factory', 'Rtaranto\Presentation\Form\Biker\BikerDTOType']
         
     ##################Domain##################
     domain.factory.normal_user:

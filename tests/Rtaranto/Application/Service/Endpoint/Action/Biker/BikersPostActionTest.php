@@ -2,9 +2,9 @@
 namespace Tests\Rtaranto\Application\Service\Endpoint\Action\Biker;
 
 use Rtaranto\Application\Dto\Biker\BikerDTO;
+use Rtaranto\Application\EndpointAction\Biker\PostBikerAction;
 use Rtaranto\Application\Exception\ValidationFailedException;
-use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPostAction;
-use Rtaranto\Application\Service\ParametersBinder\ParametersBinderInterface;
+use Rtaranto\Application\ParametersBinder\ParametersBinderInterface;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
@@ -30,7 +30,7 @@ class BikersPostActionTest extends \PHPUnit_Framework_TestCase
         
         $validator = $this->getMock(ValidatorInterface::class);
         
-        $bikerPostAction = new BikersPostAction($parametersBinder, $validator, $bikerRepository);
+        $bikerPostAction = new PostBikerAction($parametersBinder, $validator, $bikerRepository);
         $requestBodyParams = array('Test Biker', 'testbike@email.com');
         $returnedBiker = $bikerPostAction->post($requestBodyParams);
         $this->assertInstanceOf(Biker::class, $returnedBiker);
@@ -51,7 +51,7 @@ class BikersPostActionTest extends \PHPUnit_Framework_TestCase
             ->method('throwValidationFailedIfNotValid')
             ->will($this->throwException(new ValidationFailedException(array())));
         
-        $bikerPostAction = new BikersPostAction($parametersBinder, $validator, $bikerRepository);
+        $bikerPostAction = new PostBikerAction($parametersBinder, $validator, $bikerRepository);
         
         $this->setExpectedException(ValidationFailedException::class);
         $requestBodyParams = array();
@@ -73,7 +73,7 @@ class BikersPostActionTest extends \PHPUnit_Framework_TestCase
             ->method('throwValidationFailedIfNotValid')
             ->will($this->throwException(new ValidationFailedException(array())));
         
-        $bikerPostAction = new BikersPostAction($parametersBinder, $validator, $bikerRepository);
+        $bikerPostAction = new PostBikerAction($parametersBinder, $validator, $bikerRepository);
         
         $this->setExpectedException(ValidationFailedException::class);
         $requestBodyParams = array('name' => 'smallName', 'email' => 'invalidEmail');

@@ -1,10 +1,11 @@
 <?php
-namespace Rtaranto\Application\Service\Endpoint\Action\Biker;
+namespace Rtaranto\Application\EndpointAction\Biker;
 
+use Rtaranto\Application\EndpointAction\CgetActionInterface;
 use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
 use Rtaranto\Presentation\Controller\QueryParam\QueryParamsFetcherInterface;
 
-class BikersCgetAction implements BikersCgetActionInterface
+class CgetBikersAction implements CgetActionInterface
 {
     private $bikerRepository;
     private $queryParamsFetcher;
@@ -17,7 +18,7 @@ class BikersCgetAction implements BikersCgetActionInterface
         $this->queryParamsFetcher = $queryParamsFetcher;
     }
     
-    public function getAll()
+    public function cGet()
     {
         $filters = $this->queryParamsFetcher->getFiltersParam();
         $orderBy = $this->queryParamsFetcher->getOrderByParam();

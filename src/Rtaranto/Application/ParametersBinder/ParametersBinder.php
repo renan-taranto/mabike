@@ -1,5 +1,5 @@
 <?php
-namespace Rtaranto\Application\Service\ParametersBinder;
+namespace Rtaranto\Application\ParametersBinder;
 
 use Symfony\Component\Form\FormFactoryInterface;
 

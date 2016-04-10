@@ -1,7 +1,7 @@
 <?php
-namespace Rtaranto\Application\Service\Endpoint\Action\Biker;
+namespace Rtaranto\Application\EndpointAction;
 
-interface BikersPostActionInterface
+interface PostActionInterface
 {
     /**
      * @param array $requestBodyParameters

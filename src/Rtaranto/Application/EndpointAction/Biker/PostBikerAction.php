@@ -1,13 +1,14 @@
 <?php
-namespace Rtaranto\Application\Service\Endpoint\Action\Biker;
+namespace Rtaranto\Application\EndpointAction\Biker;
 
 use Rtaranto\Application\Dto\Biker\BikerDTO;
-use Rtaranto\Application\Service\ParametersBinder\ParametersBinderInterface;
+use Rtaranto\Application\EndpointAction\PostActionInterface;
+use Rtaranto\Application\ParametersBinder\ParametersBinderInterface;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
 
-class BikersPostAction implements BikersPostActionInterface
+class PostBikerAction implements PostActionInterface
 {
     private $parametersBinder;
     private $validator;

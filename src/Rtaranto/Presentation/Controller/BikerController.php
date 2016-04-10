@@ -4,12 +4,12 @@ namespace Rtaranto\Presentation\Controller;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Rtaranto\Application\EndpointAction\Factory\CgetActionFactoryInterface;
 use Rtaranto\Application\Exception\ValidationFailedException;
-use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersGetActionInterface;
-use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPatchActionInterface;
-use Rtaranto\Application\Service\Endpoint\Action\Biker\BikersPostActionInterface;
-use Rtaranto\Application\Service\Endpoint\Action\Biker\DeleteBikerInterface;
-use Rtaranto\Application\Service\Endpoint\Action\Factory\CgetActionFactoryInterface;
+use Rtaranto\Application\Service\Endpoint\Action\Biker\DeleteActionInterface;
+use Rtaranto\Application\Service\Endpoint\Action\Biker\GetActionInterface;
+use Rtaranto\Application\Service\Endpoint\Action\Biker\PatchActionInterface;
+use Rtaranto\Application\Service\Endpoint\Action\Biker\PostActionInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,7 +17,7 @@ class BikerController extends FOSRestController implements ClassResourceInterfac
 {
     public function postAction(Request $request)
     {
-        /* @var $bikersPostAction BikersPostActionInterface */
+        /* @var $bikersPostAction PostActionInterface */
         $bikersPostAction = $this->get('app.action.bikers.post_action');
         try {
             $biker = $bikersPostAction->post($request->request->all());
@@ -35,7 +35,7 @@ class BikerController extends FOSRestController implements ClassResourceInterfac
     
     public function getAction($id)
     {
-        /* @var $bikersGetAction BikersGetActionInterface */
+        /* @var $bikersGetAction GetActionInterface */
         $bikersGetAction = $this->get('app.action.bikers.get_action');
         return $bikersGetAction->get($id);
     }
@@ -44,14 +44,13 @@ class BikerController extends FOSRestController implements ClassResourceInterfac
     {
         /* @var $cGetBikersFactory CgetActionFactoryInterface */
         $cGetBikersFactory = $this->get('app.action.cget_bikers_factory');
-        $em = $this->getDoctrine()->getManager();
-        $bikersCgetAction = $cGetBikersFactory->createCgetAction($em, $paramFetcher);
-        return $bikersCgetAction->getAll();
+        $bikersCgetAction = $cGetBikersFactory->createCgetAction($paramFetcher);
+        return $bikersCgetAction->cGet();
     }
     
     public function patchAction($id, Request $request)
     {
-        /* @var $bikersPatchAction BikersPatchActionInterface */
+        /* @var $bikersPatchAction PatchActionInterface */
         $bikersPatchAction = $this->get('app.action.bikers.patch_action');
         try {
             $biker = $bikersPatchAction->patch($id, $request->request->all());
@@ -72,8 +71,8 @@ class BikerController extends FOSRestController implements ClassResourceInterfac
     
     public function deleteAction($id)
     {
-        /* @var $deleteBiker DeleteBikerInterface */
-        $deleteBiker = $this->get('app.bikers.delete');
+        /* @var $deleteBiker DeleteActionInterface */
+        $deleteBiker = $this->get('app.bikers.delete_action');
         $deleteBiker->delete($id);
         return new Response('', Response::HTTP_NO_CONTENT);
     }
