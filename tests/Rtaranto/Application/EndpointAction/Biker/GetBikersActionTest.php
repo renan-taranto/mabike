@@ -1,12 +1,12 @@
 <?php
-namespace Tests\Rtaranto\Application\Service\Endpoint\Action\Biker;
+namespace Tests\Rtaranto\Application\EndpointAction\Biker;
 
 use Rtaranto\Application\EndpointAction\Biker\GetBikerAction;
 use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class BikersGetActionTest extends \PHPUnit_Framework_TestCase
+class GetBikersActionTest extends \PHPUnit_Framework_TestCase
 {
     public function testSuccesfullyGetBiker()
     {

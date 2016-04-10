@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Rtaranto\Application\Service\Endpoint\Action\Biker;
+namespace Tests\Rtaranto\Application\EndpointAction\Biker;
 
 use Rtaranto\Application\EndpointAction\Biker\CgetBikersAction;
 use Rtaranto\Domain\Entity\Biker;

@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Rtaranto\Application\Service\Endpoint\Action\Biker;
+namespace Tests\Rtaranto\Application\EndpointAction\Biker;
 
 use Rtaranto\Application\Dto\Biker\BikerDTO;
 use Rtaranto\Application\EndpointAction\Biker\PostBikerAction;
@@ -9,7 +9,7 @@ use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
 
-class BikersPostActionTest extends \PHPUnit_Framework_TestCase
+class PostBikersActionTest extends \PHPUnit_Framework_TestCase
 {
     public function testSuccessfullyPostBiker()
     {

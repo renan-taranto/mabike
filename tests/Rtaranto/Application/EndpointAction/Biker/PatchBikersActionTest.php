@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Rtaranto\Application\Service\Endpoint\Action\Biker;
+namespace Tests\Rtaranto\Application\EndpointAction\Biker;
 
 use Rtaranto\Application\Dto\Biker\BikerDTO;
 use Rtaranto\Application\EndpointAction\Biker\PatchBikerAction;
@@ -10,7 +10,7 @@ use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class BikersPatchActionTest extends \PHPUnit_Framework_TestCase
+class PatchBikersActionTest extends \PHPUnit_Framework_TestCase
 {
     public function testPatchReplacesAllProperties()
     {
