@@ -33,7 +33,9 @@ class BikerControllerTest extends WebTestCase
         $content = json_decode($response->getContent(), true);
         
         $this->assertTrue($response->headers->contains('Content-Type','application/json'));
-        $this->assertNotEmpty($response->headers->get('Location'));
+        $returnedLocationHeader = $response->headers->get('Location');
+        $expectedLocationHeader  = $this->getUrl('api_v1_get_biker', array('id' => 3));
+        $this->assertEquals($expectedLocationHeader, $returnedLocationHeader);
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
         $this->assertContains($name, $content['name']);
         $this->assertContains($email, $content['email']);
