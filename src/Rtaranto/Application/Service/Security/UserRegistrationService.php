@@ -3,7 +3,7 @@ namespace Rtaranto\Application\Service\Security;
 
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
-use Rtaranto\Domain\Entity\Factory\UserFactory;
+use Rtaranto\Domain\Entity\Factory\UserFactoryInterface;
 use Rtaranto\Domain\Entity\Repository\UserRepositoryInterface;
 use Rtaranto\Domain\Entity\User;
 use Exception;
@@ -15,7 +15,7 @@ class UserRegistrationService implements UserRegistrationInterface
     private $userFactory;
     
     public function __construct(
-        UserFactory $userFactory,
+        UserFactoryInterface $userFactory,
         UserRepositoryInterface $userRepository,
         ValidatorInterface $validator
     ) {
@@ -31,9 +31,9 @@ class UserRegistrationService implements UserRegistrationInterface
      * @return User
      * @throws Exception
      */
-    public function registerUser($username, $email, $password)
+    public function registerUser($username, $email, $password, array $roles)
     {
-        $user = $this->userFactory->createUser($username, $email, $password);
+        $user = $this->userFactory->createUser($username, $email, $password, $roles);
         
         if (!$this->validator->isValid($user)) {
             throw new ValidationFailedException($this->validator->getErrors($user));

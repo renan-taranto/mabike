@@ -1,14 +1,13 @@
 <?php
 namespace Rtaranto\Presentation\Controller;
 
+use FOS\RestBundle\Controller\FOSRestController;
 use Rtaranto\Application\Command\Security\UserRegistrationCommand;
 use Rtaranto\Application\Dto\Security\UserRegistrationDTO;
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Rtaranto\Application\Service\Validator\Validator;
+use Rtaranto\Domain\Entity\User;
 use Rtaranto\Presentation\Form\RegistrationType;
-
-use FOS\RestBundle\Controller\FOSRestController;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,7 +18,10 @@ class RegistrationController extends FOSRestController
      */
     public function registrationAction(Request $request)
     {
-        $registrationForm = $this->createForm(RegistrationType::class, new UserRegistrationDTO());
+        $registrationForm = $this->createForm(
+            RegistrationType::class,
+            new UserRegistrationDTO(array(User::ROLE_USER))
+        );
         $registrationForm->submit($request->request->all());
 
         /* @var $validator Validator */

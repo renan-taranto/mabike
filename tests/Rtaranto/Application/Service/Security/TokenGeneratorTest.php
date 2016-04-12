@@ -29,7 +29,7 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
             ->setConstructorArgs(array($userRepository, $tokenFactory))
             ->getMock();
         
-        $user = new User('username', 'email', 'password');
+        $user = new User('username', 'email', 'password', array(User::ROLE_USER));
         $userTokenService->createTokenForUser($user);
         
         $this->assertEquals($key, $user->getApiKey());

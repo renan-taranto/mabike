@@ -26,7 +26,8 @@ class UserRegistrationCommand
         $user = $this->userRegistration->registerUser(
             $registerUserDTO->getUsername(),
             $registerUserDTO->getEmail(),
-            $registerUserDTO->getPassword()
+            $registerUserDTO->getPassword(),
+            $registerUserDTO->getRoles()
         );
         
         return $user;

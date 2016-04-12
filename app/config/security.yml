@@ -33,6 +33,8 @@ security:
                     - app.token_authenticator
             stateless: true        
                     
-                    
+    role_hierarchy:
+        ROLE_BIKER:       ROLE_USER
+        
     access_control:
         - { path: ^/api/v1, roles: ROLE_USER }

@@ -1,14 +1,16 @@
 <?php
 namespace AppBundle\DataFixtures\ORM;
 
-use Rtaranto\Application\Service\Security\UserRegistrationService;
 use DateTime;
+use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Rtaranto\Application\Service\Security\UserRegistrationService;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class LoadUserTestingData implements FixtureInterface, ContainerAwareInterface
+class LoadUserTestingData extends AbstractFixture implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface
 {
     /**
      * @var ContainerInterface
@@ -36,11 +38,20 @@ class LoadUserTestingData implements FixtureInterface, ContainerAwareInterface
         $manager->persist($user2);
         $manager->persist($user3);
         $manager->flush();
+        
+        $this->addReference('user1', $user);
+        $this->addReference('user2', $user2);
+        $this->addReference('user3', $user3);
     }
 
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
+    }
+
+    public function getOrder()
+    {
+        return 1;
     }
 
 }

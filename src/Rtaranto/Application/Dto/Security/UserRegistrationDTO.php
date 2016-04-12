@@ -6,6 +6,12 @@ class UserRegistrationDTO
     private $username;
     private $email;
     private $password;
+    private $roles;
+    
+    public function __construct(array $roles)
+    {
+        $this->roles = $roles;
+    }
     
     public function getUsername()
     {
@@ -36,5 +42,14 @@ class UserRegistrationDTO
     {
         $this->password = $password;
     }
+    
+    public function getRoles()
+    {
+        return $this->roles;
+    }
 
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+    }
 }

@@ -36,7 +36,7 @@ services:
     #Security
     app.user_registration:
         class: Rtaranto\Application\Service\Security\UserRegistrationService
-        arguments: ['@domain.factory.normal_user', '@infra.repository.user', '@app.validator']
+        arguments: ['@domain.factory.user', '@infra.repository.user', '@app.validator']
     app.login:
         class: Rtaranto\Application\Service\Security\StatelessLoginService
         arguments: ['@infra.repository.user', '@infra.password_validator', '@app.token_generator' ]
@@ -50,8 +50,8 @@ services:
         arguments: ['@doctrine.orm.entity_manager', '@router']
         
     ##################Domain##################
-    domain.factory.normal_user:
-        class: Rtaranto\Domain\Entity\Factory\NormalUserFactory
+    domain.factory.user:
+        class: Rtaranto\Domain\Entity\Factory\UserFactory
         arguments: ['@security.password_encoder']
         
     ##################Rtaranto\Infrastructure##################

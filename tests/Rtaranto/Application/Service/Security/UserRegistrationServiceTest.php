@@ -4,15 +4,15 @@ namespace Rtaranto\Tests\Application\Service;
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Rtaranto\Application\Service\Security\UserRegistrationService;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
-use Rtaranto\Domain\Entity\Factory\UserFactory;
+use Rtaranto\Domain\Entity\Factory\UserFactoryInterface;
 use Rtaranto\Domain\Entity\Repository\UserRepositoryInterface;
 use Rtaranto\Domain\Entity\User;
 
-class RegisterUserServiceTest extends \PHPUnit_Framework_TestCase
+class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
 {
     public function testRegisterInvalidUserThrowsException()
     {
-        $userFactory = $this->getMock(UserFactory::class);
+        $userFactory = $this->getMock(UserFactoryInterface::class);
         
         $userRepository = $this->getMock(UserRepositoryInterface::class);
                 
@@ -27,7 +27,7 @@ class RegisterUserServiceTest extends \PHPUnit_Framework_TestCase
         
         $this->setExpectedException(ValidationFailedException::class);
         
-        $registerUserService->registerUser('user', 'email', 'pass');
+        $registerUserService->registerUser('user', 'email', 'pass', array());
     }
     
     /**
@@ -35,7 +35,7 @@ class RegisterUserServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testRegisterReturnsUser($user)
     {
-        $userFactory = $this->getMock(UserFactory::class);
+        $userFactory = $this->getMock(UserFactoryInterface::class);
         $userFactory->expects($this->once())
             ->method('createUser')
             ->will($this->returnValue($user));
@@ -51,7 +51,7 @@ class RegisterUserServiceTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
         
         $registerUserService = new UserRegistrationService($userFactory, $userRepository, $validator);
-        $registeredUser = $registerUserService->registerUser('user', 'email', 'pass');
+        $registeredUser = $registerUserService->registerUser('user', 'email', 'pass', array(User::ROLE_USER));
         
         $this->assertEquals($user, $registeredUser);
     }
@@ -61,7 +61,8 @@ class RegisterUserServiceTest extends \PHPUnit_Framework_TestCase
         $username = 'normal_user';
         $email = 'user@email.com';
         $password = 'plainPass';
-        $user = new User($username, $email, $password);
+        $roles = array(User::ROLE_USER);
+        $user = new User($username, $email, $password, $roles);
         
         return array(array($user));
     }

@@ -9,6 +9,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+    const ROLE_USER = 'ROLE_USER';
+    const ROLE_BIKER = 'ROLE_BIKER';
+    
     /**
      * @var int
      */
@@ -44,12 +47,16 @@ class User implements UserInterface
      */
     private $password;
     
-    public function __construct($username, $email, $password)
+    public function __construct($username, $email, $password, array $roles)
     {
+        if (empty($roles)) {
+            throw new \Exception('At least one role must be provided while'
+                . ' creating a user.');
+        }
         $this->username = $username;
         $this->email = $email;
         $this->password = $password;
-        $this->roles = array('ROLE_USER');
+        $this->roles = $roles;
     }
     
     /**
@@ -176,10 +183,6 @@ class User implements UserInterface
     
     public function getRoles()
     {
-        if (empty($this->roles)) {
-            return array('ROLE_USER');
-        }
-        
         return $this->roles;
     }
 

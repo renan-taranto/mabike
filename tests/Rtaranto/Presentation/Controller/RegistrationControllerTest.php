@@ -2,20 +2,20 @@
 namespace Tests\Rtaranto\Presentation\Controller;
 
 use AppBundle\DataFixtures\ORM\LoadUserTestingData;
+use Doctrine\ORM\EntityManagerInterface;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
+use Rtaranto\Domain\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\JsonPostRequest;
 
 class RegistrationControllerTest extends WebTestCase
 {
-    private static $REGISTRATION_URI = '/api/v1/registration';
-
     public function setUp()
     {
         $this->loadFixtures(array(LoadUserTestingData::class));
     }
 
-    public function testSuccesfullyRegisterUser()
+    public function testSuccesfullyRegisterUserAsBiker()
     {
         $client = static::createClient();
         $post = new JsonPostRequest($client);
@@ -23,7 +23,15 @@ class RegistrationControllerTest extends WebTestCase
             'username' => 'user',
             'email' => 'user@email.com',
             'password' => 'userpass');
-        $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
+        $response = $post->post($this->getRegistrationUri(), $post->getStandardHeaders(), $data);
+        
+        /* @var $em EntityManagerInterface */
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        
+        /* @var $persistedUser User */
+        $userRepository = $em->getRepository('Domain:User');
+        $persistedUser = $userRepository->findOneBy(array('username' => 'user'));
+        $this->assertEquals(array('ROLE_USER'), $persistedUser->getRoles());
         
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
@@ -36,7 +44,7 @@ class RegistrationControllerTest extends WebTestCase
             'username' => 'test_user_1',
             'email' => 'testuser1@email.com',
             'password' => 'userpass');
-        $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
+        $response = $post->post($this->getRegistrationUri(), $post->getStandardHeaders(), $data);
         $content = json_decode($response->getContent(), true);
         
         $this->assertContains('E-email address already in use.', $content['errors']['email'][0]);
@@ -51,7 +59,7 @@ class RegistrationControllerTest extends WebTestCase
             'username' => 'test_user_1',
             'email' => 'newemail@email.com',
             'password' => 'userpass');
-        $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
+        $response = $post->post($this->getRegistrationUri(), $post->getStandardHeaders(), $data);
         $content = json_decode($response->getContent(), true);
         
         $this->assertContains('Username already in use.', $content['errors']['username'][0]);
@@ -63,7 +71,7 @@ class RegistrationControllerTest extends WebTestCase
         $client = static::createClient();
         $post = new JsonPostRequest($client);
         $data = array('username' => 'us');
-        $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
+        $response = $post->post($this->getRegistrationUri(), $post->getStandardHeaders(), $data);
         $content = json_decode($response->getContent(), true);
 
         $this->assertContains('Validation Failed', $content['message']);
@@ -76,7 +84,7 @@ class RegistrationControllerTest extends WebTestCase
         $client = static::createClient();
         $data = array('username' => str_repeat('u', 51));
         $post = new JsonPostRequest($client);
-        $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
+        $response = $post->post($this->getRegistrationUri(), $post->getStandardHeaders(), $data);
         $content = json_decode($response->getContent(), true);
 
         $this->assertContains('Validation Failed', $content['message']);
@@ -89,7 +97,7 @@ class RegistrationControllerTest extends WebTestCase
         $client = static::createClient();
         $post = new JsonPostRequest($client);
         $data = array('email' => 'user@email');
-        $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
+        $response = $post->post($this->getRegistrationUri(), $post->getStandardHeaders(), $data);
         $content = json_decode($response->getContent(), true);
 
         $this->assertContains('Validation Failed', $content['message']);
@@ -102,7 +110,7 @@ class RegistrationControllerTest extends WebTestCase
         $client = static::createClient();
         $post = new JsonPostRequest($client);
         $data = array('password' => 12345);
-        $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
+        $response = $post->post($this->getRegistrationUri(), $post->getStandardHeaders(), $data);
 
         $content = json_decode($response->getContent(), true);
         
@@ -116,7 +124,7 @@ class RegistrationControllerTest extends WebTestCase
         $client = static::createClient();
         $post = new JsonPostRequest($client);
         $data = array('password' => str_repeat('p', 4097));
-        $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
+        $response = $post->post($this->getRegistrationUri(), $post->getStandardHeaders(), $data);
         $content = json_decode($response->getContent(), true);
 
         $this->assertContains('Validation Failed', $content['message']);
@@ -129,7 +137,7 @@ class RegistrationControllerTest extends WebTestCase
         $client = static::createClient();
         $post = new JsonPostRequest($client);
         $data = array('username' => '');
-        $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
+        $response = $post->post($this->getRegistrationUri(), $post->getStandardHeaders(), $data);
         $content = json_decode($response->getContent(), true);
 
         $this->assertContains('This value should not be blank.',$content['errors']['username'][0]);
@@ -141,10 +149,15 @@ class RegistrationControllerTest extends WebTestCase
         $client = static::createClient();
         $post = new JsonPostRequest($client);
         $data = array('username' => '');
-        $response = $post->post(self::$REGISTRATION_URI, $post->getStandardHeaders(), $data);
+        $response = $post->post($this->getRegistrationUri(), $post->getStandardHeaders(), $data);
         $content = json_decode($response->getContent(), true);
         
         $this->assertContains('This value should not be blank.',$content['errors']['password'][0]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+    }
+    
+    private function getRegistrationUri()
+    {
+        return $this->getUrl('api_v1_registration');
     }
 }

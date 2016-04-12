@@ -10,7 +10,7 @@ class UserRegistrationCommandTest extends \PHPUnit_Framework_TestCase
 {
     public function testCommandReturnsUser()
     {
-        $registerUserDTO = new UserRegistrationDTO();
+        $registerUserDTO = new UserRegistrationDTO(array(User::ROLE_USER));
         $registerUserDTO->setUsername('normal_user');
         $registerUserDTO->setEmail('user@email.com');
         $registerUserDTO->setPassword('plainPass');
@@ -18,7 +18,9 @@ class UserRegistrationCommandTest extends \PHPUnit_Framework_TestCase
         $user = new User(
             $registerUserDTO->getUsername(),
             $registerUserDTO->getEmail(),
-            $registerUserDTO->getPassword());
+            $registerUserDTO->getPassword(),
+            $registerUserDTO->getRoles()
+        );
         
         $userRegistration = $this->getMock(UserRegistrationInterface::class);
         $userRegistration->expects($this->once())

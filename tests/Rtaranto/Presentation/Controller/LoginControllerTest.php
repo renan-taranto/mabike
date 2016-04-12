@@ -8,8 +8,6 @@ use Tests\JsonPostRequest;
 
 class LoginControllerTest extends WebTestCase
 {
-    private static $LOGIN_URI = '/api/v1/login';
-    
     public function setUp()
     {
         $this->loadFixtures(array(LoadUserTestingData::class));
@@ -20,7 +18,7 @@ class LoginControllerTest extends WebTestCase
         $data = array('username' => 'test_user_1', 'password' => 123456);
         $client = static::createClient();
         $post = new JsonPostRequest($client);
-        $response = $post->post(self::$LOGIN_URI, $post->getStandardHeaders(), $data);
+        $response = $post->post($this->getLoginUri(), $post->getStandardHeaders(), $data);
 
         $content = json_decode($response->getContent(), true);
         $this->assertNotNull($content['auth_token']['key']);
@@ -34,7 +32,7 @@ class LoginControllerTest extends WebTestCase
         $data = array('username' => 'test_user_1', 'password' => 123457);
         $client = static::createClient();
         $post = new JsonPostRequest($client);
-        $response = $post->post(self::$LOGIN_URI, $post->getStandardHeaders(), $data);
+        $response = $post->post($this->getLoginUri(), $post->getStandardHeaders(), $data);
 
         $content = json_decode($response->getContent(), true);
         $this->assertContains('Invalid username or password.', $content['message']);
@@ -46,7 +44,7 @@ class LoginControllerTest extends WebTestCase
         $data = array('username' => 'test', 'password' => 123456);
         $client = static::createClient();
         $post = new JsonPostRequest($client);
-        $response = $post->post(self::$LOGIN_URI, $post->getStandardHeaders(), $data);
+        $response = $post->post($this->getLoginUri(), $post->getStandardHeaders(), $data);
 
         $content = json_decode($response->getContent(), true);
         $this->assertContains('Invalid username or password.', $content['message']);
@@ -58,7 +56,7 @@ class LoginControllerTest extends WebTestCase
         $data = array('username' => '');
         $client = static::createClient();
         $post = new JsonPostRequest($client);
-        $response = $post->post(self::$LOGIN_URI, $post->getStandardHeaders(), $data);
+        $response = $post->post($this->getLoginUri(), $post->getStandardHeaders(), $data);
 
         $content = json_decode($response->getContent(), true);
         $this->assertContains('This value should not be blank.',
@@ -72,12 +70,17 @@ class LoginControllerTest extends WebTestCase
         $data = array('username' => '');
         $client = static::createClient();
         $post = new JsonPostRequest($client);
-        $response = $post->post(self::$LOGIN_URI, $post->getStandardHeaders(), $data);
+        $response = $post->post($this->getLoginUri(), $post->getStandardHeaders(), $data);
 
         $content = json_decode($response->getContent(), true);
         $this->assertContains('This value should not be blank.',
             $content['errors']['password'][0]);
         
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+    }
+    
+    private function getLoginUri()
+    {
+        return $this->getUrl('api_v1_login');
     }
 }
