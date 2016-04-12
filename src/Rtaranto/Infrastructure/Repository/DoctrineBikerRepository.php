@@ -2,8 +2,10 @@
 namespace Rtaranto\Infrastructure\Repository;
 
 use Doctrine\ORM\EntityManager;
+use PhpOption\Tests\Repository;
 use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class DoctrineBikerRepository implements BikerRepositoryInterface
 {
@@ -23,13 +25,13 @@ class DoctrineBikerRepository implements BikerRepositoryInterface
 
     public function get($id)
     {
-        $doctrineRepository = $this->getDoctrineUserRepository();
+        $doctrineRepository = $this->getDoctrineEntityRepository();
         return $doctrineRepository->find($id);
     }
     
     public function getAll($filters = array(), $orderBy = null, $limit = null, $offset = null)
     {
-        $doctrineRepository = $this->getDoctrineUserRepository();
+        $doctrineRepository = $this->getDoctrineEntityRepository();
         return $doctrineRepository->findBy($filters, $orderBy, $limit, $offset);
     }
 
@@ -49,8 +51,15 @@ class DoctrineBikerRepository implements BikerRepositoryInterface
     /**
      * @return Repository
      */
-    private function getDoctrineUserRepository()
+    private function getDoctrineEntityRepository()
     {
         return $this->em->getRepository('Domain:Biker');
     }
+
+    public function findOneByUser(UserInterface $user)
+    {
+        $doctrineRepository = $this->getDoctrineEntityRepository();
+        return $doctrineRepository->findOneBy(array('user' => $user));
+    }
+
 }

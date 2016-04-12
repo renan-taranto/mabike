@@ -16,3 +16,19 @@ Rtaranto\Domain\Entity\Biker:
             type: string
             length: 255
             unique: true
+
+    oneToOne:
+        user:
+            targetEntity: User
+            nullable: true
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+
+    oneToMany:
+        motorcycles:
+            targetEntity: Motorcycle
+            mappedBy: biker
+            cascade: ["persist", "merge"]
+            orphanRemoval: true
+                    

@@ -2,6 +2,8 @@
 namespace Rtaranto\Domain\Entity\Repository;
 
 use Rtaranto\Domain\Entity\Biker;
+use Rtaranto\Domain\Entity\User;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 interface BikerRepositoryInterface
 {
@@ -28,4 +30,10 @@ interface BikerRepositoryInterface
      * @param integer $id
      */
     public function delete($id);
+    
+    /**
+     * @param User $user
+     * @return Biker
+     */
+    public function findOneByUser(UserInterface $user);
 }

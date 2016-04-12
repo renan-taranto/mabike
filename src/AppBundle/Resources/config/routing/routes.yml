@@ -17,3 +17,8 @@ api_bikers:
     type:         rest
     resource:     Rtaranto\Presentation\Controller\BikerController
     name_prefix:  api_v1_
+    
+api_motorcycles:
+    type:         rest
+    resource:     Rtaranto\Presentation\Controller\MotorcycleController
+    name_prefix:  api_v1_

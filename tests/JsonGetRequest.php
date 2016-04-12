@@ -25,8 +25,19 @@ class JsonGetRequest implements GetRequest
         return array('HTTP_ACCEPT' => 'application/json');
     }
     
-    public function getStandardHeadersWithAuthentication()
+    public function getStandardHeadersWithAuthenticationforUser1()
     {
         return array('HTTP_ACCEPT' => 'application/json', 'HTTP_X-AUTH-TOKEN' => 'testuserkey');
     }
+
+    public function getStandardHeadersWithAuthenticationforUser2()
+    {
+        return array('HTTP_ACCEPT' => 'application/json', 'HTTP_X-AUTH-TOKEN' => 'testuser2key');
+    }
+    
+    public function getStandardHeadersWithAuthenticationforUser3()
+    {
+        return array('HTTP_ACCEPT' => 'application/json', 'HTTP_X-AUTH-TOKEN' => 'testuser3key');
+    }
+
 }

@@ -1,7 +1,6 @@
 Rtaranto\Domain\Entity\Motorcycle:
     type: entity
     table: null
-    repositoryClass: Rtaranto\Domain\Entity\Repository\MotorcycleRepository
     id:
         id:
             type: integer
@@ -9,19 +8,19 @@ Rtaranto\Domain\Entity\Motorcycle:
             generator:
                 strategy: AUTO
     fields:
-        brand:
-            type: string
-            length: '20'
         model:
             type: string
             length: '20'
-        color:
-            type: string
-            length: '20'
-        year:
-            type: datetime
-        kilometersDriven:
+        kmsDriven:
             type: integer
             options:
                 unsigned: true
+    manyToOne:
+        biker:
+            targetEntity: Biker
+            inversedBy: motorcycles
+            joinColumn:
+                name: biker_id
+                referencedColumnName: id
+                
     lifecycleCallbacks: {  }

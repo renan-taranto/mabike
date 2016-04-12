@@ -145,7 +145,7 @@ class BikerControllerTest extends WebTestCase
         $client = static::createClient();
         
         $getRequest = new JsonGetRequest($client);
-        $response = $getRequest->get(self::$URI . '/1', $getRequest->getStandardHeadersWithAuthentication());
+        $response = $getRequest->get(self::$URI . '/1', $getRequest->getStandardHeadersWithAuthenticationforUser1());
         
         $content = json_decode($response->getContent(), true);
         $expected = array('id' => 1, 'name' => 'Test Biker', 'email' => 'testbiker@email.com');
@@ -164,7 +164,7 @@ class BikerControllerTest extends WebTestCase
         $getRequest = new JsonGetRequest($client);
         
         $id = 123124213;
-        $response = $getRequest->get(self::$URI . '/' . $id, $getRequest->getStandardHeadersWithAuthentication());
+        $response = $getRequest->get(self::$URI . '/' . $id, $getRequest->getStandardHeadersWithAuthenticationforUser1());
         $content = json_decode($response->getContent(), true);
         
         $expectedContent = array(
@@ -184,7 +184,7 @@ class BikerControllerTest extends WebTestCase
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
         
-        $response = $getRequest->get(self::$URI, $getRequest->getStandardHeadersWithAuthentication());
+        $response = $getRequest->get(self::$URI, $getRequest->getStandardHeadersWithAuthenticationforUser1());
         $content = json_decode($response->getContent(), true);
         
         $expectedBiker1 = array('id' => 1, 'name' => 'Test Biker', 'email' => 'testbiker@email.com');
@@ -197,7 +197,7 @@ class BikerControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
-        $response = $getRequest->get(self::$URI . '?&limit=1', $getRequest->getStandardHeadersWithAuthentication());
+        $response = $getRequest->get(self::$URI . '?&limit=1', $getRequest->getStandardHeadersWithAuthenticationforUser1());
         $content = json_decode($response->getContent(), true);
         $expectedBiker = array('id' => 1, 'name' => 'Test Biker', 'email' => 'testbiker@email.com');
         $this->assertEquals(array($expectedBiker), $content);
@@ -208,7 +208,7 @@ class BikerControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
-        $response = $getRequest->get(self::$URI . '?&orderBy[id]=desc', $getRequest->getStandardHeadersWithAuthentication());
+        $response = $getRequest->get(self::$URI . '?&orderBy[id]=desc', $getRequest->getStandardHeadersWithAuthenticationforUser1());
         $content = json_decode($response->getContent(), true);
         $expectedBiker = array('id' => 2, 'name' => 'Test Biker2', 'email' => 'testbiker2@email.com');
         $this->assertEquals($expectedBiker, $content[0]);
@@ -219,7 +219,7 @@ class BikerControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
-        $response = $getRequest->get(self::$URI . '?&offset=1', $getRequest->getStandardHeadersWithAuthentication());
+        $response = $getRequest->get(self::$URI . '?&offset=1', $getRequest->getStandardHeadersWithAuthenticationforUser1());
         $content = json_decode($response->getContent(), true);
         $expectedBiker = array('id' => 2, 'name' => 'Test Biker2', 'email' => 'testbiker2@email.com');
         $this->assertEquals($expectedBiker, $content[0]);
@@ -230,7 +230,7 @@ class BikerControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
-        $response = $getRequest->get(self::$URI . '?&filters[name]=Test Biker2', $getRequest->getStandardHeadersWithAuthentication());
+        $response = $getRequest->get(self::$URI . '?&filters[name]=Test Biker2', $getRequest->getStandardHeadersWithAuthenticationforUser1());
         $content = json_decode($response->getContent(), true);
         $expectedBiker = array('id' => 2, 'name' => 'Test Biker2', 'email' => 'testbiker2@email.com');
         $this->assertEquals($expectedBiker, $content[0]);
@@ -241,7 +241,7 @@ class BikerControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
-        $response = $getRequest->get(self::$URI . '?&offset=0&limit=1', $getRequest->getStandardHeadersWithAuthentication());
+        $response = $getRequest->get(self::$URI . '?&offset=0&limit=1', $getRequest->getStandardHeadersWithAuthenticationforUser1());
         $content = json_decode($response->getContent(), true);
         $expectedBiker = array('id' => 1, 'name' => 'Test Biker', 'email' => 'testbiker@email.com');
         $this->assertEquals($expectedBiker, $content[0]);
@@ -338,7 +338,7 @@ class BikerControllerTest extends WebTestCase
         $getRequest = new JsonGetRequest($client);
         $getResponse = $getRequest->get(
             $this->getUrl('api_v1_get_biker', array('id' => $id)),
-            $getRequest->getStandardHeadersWithAuthentication()
+            $getRequest->getStandardHeadersWithAuthenticationforUser1()
         );
         
         $content = json_decode($getResponse->getContent(), true);

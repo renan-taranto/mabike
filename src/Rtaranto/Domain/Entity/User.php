@@ -24,6 +24,9 @@ class User implements UserInterface
      */
     private $email;
 
+    /**
+     * @var array
+     */
     private $roles;
     
     /**
@@ -40,7 +43,6 @@ class User implements UserInterface
      * @var string
      */
     private $password;
-    
     
     public function __construct($username, $email, $password)
     {

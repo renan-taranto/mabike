@@ -2,15 +2,16 @@
 namespace Tests\Rtaranto\Infrastructure\Repository;
 
 use AppBundle\DataFixtures\ORM\LoadBikerTestingData;
+use AppBundle\DataFixtures\ORM\LoadUserTestingData;
+use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Infrastructure\Repository\DoctrineBikerRepository;
-use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 class DoctrineBikerRepositoryTest extends WebTestCase
 {
     public function setUp()
     {
-        $this->loadFixtures(array(LoadBikerTestingData::class));
+        $this->loadFixtures(array(LoadUserTestingData::class, LoadBikerTestingData::class));
     }
     
     public function testSuccessfullyFindBiker()
