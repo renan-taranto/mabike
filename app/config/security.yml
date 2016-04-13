@@ -34,9 +34,10 @@ security:
             stateless: true        
                     
     role_hierarchy:
-        ROLE_DEV:       ROLE_DEV
-        ROLE_BIKER:       ROLE_USER
+        ROLE_DEV:       ROLE_BIKER
+        ROLE_BIKER:     ROLE_USER
         
     access_control:
         - { path: ^/api/v1/bikers, roles: ROLE_DEV }
+        - { path: ^/api/v1/motorcycles, roles: ROLE_BIKER }
         - { path: ^/api/v1, roles: ROLE_USER }

@@ -33,7 +33,7 @@ class MotorcycleControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
     
-    public function testCgetMotorcyclesForUserWithoutBikerReturnsEmptyArray()
+    public function testCgetMotorcyclesForUserWithoutBikerRoleReturnsForbidden()
     {
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
@@ -42,12 +42,7 @@ class MotorcycleControllerTest extends WebTestCase
         $apiKey = $this->fixtures->getReferenceRepository()->getReference('user')->getApiKey();
         $response = $getRequest->get($uri, $apiKey);
         
-        $content = json_decode($response->getContent(), true);
-        
-        $expectedMotorcycle = array();
-
-        $this->assertEquals($expectedMotorcycle, $content);        
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
     }
     
     public function testCgetMotorcyclesForBikerWithoutMotorcyclesReturnsEmptyArray()
