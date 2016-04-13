@@ -5,6 +5,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Rtaranto\Application\EndpointAction\Factory\Motorcycle\CgetMotorcyclesActionFactory;
+use Rtaranto\Application\EndpointAction\Factory\Motorcycle\DeleteMotorcycleActionFactory;
 use Rtaranto\Application\EndpointAction\Factory\Motorcycle\GetMotorcycleActionFactory;
 use Rtaranto\Application\EndpointAction\Factory\Motorcycle\PostMotorcycleActionFactory;
 use Rtaranto\Application\Exception\ValidationFailedException;
@@ -52,7 +53,15 @@ class MotorcycleController extends FOSRestController implements ClassResourceInt
         $view = $this->view($motorcycle, Response::HTTP_CREATED, array('Location' => $location));
         
         return $view;
-        
+    }
+    
+    public function deleteAction($id)
+    {
+        $user = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $deleteMotorcycleActionFactory = new DeleteMotorcycleActionFactory($user, $em);
+        $deleteMotorcycleAction = $deleteMotorcycleActionFactory->createDeleteAction();
+        $deleteMotorcycleAction->delete($id);
     }
     
     private function createLocationHeaderContent($id, $request)

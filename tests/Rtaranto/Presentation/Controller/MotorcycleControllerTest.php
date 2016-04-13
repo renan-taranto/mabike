@@ -5,6 +5,7 @@ use AppBundle\DataFixtures\ORM\LoadBikerTestingData;
 use AppBundle\DataFixtures\ORM\LoadUserTestingData;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
+use Tests\DeleteRequestImpl;
 use Tests\JsonGetRequest;
 use Tests\JsonPostRequest;
 
@@ -150,6 +151,30 @@ class MotorcycleControllerTest extends WebTestCase
         $this->assertStatusCode(Response::HTTP_NOT_FOUND, $client);
         $this->assertArrayHasKey('code', $content);
         $this->assertArrayHasKey('message', $content);
+    }
+    
+    public function testSuccessfullyDeleteReturnsNoContent()
+    {
+        $client = static::createClient();
+        $deleteRequest = new DeleteRequestImpl($client);
+        $id = 1;
+        $uri = $this->getMotorcycleResourceUri(array('id' => $id));
+        $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
+        $deleteRequest->delete($uri, $apiKey);
+        
+        $this->assertStatusCode(Response::HTTP_NO_CONTENT, $client);
+    }
+    
+    public function testDeleteReturnsNotFound()
+    {
+        $client = static::createClient();
+        $deleteRequest = new DeleteRequestImpl($client);
+        $id = 100;
+        $uri = $this->getMotorcycleResourceUri(array('id' => $id));
+        $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
+        $deleteRequest->delete($uri, $apiKey);
+        
+        $this->assertStatusCode(Response::HTTP_NOT_FOUND, $client);
     }
     
     private function getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles()
