@@ -15,25 +15,17 @@ class JsonPostRequest implements PostRequest
     
     /**
      * @param string $uri
+     * @param array $data
+     * @param string $apiKey
      * @param array $headers
-     * @param string $data
      * @return Response
      */
-    public function post($uri, $headers, array $data = null)
+    public function post($uri, array $data = null, $apiKey = null, array $headers = null)
     {
+        $headers = JsonHeadersFactory::createHeaders($headers, $apiKey);
         $this->client->request('POST', $uri, array(), array(), $headers, json_encode($data));
         $response = $this->client->getResponse();
         $this->client->restart();
         return $response;
-    }
-    
-    public function getStandardHeaders()
-    {
-        return array('CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json');
-    }
-    
-    public function getStandardHeadersWithAuthentication()
-    {
-        return array('CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json', 'HTTP_X-AUTH-TOKEN' => 'testuserkey');
     }
 }

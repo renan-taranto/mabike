@@ -13,12 +13,12 @@ class LoadBikerTestingData extends AbstractFixture implements FixtureInterface, 
     public function load(ObjectManager $manager)
     {
         $biker = new Biker('Test Biker', 'testbiker@email.com');
-        $biker->setUser($this->getReference('user1'));
+        $biker->setUser($this->getReference('biker_user_1'));
         $motorcycle = new Motorcycle('Ducati Hypermotard 796');
         $biker->addMotorcycle($motorcycle);
         
         $aSecondBiker = new Biker('Test Biker2', 'testbiker2@email.com');
-        $aSecondBiker->setUser($this->getReference('user2'));
+        $aSecondBiker->setUser($this->getReference('biker_user_2'));
         
         $manager->persist($biker);
         $manager->persist($aSecondBiker);

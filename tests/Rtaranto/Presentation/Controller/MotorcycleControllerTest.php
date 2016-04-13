@@ -9,9 +9,11 @@ use Tests\JsonGetRequest;
 
 class MotorcycleControllerTest extends WebTestCase
 {
+    private $fixtures;
+    
     public function setUp()
     {
-        $this->loadFixtures(array(LoadUserTestingData::class, LoadBikerTestingData::class));
+        $this->fixtures = $this->loadFixtures(array(LoadUserTestingData::class, LoadBikerTestingData::class));
     }
     
     public function testCgetMotorcyclesReturnsCollection()
@@ -19,7 +21,9 @@ class MotorcycleControllerTest extends WebTestCase
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
         $uri = $this->getMotorcyclesEndpointUri();
-        $response = $getRequest->get($uri, $getRequest->getStandardHeadersWithAuthenticationforUser1());
+        
+        $apiKey = $this->fixtures->getReferenceRepository()->getReference('biker_user_1')->getApiKey();
+        $response = $getRequest->get($uri, $apiKey);
         
         $content = json_decode($response->getContent(), true);
         
@@ -34,7 +38,9 @@ class MotorcycleControllerTest extends WebTestCase
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
         $uri = $this->getMotorcyclesEndpointUri();
-        $response = $getRequest->get($uri, $getRequest->getStandardHeadersWithAuthenticationforUser2());
+        
+        $apiKey = $this->fixtures->getReferenceRepository()->getReference('user')->getApiKey();
+        $response = $getRequest->get($uri, $apiKey);
         
         $content = json_decode($response->getContent(), true);
         
@@ -49,7 +55,9 @@ class MotorcycleControllerTest extends WebTestCase
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
         $uri = $this->getMotorcyclesEndpointUri();
-        $response = $getRequest->get($uri, $getRequest->getStandardHeadersWithAuthenticationforUser3());
+        
+        $apiKey = $this->fixtures->getReferenceRepository()->getReference('biker_user_2')->getApiKey();
+        $response = $getRequest->get($uri, $apiKey);
         
         $content = json_decode($response->getContent(), true);
         

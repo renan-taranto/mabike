@@ -12,9 +12,11 @@ use Tests\JsonPostRequest;
 
 class BikerControllerTest extends WebTestCase
 {
+    private $fixtures;
+    
     public function setUp()
     {
-        $this->loadFixtures(array(LoadUserTestingData::class, LoadBikerTestingData::class));
+        $this->fixtures = $this->loadFixtures(array(LoadUserTestingData::class, LoadBikerTestingData::class));
     }
     
     public function testSuccessfullyPostBiker()
@@ -27,11 +29,11 @@ class BikerControllerTest extends WebTestCase
         $post = new JsonPostRequest($client);
         $data = array('name' => $name, 'email' => $email);
         
-        $response = $post->post($this->getBikersEndpointUri(), $post->getStandardHeadersWithAuthentication(), $data);
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $post->post($this->getBikersEndpointUri(), $data, $apiKey);
         $content = json_decode($response->getContent(), true);
         
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
-        
         
         $this->assertTrue($response->headers->contains('Content-Type','application/json'));
         
@@ -54,7 +56,8 @@ class BikerControllerTest extends WebTestCase
         $post = new JsonPostRequest($client);
         $data = array();
         
-        $response = $post->post($this->getBikersEndpointUri(), $post->getStandardHeadersWithAuthentication(), $data);
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $post->post($this->getBikersEndpointUri(), $data, $apiKey);
         $content = json_decode($response->getContent(), true);
         
         $this->assertContains('This value should not be blank.',
@@ -69,7 +72,8 @@ class BikerControllerTest extends WebTestCase
         $post = new JsonPostRequest($client);
         $data = array();
         
-        $response = $post->post($this->getBikersEndpointUri(), $post->getStandardHeadersWithAuthentication(), $data);
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $post->post($this->getBikersEndpointUri(), $data, $apiKey);
         $content = json_decode($response->getContent(), true);
         
         $this->assertContains('This value should not be blank.',
@@ -86,7 +90,8 @@ class BikerControllerTest extends WebTestCase
             'name' => 'new test biker',
             'email' => 'testbiker@email.com');
         
-        $response = $post->post($this->getBikersEndpointUri(), $post->getStandardHeadersWithAuthentication(), $data);
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $post->post($this->getBikersEndpointUri(), $data, $apiKey);
         $content = json_decode($response->getContent(), true);
         
         $this->assertContains('E-mail address already in use.', $content['errors']['email'][0]);
@@ -102,7 +107,8 @@ class BikerControllerTest extends WebTestCase
             'name' => 'Test Biker',
             'email' => 'testnewbiker@email.com');
         
-        $response = $post->post($this->getBikersEndpointUri(), $post->getStandardHeadersWithAuthentication(), $data);
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $post->post($this->getBikersEndpointUri(), $data, $apiKey);
         $content = json_decode($response->getContent(), true);
         
         $this->assertContains('Name already in use.', $content['errors']['name'][0]);
@@ -116,7 +122,8 @@ class BikerControllerTest extends WebTestCase
         $post = new JsonPostRequest($client);
         $data = array('name' => str_repeat('u', 7));
         
-        $response = $post->post($this->getBikersEndpointUri(), $post->getStandardHeadersWithAuthentication(), $data);
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $post->post($this->getBikersEndpointUri(), $data, $apiKey);
         $content = json_decode($response->getContent(), true);
         
         $this->assertContains('Validation Failed', $content['message']);
@@ -130,7 +137,8 @@ class BikerControllerTest extends WebTestCase
         $post = new JsonPostRequest($client);
         $data = array('name' => str_repeat('u', 51));
         
-        $response = $post->post($this->getBikersEndpointUri(), $post->getStandardHeadersWithAuthentication(), $data);
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $post->post($this->getBikersEndpointUri(), $data, $apiKey);
         $content = json_decode($response->getContent(), true);
         
         $this->assertContains('Validation Failed', $content['message']);
@@ -143,7 +151,9 @@ class BikerControllerTest extends WebTestCase
         $client = static::createClient();
         
         $getRequest = new JsonGetRequest($client);
-        $response = $getRequest->get($this->getBikersEndpointUri() . '/1', $getRequest->getStandardHeadersWithAuthenticationforUser1());
+        
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $getRequest->get($this->getBikersEndpointUri() . '/1', $apiKey);
         
         $content = json_decode($response->getContent(), true);
         $expected = array('id' => 1, 'name' => 'Test Biker', 'email' => 'testbiker@email.com');
@@ -162,7 +172,8 @@ class BikerControllerTest extends WebTestCase
         $getRequest = new JsonGetRequest($client);
         
         $id = 123124213;
-        $response = $getRequest->get($this->getBikersEndpointUri() . '/' . $id, $getRequest->getStandardHeadersWithAuthenticationforUser1());
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $getRequest->get($this->getBikersEndpointUri() . '/' . $id, $apiKey);
         $content = json_decode($response->getContent(), true);
         
         $expectedContent = array(
@@ -182,7 +193,8 @@ class BikerControllerTest extends WebTestCase
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
         
-        $response = $getRequest->get($this->getBikersEndpointUri(), $getRequest->getStandardHeadersWithAuthenticationforUser1());
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $getRequest->get($this->getBikersEndpointUri(), $apiKey);
         $content = json_decode($response->getContent(), true);
         
         $expectedBiker1 = array('id' => 1, 'name' => 'Test Biker', 'email' => 'testbiker@email.com');
@@ -195,7 +207,10 @@ class BikerControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
-        $response = $getRequest->get($this->getBikersEndpointUri() . '?&limit=1', $getRequest->getStandardHeadersWithAuthenticationforUser1());
+        
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $getRequest->get($this->getBikersEndpointUri() . '?&limit=1', $apiKey);
+        
         $content = json_decode($response->getContent(), true);
         $expectedBiker = array('id' => 1, 'name' => 'Test Biker', 'email' => 'testbiker@email.com');
         $this->assertEquals(array($expectedBiker), $content);
@@ -206,7 +221,10 @@ class BikerControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
-        $response = $getRequest->get($this->getBikersEndpointUri() . '?&orderBy[id]=desc', $getRequest->getStandardHeadersWithAuthenticationforUser1());
+        
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $getRequest->get($this->getBikersEndpointUri() . '?&orderBy[id]=desc', $apiKey);
+        
         $content = json_decode($response->getContent(), true);
         $expectedBiker = array('id' => 2, 'name' => 'Test Biker2', 'email' => 'testbiker2@email.com');
         $this->assertEquals($expectedBiker, $content[0]);
@@ -217,7 +235,10 @@ class BikerControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
-        $response = $getRequest->get($this->getBikersEndpointUri() . '?&offset=1', $getRequest->getStandardHeadersWithAuthenticationforUser1());
+        
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $getRequest->get($this->getBikersEndpointUri() . '?&offset=1', $apiKey);
+        
         $content = json_decode($response->getContent(), true);
         $expectedBiker = array('id' => 2, 'name' => 'Test Biker2', 'email' => 'testbiker2@email.com');
         $this->assertEquals($expectedBiker, $content[0]);
@@ -228,7 +249,10 @@ class BikerControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
-        $response = $getRequest->get($this->getBikersEndpointUri() . '?&filters[name]=Test Biker2', $getRequest->getStandardHeadersWithAuthenticationforUser1());
+        
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $getRequest->get($this->getBikersEndpointUri() . '?&filters[name]=Test Biker2', $apiKey);
+        
         $content = json_decode($response->getContent(), true);
         $expectedBiker = array('id' => 2, 'name' => 'Test Biker2', 'email' => 'testbiker2@email.com');
         $this->assertEquals($expectedBiker, $content[0]);
@@ -239,7 +263,10 @@ class BikerControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
-        $response = $getRequest->get($this->getBikersEndpointUri() . '?&offset=0&limit=1', $getRequest->getStandardHeadersWithAuthenticationforUser1());
+        
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $getRequest->get($this->getBikersEndpointUri() . '?&offset=0&limit=1', $apiKey);
+        
         $content = json_decode($response->getContent(), true);
         $expectedBiker = array('id' => 1, 'name' => 'Test Biker', 'email' => 'testbiker@email.com');
         $this->assertEquals($expectedBiker, $content[0]);
@@ -257,7 +284,8 @@ class BikerControllerTest extends WebTestCase
         $data = array('name' => $name, 'email' => $email);
         $expectedContent = array('id' => $id, 'name' => $name, 'email' => $email);
         
-        $response = $getRequest->patch($this->getBikersEndpointUri() . '/' . $id, $getRequest->getStandardHeadersWithAuthentication(), $data);
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $getRequest->patch($this->getBikersEndpointUri() . '/' . $id, $data, $apiKey);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         
         $content = json_decode($response->getContent(), true);
@@ -279,7 +307,8 @@ class BikerControllerTest extends WebTestCase
         $data = array('name' => $name);
         $expectedContent = array('id' => $id, 'name' => $name, 'email' => 'testbiker@email.com');
         
-        $response = $getRequest->patch($this->getBikersEndpointUri() . '/' . $id, $getRequest->getStandardHeadersWithAuthentication(), $data);
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $getRequest->patch($this->getBikersEndpointUri() . '/' . $id, $data, $apiKey);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         
         $content = json_decode($response->getContent(), true);
@@ -297,7 +326,8 @@ class BikerControllerTest extends WebTestCase
         
         $id = 100;
         
-        $response = $getRequest->patch($this->getBikersEndpointUri() . '/' . $id, $getRequest->getStandardHeadersWithAuthentication(), array());
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $getRequest->patch($this->getBikersEndpointUri() . '/' . $id, array(), $apiKey);
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
     
@@ -307,15 +337,17 @@ class BikerControllerTest extends WebTestCase
         $getRequest = new JsonPatchRequest($client);
         $id = 1;
         $data = array('name' => 'sn');
-        $response = $getRequest->patch($this->getBikersEndpointUri() . '/' . $id, $getRequest->getStandardHeadersWithAuthentication(), $data);
+        
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $getRequest->patch($this->getBikersEndpointUri() . '/' . $id, $data, $apiKey);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
     
     public function testOptionsResponseContainsCorrectAllowHeader()
     {
         $client = static::createClient();
-        $headers = array('HTTP_X-AUTH-TOKEN' => 'testuserkey');
-        $client->request('OPTIONS', $this->getBikersEndpointUri(), array(), array(), $headers);
+        
+        $client->request('OPTIONS', $this->getBikersEndpointUri(), array(), array(), array('HTTP_X-AUTH-TOKEN' => $this->getApiKeyForUserWithDevRole()));
         
         $response = $client->getResponse();
         $returnedAllowHeaderAsArray = explode(',', $response->headers->get('Allow'));
@@ -330,13 +362,13 @@ class BikerControllerTest extends WebTestCase
         $id = 1;
         $deleteResponse = $deleteRequest->delete(
             $this->getUrl('api_v1_get_biker', array('id' => $id)),
-            $deleteRequest->getAuthenticationHeader()
+            $this->getApiKeyForUserWithDevRole()
         );
         
         $getRequest = new JsonGetRequest($client);
         $getResponse = $getRequest->get(
             $this->getUrl('api_v1_get_biker', array('id' => $id)),
-            $getRequest->getStandardHeadersWithAuthenticationforUser1()
+            $this->getApiKeyForUserWithDevRole()
         );
         
         $content = json_decode($getResponse->getContent(), true);
@@ -362,13 +394,106 @@ class BikerControllerTest extends WebTestCase
         $id = 100000;
         $response = $deleteRequest->delete(
             $this->getUrl('api_v1_get_biker', array('id' => $id)),
-            $deleteRequest->getAuthenticationHeader()
+            $this->getApiKeyForUserWithDevRole()
         );
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+    
+    public function testGetReturnsForbiddenForUserWithoutDevRole()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonGetRequest($client);
+        
+        $apiKey = $this->getApiKeyForUserWithoutDevRole();
+        $response = $getRequest->get($this->getBikersEndpointUri() . '/1', $apiKey);
+        
+        $content = json_decode($response->getContent(), true);
+        $expected = $this->createForbiddenMessageAsArray();
+        $this->assertEquals($expected, $content);
+        
+        $returnedAllowHeaderAsArray = explode(',', $response->headers->get('Allow'));
+        $expectedAllowHeaders = array('PATCH', 'DELETE', 'GET');
+        $this->assertEquals(sort($expectedAllowHeaders), sort($returnedAllowHeaderAsArray));
+        
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+    }
+    
+    public function testCgetReturnsForbiddenForUserWithoutDevRole()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonGetRequest($client);
+        
+        $apiKey = $this->getApiKeyForUserWithoutDevRole();
+        $response = $getRequest->get($this->getBikersEndpointUri() ,$apiKey);
+        
+        $content = json_decode($response->getContent(), true);
+        $expected = $this->createForbiddenMessageAsArray();
+        $this->assertEquals($expected, $content);
+        
+        $returnedAllowHeaderAsArray = explode(',', $response->headers->get('Allow'));
+        $expectedAllowHeaders = $this->createExpectedAllowHeadersForCollectionEndpoint();
+        $this->assertEquals(sort($expectedAllowHeaders), sort($returnedAllowHeaderAsArray));
+        
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+    }
+    
+    public function testPostReturnsForbiddenForUserWithoutDevRole()
+    {
+        $client = static::createClient();
+        
+        $post = new JsonPostRequest($client);
+        $data = array();
+        
+        $apiKey = $this->getApiKeyForUserWithoutDevRole();
+        $response = $post->post($this->getBikersEndpointUri(), $data, $apiKey);
+        
+        $content = json_decode($response->getContent(), true);
+        $expected = $this->createForbiddenMessageAsArray();
+        $this->assertEquals($expected, $content);
+        
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+    }
+    
+        
+    public function testPatchReturnsForbiddenForUserWithoutDevRole()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonPatchRequest($client);
+        
+        $id = 100;
+        
+        $apiKey = $this->getApiKeyForUserWithoutDevRole();
+        $response = $getRequest->patch($this->getBikersEndpointUri() . '/' . $id, array(), $apiKey);
+        
+        $content = json_decode($response->getContent(), true);
+        $expected = $this->createForbiddenMessageAsArray();
+        $this->assertEquals($expected, $content);
+        
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+    }
+    
+    private function createExpectedAllowHeadersForCollectionEndpoint()
+    {
+        return array('POST', 'GET', 'OPTIONS');
+    }
+    
+    private function createForbiddenMessageAsArray()
+    {
+        return array('code' => 403, 'message' => 'Access Denied.');
     }
     
     private function getBikersEndpointUri()
     {
         return $this->getUrl('api_v1_get_bikers');
+    }
+    
+    private function getApiKeyForUserWithDevRole()
+    {
+        return $this->fixtures->getReferenceRepository()->getReference('dev_user')->getApiKey();
+    }
+    
+    private function getApiKeyForUserWithoutDevRole()
+    {
+        return $this->fixtures->getReferenceRepository()->getReference('user')->getApiKey();
     }
 }

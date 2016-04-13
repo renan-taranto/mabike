@@ -11,6 +11,7 @@ class User implements UserInterface
 {
     const ROLE_USER = 'ROLE_USER';
     const ROLE_BIKER = 'ROLE_BIKER';
+    const ROLE_DEV = 'ROLE_DEV';
     
     /**
      * @var int

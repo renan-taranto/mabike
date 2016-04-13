@@ -20,7 +20,7 @@ class RegistrationController extends FOSRestController
     {
         $registrationForm = $this->createForm(
             RegistrationType::class,
-            new UserRegistrationDTO(array(User::ROLE_USER))
+            new UserRegistrationDTO(array(User::ROLE_BIKER))
         );
         $registrationForm->submit($request->request->all());
 

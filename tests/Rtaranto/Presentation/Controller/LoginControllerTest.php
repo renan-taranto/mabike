@@ -8,9 +8,11 @@ use Tests\JsonPostRequest;
 
 class LoginControllerTest extends WebTestCase
 {
+    private $fixtures;
+    
     public function setUp()
     {
-        $this->loadFixtures(array(LoadUserTestingData::class));
+        $this->fixtures = $this->loadFixtures(array(LoadUserTestingData::class));
     }
     
     public function testSuccesfullLoginReturnsToken()
@@ -18,8 +20,10 @@ class LoginControllerTest extends WebTestCase
         $data = array('username' => 'test_user_1', 'password' => 123456);
         $client = static::createClient();
         $post = new JsonPostRequest($client);
-        $response = $post->post($this->getLoginUri(), $post->getStandardHeaders(), $data);
 
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $post->post($this->getLoginUri(), $data, $apiKey);
+        
         $content = json_decode($response->getContent(), true);
         $this->assertNotNull($content['auth_token']['key']);
         $this->assertNotNull($content['auth_token']['expiration_date_time']);
@@ -32,7 +36,9 @@ class LoginControllerTest extends WebTestCase
         $data = array('username' => 'test_user_1', 'password' => 123457);
         $client = static::createClient();
         $post = new JsonPostRequest($client);
-        $response = $post->post($this->getLoginUri(), $post->getStandardHeaders(), $data);
+        
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $post->post($this->getLoginUri(), $data, $apiKey);
 
         $content = json_decode($response->getContent(), true);
         $this->assertContains('Invalid username or password.', $content['message']);
@@ -44,7 +50,9 @@ class LoginControllerTest extends WebTestCase
         $data = array('username' => 'test', 'password' => 123456);
         $client = static::createClient();
         $post = new JsonPostRequest($client);
-        $response = $post->post($this->getLoginUri(), $post->getStandardHeaders(), $data);
+        
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $post->post($this->getLoginUri(), $data, $apiKey);
 
         $content = json_decode($response->getContent(), true);
         $this->assertContains('Invalid username or password.', $content['message']);
@@ -56,7 +64,9 @@ class LoginControllerTest extends WebTestCase
         $data = array('username' => '');
         $client = static::createClient();
         $post = new JsonPostRequest($client);
-        $response = $post->post($this->getLoginUri(), $post->getStandardHeaders(), $data);
+        
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $post->post($this->getLoginUri(), $data, $apiKey);
 
         $content = json_decode($response->getContent(), true);
         $this->assertContains('This value should not be blank.',
@@ -70,7 +80,9 @@ class LoginControllerTest extends WebTestCase
         $data = array('username' => '');
         $client = static::createClient();
         $post = new JsonPostRequest($client);
-        $response = $post->post($this->getLoginUri(), $post->getStandardHeaders(), $data);
+        
+        $apiKey = $this->getApiKeyForUserWithDevRole();
+        $response = $post->post($this->getLoginUri(), $data, $apiKey);
 
         $content = json_decode($response->getContent(), true);
         $this->assertContains('This value should not be blank.',
@@ -82,5 +94,10 @@ class LoginControllerTest extends WebTestCase
     private function getLoginUri()
     {
         return $this->getUrl('api_v1_login');
+    }
+    
+    private function getApiKeyForUserWithDevRole()
+    {
+        return $this->fixtures->getReferenceRepository()->getReference('dev_user')->getApiKey();
     }
 }

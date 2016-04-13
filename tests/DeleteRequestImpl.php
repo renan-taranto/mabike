@@ -12,16 +12,12 @@ class DeleteRequestImpl implements DeleteRequest
         $this->client = $client;
     }
     
-    public function delete($uri, $headers)
+    public function delete($uri, $apiKey = null, array $headers = null)
     {
+        $headers = JsonHeadersFactory::createHeaders($headers, $apiKey);
         $this->client->request('DELETE', $uri, array(), array(), $headers);
         $response = $this->client->getResponse();
         $this->client->restart();
         return $response;
-    }
-    
-    public function getAuthenticationHeader()
-    {
-        return array('HTTP_X-AUTH-TOKEN' => 'testuserkey');
     }
 }

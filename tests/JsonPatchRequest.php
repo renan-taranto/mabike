@@ -19,21 +19,12 @@ class JsonPatchRequest implements PatchRequest
      * @param string $data
      * @return Response
      */
-    public function patch($uri, $headers, array $data)
+    public function patch($uri, array $data = null, $apiKey = null, array $headers = null)
     {
+        $headers = JsonHeadersFactory::createHeaders($headers, $apiKey);
         $this->client->request('PATCH', $uri, array(), array(), $headers, json_encode($data));
         $response = $this->client->getResponse();
         $this->client->restart();
         return $response;
-    }
-    
-    public function getStandardHeaders()
-    {
-        return array('CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json');
-    }
-    
-    public function getStandardHeadersWithAuthentication()
-    {
-        return array('CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json', 'HTTP_X-AUTH-TOKEN' => 'testuserkey');
     }
 }

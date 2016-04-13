@@ -3,7 +3,5 @@ namespace Tests;
 
 interface PostRequest
 {
-    public function post($uri, $headers, array $data);
-    public function getStandardHeaders();
-    public function getStandardHeadersWithAuthentication();
+    public function post($uri, array $data = null, $apiKey = null, array $headers = null);
 }

@@ -12,32 +12,12 @@ class JsonGetRequest implements GetRequest
         $this->client = $client;
     }
     
-    public function get($uri, $headers)
+    public function get($uri, $apiKey = null, $headers = null)
     {
+        $headers = JsonHeadersFactory::createHeaders($headers, $apiKey);
         $this->client->request('GET', $uri, array(), array(), $headers);
         $response = $this->client->getResponse();
         $this->client->restart();
         return $response;
     }
-    
-    public function getStandardHeaders()
-    {
-        return array('HTTP_ACCEPT' => 'application/json');
-    }
-    
-    public function getStandardHeadersWithAuthenticationforUser1()
-    {
-        return array('HTTP_ACCEPT' => 'application/json', 'HTTP_X-AUTH-TOKEN' => 'testuserkey');
-    }
-
-    public function getStandardHeadersWithAuthenticationforUser2()
-    {
-        return array('HTTP_ACCEPT' => 'application/json', 'HTTP_X-AUTH-TOKEN' => 'testuser2key');
-    }
-    
-    public function getStandardHeadersWithAuthenticationforUser3()
-    {
-        return array('HTTP_ACCEPT' => 'application/json', 'HTTP_X-AUTH-TOKEN' => 'testuser3key');
-    }
-
 }
