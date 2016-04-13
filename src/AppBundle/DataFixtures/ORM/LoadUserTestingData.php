@@ -7,6 +7,7 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Rtaranto\Application\Service\Security\UserRegistrationService;
+use Rtaranto\Domain\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -25,13 +26,16 @@ class LoadUserTestingData extends AbstractFixture implements FixtureInterface, C
         $datetime = new DateTime('now');
         $datetime->modify('+1 day');
         
-        $user = $userRegistration->registerUser('test_user_1', 'testuser1@email.com', 123456);
+        $user = $userRegistration
+            ->registerUser('test_user_1', 'testuser1@email.com', 123456, array(User::ROLE_USER));
         $user->updateApiKey('testuserkey', $datetime);
         
-        $user2 = $userRegistration->registerUser('test_user_2', 'testuser2@email.com', 1234567);
+        $user2 = $userRegistration
+            ->registerUser('test_user_2', 'testuser2@email.com', 1234567, array(User::ROLE_USER));
         $user2->updateApiKey('testuser2key', $datetime);
         
-        $user3 = $userRegistration->registerUser('test_user_3', 'testuser3@email.com', 12345678);
+        $user3 = $userRegistration
+            ->registerUser('test_user_3', 'testuser3@email.com', 12345678, array(User::ROLE_USER));
         $user3->updateApiKey('testuser3key', $datetime);
         
         $manager->persist($user);
