@@ -21,7 +21,7 @@ class MotorcycleControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
-        $uri = $this->getMotorcyclesEndpointUri();
+        $uri = $this->getMotorcyclesCollectionUri();
         
         $apiKey = $this->fixtures->getReferenceRepository()->getReference('biker_user_1')->getApiKey();
         $response = $getRequest->get($uri, $apiKey);
@@ -38,7 +38,7 @@ class MotorcycleControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
-        $uri = $this->getMotorcyclesEndpointUri();
+        $uri = $this->getMotorcyclesCollectionUri();
         
         $apiKey = $this->fixtures->getReferenceRepository()->getReference('user')->getApiKey();
         $response = $getRequest->get($uri, $apiKey);
@@ -50,7 +50,7 @@ class MotorcycleControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
-        $uri = $this->getMotorcyclesEndpointUri();
+        $uri = $this->getMotorcyclesCollectionUri();
         
         $apiKey = $this->fixtures->getReferenceRepository()->getReference('biker_user_2')->getApiKey();
         $response = $getRequest->get($uri, $apiKey);
@@ -67,7 +67,7 @@ class MotorcycleControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $postRequest = new JsonPostRequest($client);
-        $uri = $this->getMotorcyclesEndpointUri();
+        $uri = $this->getMotorcyclesCollectionUri();
         $apiKey = $this->getApiKeyForUserWithBikerRole();
         $model = 'CRF 450';
         $kmsDriven = 321412;
@@ -89,7 +89,7 @@ class MotorcycleControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $postRequest = new JsonPostRequest($client);
-        $uri = $this->getMotorcyclesEndpointUri();
+        $uri = $this->getMotorcyclesCollectionUri();
         $apiKey = $this->getApiKeyForUserWithBikerRole();
         $data = array('model' => '');
         
@@ -105,7 +105,7 @@ class MotorcycleControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $postRequest = new JsonPostRequest($client);
-        $uri = $this->getMotorcyclesEndpointUri();
+        $uri = $this->getMotorcyclesCollectionUri();
         $apiKey = $this->getApiKeyForUserWithBikerRole();
         $data = array('model' => '1', 'kms_driven' => -1);
         
@@ -119,13 +119,56 @@ class MotorcycleControllerTest extends WebTestCase
         $this->assertStatusCode(Response::HTTP_BAD_REQUEST, $client);
     }
     
+    public function testGetReturnsMotorcycleRepresentation()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonGetRequest($client);
+        $id = 1;
+        $uri = $this->getMotorcyclesCollectionUri(array('id' => $id));
+        $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
+        
+        $response = $getRequest->get($uri, $apiKey);
+        $content = json_decode($response->getContent(), true);
+        
+        $this->assertStatusCode(Response::HTTP_OK, $client);
+        $this->assertArrayHasKey('model', $content[0]);
+        $this->assertArrayHasKey('kms_driven', $content[0]);
+    }
+    
+    public function testGetReturnsNotFound()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonGetRequest($client);
+        $id = 100;
+        $uri = $this->getMotorcycleResourceUri(array('id' => $id));
+        
+        $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
+        
+        $response = $getRequest->get($uri, $apiKey);
+        $content = json_decode($response->getContent(), true);
+        
+        $this->assertStatusCode(Response::HTTP_NOT_FOUND, $client);
+        $this->assertArrayHasKey('code', $content);
+        $this->assertArrayHasKey('message', $content);
+    }
+    
+    private function getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles()
+    {
+        return $this->fixtures->getReferenceRepository()->getReference('biker_user_1')->getApiKey();
+    }
+    
     private function getApiKeyForUserWithBikerRole()
     {
         return $this->fixtures->getReferenceRepository()->getReference('biker_user_2')->getApiKey();
     }
     
-    private function getMotorcyclesEndpointUri()
+    private function getMotorcyclesCollectionUri()
     {
         return $this->getUrl('api_v1_get_motorcycles');
+    }
+    
+    private function getMotorcycleResourceUri(array $params = array())
+    {
+        return $this->getUrl('api_v1_get_motorcycle', $params);
     }
 }

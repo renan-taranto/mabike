@@ -34,13 +34,14 @@ class PostMotorcycleAction implements PostActionInterface
         $this->validator->throwValidationFailedIfNotValid($motorcycleDTO);
         
         $motorcycle = $this->createMotorcycle($motorcycleDTO);
+        $this->validator->throwValidationFailedIfNotValid($motorcycle);
+        
         return $this->motorcycleRepository->add($motorcycle);
     }
     
     private function createMotorcycle(MotorcycleDTO $motorcycleDTO)
     {
         $motorcycle = new Motorcycle($motorcycleDTO->getModel(), $motorcycleDTO->getKmsDriven());
-        $this->validator->throwValidationFailedIfNotValid($motorcycle);
         $motorcycle->setBiker($this->biker);
         return $motorcycle;
     }

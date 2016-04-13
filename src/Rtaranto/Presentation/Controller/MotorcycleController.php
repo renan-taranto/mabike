@@ -5,8 +5,8 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Rtaranto\Application\EndpointAction\Factory\Motorcycle\CgetMotorcyclesActionFactory;
+use Rtaranto\Application\EndpointAction\Factory\Motorcycle\GetMotorcycleActionFactory;
 use Rtaranto\Application\EndpointAction\Factory\Motorcycle\PostMotorcycleActionFactory;
-use Rtaranto\Application\EndpointAction\Motorcycle\PostMotorcycleAction;
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +24,11 @@ class MotorcycleController extends FOSRestController implements ClassResourceInt
     
     public function getAction($id)
     {
-        
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $getMotorcycleActionFactory = new GetMotorcycleActionFactory($user, $em);
+        $getMotorcycleAction = $getMotorcycleActionFactory->createGetAction();
+        return $getMotorcycleAction->get($id);
     }
     
     public function postAction(Request $request)

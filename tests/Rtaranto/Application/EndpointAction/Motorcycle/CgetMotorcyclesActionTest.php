@@ -2,26 +2,28 @@
 namespace Tests\Rtaranto\Application\EndpointAction\Motorcycle;
 
 use Rtaranto\Application\EndpointAction\Motorcycle\CgetMotorcyclesAction;
+use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Motorcycle;
 use Rtaranto\Domain\Entity\Repository\MotorcycleRepositoryInterface;
 use Rtaranto\Presentation\Controller\QueryParam\QueryParamsFetcherInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class CgetMotorcyclesActionTest extends \PHPUnit_Framework_TestCase
 {
     public function testCgetReturnsMotorcyclesCollection()
     {
-        $user = $this->getMock(UserInterface::class);
+        $biker = $this->getMockBuilder(Biker::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $motorcycle1 = new Motorcycle('Ducati Hypermotard 796');
         $motorcycle2 = new Motorcycle('XT 660X');
         $motorcycles = array($motorcycle1, $motorcycle2);
         $motorcycleRepository = $this->getMock(MotorcycleRepositoryInterface::class);
         $motorcycleRepository->expects($this->once())
-                ->method('findAllByUser')
+                ->method('findAllByBiker')
                 ->will($this->returnValue($motorcycles));
         $queryParamsFetcher = $this->getMock(QueryParamsFetcherInterface::class);
         
-        $cGetMotorcyclesAction = new CgetMotorcyclesAction($user, $motorcycleRepository, $queryParamsFetcher);
+        $cGetMotorcyclesAction = new CgetMotorcyclesAction($biker, $motorcycleRepository, $queryParamsFetcher);
         
         $expectedReturn = array($motorcycle1, $motorcycle2);
         $actualReturn = $cGetMotorcyclesAction->cGet();
@@ -30,14 +32,16 @@ class CgetMotorcyclesActionTest extends \PHPUnit_Framework_TestCase
     
     public function testCgetUserNotRelatedToBikerReturnsEmptyArray()
     {
-        $user = $this->getMock(UserInterface::class);
+        $biker = $this->getMockBuilder(Biker::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $motorcycleRepository = $this->getMock(MotorcycleRepositoryInterface::class);
         $motorcycleRepository->expects($this->once())
-                ->method('findAllByUser')
+                ->method('findAllByBiker')
                 ->will($this->returnValue(array()));
         $queryParamsFetcher = $this->getMock(QueryParamsFetcherInterface::class);
         
-        $cGetMotorcyclesAction = new CgetMotorcyclesAction($user, $motorcycleRepository, $queryParamsFetcher);
+        $cGetMotorcyclesAction = new CgetMotorcyclesAction($biker, $motorcycleRepository, $queryParamsFetcher);
         
         $expectedReturn = array();
         $actualReturn = $cGetMotorcyclesAction->cGet();

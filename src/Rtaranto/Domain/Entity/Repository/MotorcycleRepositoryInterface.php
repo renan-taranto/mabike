@@ -1,8 +1,8 @@
 <?php
 namespace Rtaranto\Domain\Entity\Repository;
 
+use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Motorcycle;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 interface MotorcycleRepositoryInterface
 {
@@ -11,8 +11,9 @@ interface MotorcycleRepositoryInterface
     public function add(Motorcycle $motorcycle);
     public function update(Motorcycle $motorcycle);
     public function delete($id);
-    public function findAllByUser(
-        UserInterface $user,
+    public function findOneByBikerAndId(Biker $biker, $id);
+    public function findAllByBiker(
+        Biker $biker,
         $filters = array(),
         $orderBy = null,
         $limit = null,

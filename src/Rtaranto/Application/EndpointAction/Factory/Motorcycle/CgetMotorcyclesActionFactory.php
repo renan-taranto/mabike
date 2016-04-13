@@ -24,8 +24,9 @@ class CgetMotorcyclesActionFactory implements CgetActionFactoryInterface
     public function createCgetAction(ParamFetcherInterface $paramFetcher)
     {
         $doctrineBikerRepository = new DoctrineBikerRepository($this->em);
+        $biker = $doctrineBikerRepository->findOneByUser($this->user);
         $doctrineMotorcycleRepository = new DoctrineMotorcycleRepository($this->em, $doctrineBikerRepository);
         $queryParamsFetcher = new QueryParamsFetcher($paramFetcher);
-        return new CgetMotorcyclesAction($this->user, $doctrineMotorcycleRepository, $queryParamsFetcher);
+        return new CgetMotorcyclesAction($biker, $doctrineMotorcycleRepository, $queryParamsFetcher);
     }
 }

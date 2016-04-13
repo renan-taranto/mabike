@@ -2,20 +2,17 @@
 namespace Rtaranto\Infrastructure\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Motorcycle;
-use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
 use Rtaranto\Domain\Entity\Repository\MotorcycleRepositoryInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class DoctrineMotorcycleRepository implements MotorcycleRepositoryInterface
 {
     private $em;
-    private $bikerRepository;
     
-    public function __construct(EntityManagerInterface $em, BikerRepositoryInterface $bikerRepository)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
-        $this->bikerRepository = $bikerRepository;
     }
     
     public function get($id)
@@ -53,17 +50,17 @@ class DoctrineMotorcycleRepository implements MotorcycleRepositoryInterface
         $this->em->flush();
     }
 
-    public function findAllByUser(UserInterface $user, $filters = array(), $orderBy = null, $limit = null, $offset = null)
+    public function findAllByBiker(Biker $biker, $filters = array(), $orderBy = null, $limit = null, $offset = null)
     {
-        $biker = $this->bikerRepository->findOneByUser($user);
-        
-        if (empty($biker)) {
-            return array();
-        }
-        
         $filters = array_merge(array('biker' => $biker), $filters);
         
         return $this->getAll($filters, $orderBy, $limit, $offset);
+    }
+    
+    public function findOneByBikerAndId(Biker $biker, $id)
+    {
+        $doctrineRepository = $this->getDoctrineEntityRepository();
+        return $doctrineRepository->findOneBy(array('biker' => $biker, 'id' => $id));
     }
     
     private function getDoctrineEntityRepository()
