@@ -30,11 +30,21 @@ class Motorcycle
      */
     private $biker;
     
-    public function __construct($model, $kilometersDriven = 0) {
+    public function __construct($model, $kmsDriven = 0)
+    {
         $this->model = $model;
-        $this->kmsDriven = $kilometersDriven;
+        
+        if (empty($kmsDriven)) {
+            $kmsDriven = 0;
+        }
+        $this->kmsDriven = $kmsDriven;
     }
     
+    public function getId()
+    {
+        return $this->id;
+    }
+
     public function updateKmsDriven($kmsDriven)
     {
         $this->kmsDriven = $kmsDriven;

@@ -56,7 +56,7 @@ class Validator implements ValidatorInterface
         $fields = array();
         
         for ($i = 0; $i < $constraintViolationList->count(); $i++) {
-            $propertyName = $constraintViolationList->get($i)->getPropertyPath();
+            $propertyName = $this->normalizeToCamelCase($constraintViolationList->get($i)->getPropertyPath());
             if (!in_array($propertyName, $fields)) {
                 array_push($fields, $propertyName);
                 $errorMessagesByFields[$propertyName] = array();
@@ -64,11 +64,17 @@ class Validator implements ValidatorInterface
         }
         
         for ($i = 0; $i < $constraintViolationList->count(); $i++) {
-            $propertyName = $constraintViolationList->get($i)->getPropertyPath();
+            $propertyName = $this->normalizeToCamelCase($constraintViolationList->get($i)->getPropertyPath());
             $errorMessagesByFields[$propertyName] = array_merge(
                 $errorMessagesByFields[$propertyName],
                 array($constraintViolationList->get($i)->getMessage()));
         }
+        
         return $errorMessagesByFields;
+    }
+    
+    private function normalizeToCamelCase($string)
+    {
+        return ltrim(strtolower(preg_replace('/[A-Z]/', '_$0', $string)), '_');
     }
 }

@@ -6,3 +6,14 @@ Rtaranto\Domain\Entity\Biker:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
             fields: [email]
             message: 'E-mail address already in use.'
+    properties:
+        name:
+            - NotBlank: ~
+            - Length:
+                min: 8
+                max: 50
+        email:
+            - NotBlank: ~
+            - Email:
+                message: Invalid e-mail address.
+                checkMX: true

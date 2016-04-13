@@ -6,6 +6,7 @@ use AppBundle\DataFixtures\ORM\LoadUserTestingData;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\JsonGetRequest;
+use Tests\JsonPostRequest;
 
 class MotorcycleControllerTest extends WebTestCase
 {
@@ -60,6 +61,67 @@ class MotorcycleControllerTest extends WebTestCase
 
         $this->assertEquals($expectedMotorcycle, $content);        
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+    
+    public function testPostMotorcyclesReturnsCreatedResponse()
+    {
+        $client = static::createClient();
+        $postRequest = new JsonPostRequest($client);
+        $uri = $this->getMotorcyclesEndpointUri();
+        $apiKey = $this->getApiKeyForUserWithBikerRole();
+        $model = 'CRF 450';
+        $kmsDriven = 321412;
+        $data = array('model' => $model, 'kms_driven' => $kmsDriven);
+        
+        $response = $postRequest->post($uri, $data, $apiKey);
+        $content = json_decode($response->getContent(), true);
+        
+        $this->assertEquals($model, $content['model']);
+        $this->assertEquals($kmsDriven, $content['kms_driven']);
+        $this->assertStatusCode(Response::HTTP_CREATED, $client);
+        $returnedLocationHeader = $response->headers->get('Location');
+        $expectedLocationHeader = $this->getUrl('api_v1_get_motorcycle', array('id' => 2));
+        $this->assertEquals($expectedLocationHeader, $returnedLocationHeader);
+        
+    }
+    
+    public function testPostMotorcycleWithEmptyModelReturnsBadRequest()
+    {
+        $client = static::createClient();
+        $postRequest = new JsonPostRequest($client);
+        $uri = $this->getMotorcyclesEndpointUri();
+        $apiKey = $this->getApiKeyForUserWithBikerRole();
+        $data = array('model' => '');
+        
+        $response = $postRequest->post($uri, $data, $apiKey);
+        $content = json_decode($response->getContent(), true);
+        
+        $this->assertEquals('This value should not be blank.',
+            $content['errors']['model'][0]);
+        $this->assertStatusCode(Response::HTTP_BAD_REQUEST, $client);
+    }
+    
+    public function testPostMotorcycleWithInvalidValuesReturnsBadRequest()
+    {
+        $client = static::createClient();
+        $postRequest = new JsonPostRequest($client);
+        $uri = $this->getMotorcyclesEndpointUri();
+        $apiKey = $this->getApiKeyForUserWithBikerRole();
+        $data = array('model' => '1', 'kms_driven' => -1);
+        
+        $response = $postRequest->post($uri, $data, $apiKey);
+        $content = json_decode($response->getContent(), true);
+        
+        $this->assertEquals('This value is too short. It should have 2 characters or more.',
+            $content['errors']['model'][0]);
+        $this->assertEquals('This value should be 0 or more.',
+            $content['errors']['kms_driven'][0]);
+        $this->assertStatusCode(Response::HTTP_BAD_REQUEST, $client);
+    }
+    
+    private function getApiKeyForUserWithBikerRole()
+    {
+        return $this->fixtures->getReferenceRepository()->getReference('biker_user_2')->getApiKey();
     }
     
     private function getMotorcyclesEndpointUri()

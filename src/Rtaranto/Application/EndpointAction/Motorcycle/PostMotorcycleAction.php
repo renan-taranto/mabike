@@ -1,41 +1,47 @@
 <?php
 namespace Rtaranto\Application\EndpointAction\Motorcycle;
 
+use Rtaranto\Application\Dto\Motorcycle\MotorcycleDTO;
 use Rtaranto\Application\EndpointAction\PostActionInterface;
-use Rtaranto\Domain\Entity\Repository\BikerRepositoryInterface;
+use Rtaranto\Application\ParametersBinder\ParametersBinderInterface;
+use Rtaranto\Application\Service\Validator\ValidatorInterface;
+use Rtaranto\Domain\Entity\Biker;
+use Rtaranto\Domain\Entity\Motorcycle;
 use Rtaranto\Domain\Entity\Repository\MotorcycleRepositoryInterface;
-use Symfony\Component\Security\Core\User\User;
 
 class PostMotorcycleAction implements PostActionInterface
 {
-    private $user;
+    private $biker;
     private $motorcycleRepository;
+    private $parametersBinder;
+    private $validator;
     
-    public function __construct(User $user, MotorcycleRepositoryInterface $motorcycleRepository, BikerRepositoryInterface $bikerRepository)
-    {
-        $this->user = $user;
+    public function __construct(
+        Biker $biker,
+        MotorcycleRepositoryInterface $motorcycleRepository,
+        ParametersBinderInterface $parametersBinder,
+        ValidatorInterface $validator
+    ) {
+        $this->biker = $biker;
         $this->motorcycleRepository = $motorcycleRepository;
-        $bikerRepository->findOneByUser($user);
+        $this->parametersBinder = $parametersBinder;
+        $this->validator = $validator;
     }
     
     public function post(array $requestBodyParameters)
     {
-//        if ($user->get)
-//        $username = 'username';
-//        $email = 'useremail@email.com';
-//        $password = 'pass';
-//        $user = new User($username, $email, $password);
-//        
-//        $bikerName = 'biker';
-//        $bikerEmail = 'biker@email.com';
-//        $biker = new Biker($bikerName, $bikerEmail);
-//        $biker->setUser($user);
-//        
-//        $model = 'YBR';
-//        $kmsDriven = 43278;
-//        $motorcycle = new Motorcycle($model, $kmsDriven);
-//        $motorcycle->setBiker($biker);
-//        
-//        return $motorcycle;
+        $motorcycleDTO = $this->parametersBinder->bind($requestBodyParameters, new MotorcycleDTO());
+        $this->validator->throwValidationFailedIfNotValid($motorcycleDTO);
+        
+        $motorcycle = $this->createMotorcycle($motorcycleDTO);
+        return $this->motorcycleRepository->add($motorcycle);
+    }
+    
+    private function createMotorcycle(MotorcycleDTO $motorcycleDTO)
+    {
+        $motorcycle = new Motorcycle($motorcycleDTO->getModel(), $motorcycleDTO->getKmsDriven());
+        $this->validator->throwValidationFailedIfNotValid($motorcycle);
+        $motorcycle->setBiker($this->biker);
+        return $motorcycle;
     }
 }

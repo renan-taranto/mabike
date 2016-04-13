@@ -1,0 +1,11 @@
+Rtaranto\Domain\Entity\Motorcycle:
+    properties:
+        model:
+            - NotBlank: ~
+            - Length:
+                min: 2
+                max: 50
+        kmsDriven:
+            - Range:
+                min: 0
+                max: 1000000
