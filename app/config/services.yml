@@ -34,6 +34,9 @@ services:
         class: Rtaranto\Application\Service\Validator\Validator
         arguments: ['@validator']
     #Security
+    app.biker_registration:
+        class: Rtaranto\Application\Service\Security\BikerRegistrationService
+        arguments: ['@app.user_registration', '@infra.repository.biker', '@app.validator']
     app.user_registration:
         class: Rtaranto\Application\Service\Security\UserRegistrationService
         arguments: ['@domain.factory.user', '@infra.repository.user', '@app.validator']

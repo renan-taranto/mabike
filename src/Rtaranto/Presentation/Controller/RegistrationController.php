@@ -4,7 +4,6 @@ namespace Rtaranto\Presentation\Controller;
 use FOS\RestBundle\Controller\FOSRestController;
 use Rtaranto\Application\EndpointAction\Factory\Registration\PostBikerRegistrationActionFactory;
 use Rtaranto\Application\Exception\ValidationFailedException;
-use Rtaranto\Application\Service\Security\Factory\BikerRegistrationServiceFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -34,18 +33,9 @@ class RegistrationController extends FOSRestController
     
     private function createPostBikerRegistrationAction()
     {
-        $em = $this->getDoctrine()->getManager();
-        $userPasswordEncoder = $this->get('security.password_encoder');
-        $sfValidator = $this->get('validator');
-        
-        $bikerRegistrationServiceFactory = new BikerRegistrationServiceFactory(
-            $em,
-            $userPasswordEncoder,
-            $sfValidator
-        );
-        $bikerRegistrationService = $bikerRegistrationServiceFactory->createUserRegistrationService();
-        
         $formFactory = $this->get('form.factory');
+        $sfValidator = $this->get('validator');
+        $bikerRegistrationService = $this->get('app.biker_registration');
         $postBikerRegistrationActionFactory = new PostBikerRegistrationActionFactory(
             $formFactory,
             $sfValidator,
