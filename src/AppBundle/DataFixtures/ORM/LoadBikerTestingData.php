@@ -14,7 +14,8 @@ class LoadBikerTestingData extends AbstractFixture implements FixtureInterface, 
     {
         $biker = new Biker('Test Biker', 'testbiker@email.com');
         $biker->setUser($this->getReference('biker_user_1'));
-        $motorcycle = new Motorcycle('Ducati Hypermotard 796');
+        $model = 'Ducati Hypermotard 796';
+        $motorcycle = new Motorcycle($model, 1560);
         $biker->addMotorcycle($motorcycle);
         
         $aSecondBiker = new Biker('Test Biker2', 'testbiker2@email.com');
@@ -29,6 +30,5 @@ class LoadBikerTestingData extends AbstractFixture implements FixtureInterface, 
     {
         return 2;
     }
-
 }
 

@@ -6,7 +6,17 @@ class MotorcycleDTO
     private $model;
     
     private $kmsDriven;
-
+    
+    /**
+     * @param string $model
+     * @param int $kmsDriven
+     */
+    public function __construct($model = null, $kmsDriven = null)
+    {
+        $this->model = $model;
+        $this->kmsDriven = $kmsDriven;
+    }
+    
     public function getModel()
     {
         return $this->model;

@@ -7,6 +7,7 @@ use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\DeleteRequestImpl;
 use Tests\JsonGetRequest;
+use Tests\JsonPatchRequest;
 use Tests\JsonPostRequest;
 
 class MotorcycleControllerTest extends WebTestCase
@@ -29,7 +30,7 @@ class MotorcycleControllerTest extends WebTestCase
         
         $content = json_decode($response->getContent(), true);
         
-        $expectedMotorcycle = array('id' => 1, 'model' => 'Ducati Hypermotard 796', 'kms_driven' => 0);
+        $expectedMotorcycle = array('id' => 1, 'model' => 'Ducati Hypermotard 796', 'kms_driven' => 1560);
 
         $this->assertEquals(array($expectedMotorcycle), $content);        
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
@@ -112,7 +113,7 @@ class MotorcycleControllerTest extends WebTestCase
         
         $response = $postRequest->post($uri, $data, $apiKey);
         $content = json_decode($response->getContent(), true);
-        
+
         $this->assertEquals('This value is too short. It should have 2 characters or more.',
             $content['errors']['model'][0]);
         $this->assertEquals('This value should be 0 or more.',
@@ -173,6 +174,137 @@ class MotorcycleControllerTest extends WebTestCase
         $uri = $this->getMotorcycleResourceUri(array('id' => $id));
         $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
         $deleteRequest->delete($uri, $apiKey);
+        
+        $this->assertStatusCode(Response::HTTP_NOT_FOUND, $client);
+    }
+    
+    public function testPatchUpdatesAllProperties()
+    {
+        $client = static::createClient();
+        $patchRequest = new JsonPatchRequest($client);
+        $id = 1;
+        $uri = $this->getMotorcycleResourceUri(array('id' => $id));
+        $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
+        $model = 'patched model';
+        $kmsDriven = 21231;
+        $data = array('model' => $model, 'kms_driven'=> $kmsDriven);
+        $response = $patchRequest->patch($uri, $data, $apiKey);
+        
+        $content = json_decode($response->getContent(), true);
+        $expectedContent = array_merge(array('id' => $id), $data);
+        
+        $this->assertStatusCode(Response::HTTP_OK, $client);
+        $this->assertEquals($expectedContent, $content);
+    }
+    
+    public function testPatchUpdatesKmsDriven()
+    {
+        $client = static::createClient();
+        $patchRequest = new JsonPatchRequest($client);
+        $id = 1;
+        $uri = $this->getMotorcycleResourceUri(array('id' => $id));
+        $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
+        $kmsDriven = 12343;
+        $data = array('kms_driven' => $kmsDriven);
+        $response = $patchRequest->patch($uri, $data, $apiKey);
+        
+        $content = json_decode($response->getContent(), true);
+        
+        $model = 'Ducati Hypermotard 796';
+        $expectedContent = array('id' => $id, 'model' => $model, 'kms_driven' => $kmsDriven);
+        
+        $this->assertStatusCode(Response::HTTP_OK, $client);
+        $this->assertEquals($expectedContent, $content);
+    }
+    
+    public function testPatchUpdatesModel()
+    {
+        $client = static::createClient();
+        $patchRequest = new JsonPatchRequest($client);
+        $id = 1;
+        $uri = $this->getMotorcycleResourceUri(array('id' => $id));
+        $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
+        $model = 'new model';
+        $data = array('model' => $model);
+        $response = $patchRequest->patch($uri, $data, $apiKey);
+        
+        $content = json_decode($response->getContent(), true);
+        
+        $expectedContent = array('id' => $id, 'model' => $model, 'kms_driven' => 1560);
+        
+        $this->assertStatusCode(Response::HTTP_OK, $client);
+        $this->assertEquals($expectedContent, $content);
+    }
+    
+    public function testPatchInvalidKmsDrivenReturnsBadRequest()
+    {
+        $client = static::createClient();
+        $patchRequest = new JsonPatchRequest($client);
+        $id = 1;
+        $uri = $this->getMotorcycleResourceUri(array('id' => $id));
+        $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
+        $kmsDriven = -12343;
+        $data = array('kms_driven' => $kmsDriven);
+        $response = $patchRequest->patch($uri, $data, $apiKey);
+        
+        $content = json_decode($response->getContent(), true);
+        
+        $this->assertStatusCode(Response::HTTP_BAD_REQUEST, $client);
+        $this->assertEquals('This value should be 0 or more.',
+            $content['errors']['kms_driven'][0]);
+    }
+    
+    public function testPatchInvalidModelReturnsBadRequest()
+    {
+        $client = static::createClient();
+        $patchRequest = new JsonPatchRequest($client);
+        $id = 1;
+        $uri = $this->getMotorcycleResourceUri(array('id' => $id));
+        $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
+        $model = '1';
+        $data = array('model' => $model);
+        $response = $patchRequest->patch($uri, $data, $apiKey);
+        
+        $content = json_decode($response->getContent(), true);
+        
+        $expectedContent = array('id' => $id, 'model' => $model, 'kms_driven' => 1560);
+        
+        $this->assertEquals('This value is too short. It should have 2 characters or more.',
+            $content['errors']['model'][0]);
+        $this->assertStatusCode(Response::HTTP_BAD_REQUEST, $client);
+        
+    }
+    
+    public function testPatchBlankDataReturnsUnchangedResource()
+    {
+        $client = static::createClient();
+        $patchRequest = new JsonPatchRequest($client);
+        $id = 1;
+        $uri = $this->getMotorcycleResourceUri(array('id' => $id));
+        $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
+        
+        $data = array();
+        $response = $patchRequest->patch($uri, $data, $apiKey);
+        
+        $content = json_decode($response->getContent(), true);
+        
+        $expectedContent = array('id' => $id, 'model' => 'Ducati Hypermotard 796', 'kms_driven' => 1560);
+        
+        $this->assertStatusCode(Response::HTTP_OK, $client);
+        $this->assertEquals($expectedContent, $content);
+    }
+    
+    public function testPatchReturnsNotFound()
+    {
+        $client = static::createClient();
+        $patchRequest = new JsonPatchRequest($client);
+        $id = 10000;
+        $uri = $this->getMotorcycleResourceUri(array('id' => $id));
+        $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
+        $data = array();
+        $response = $patchRequest->patch($uri, $data, $apiKey);
+        
+        $content = json_decode($response->getContent(), true);
         
         $this->assertStatusCode(Response::HTTP_NOT_FOUND, $client);
     }

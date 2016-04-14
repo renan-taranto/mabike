@@ -7,6 +7,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use Rtaranto\Application\EndpointAction\Factory\Motorcycle\CgetMotorcyclesActionFactory;
 use Rtaranto\Application\EndpointAction\Factory\Motorcycle\DeleteMotorcycleActionFactory;
 use Rtaranto\Application\EndpointAction\Factory\Motorcycle\GetMotorcycleActionFactory;
+use Rtaranto\Application\EndpointAction\Factory\Motorcycle\PatchMotorcycleActionFactory;
 use Rtaranto\Application\EndpointAction\Factory\Motorcycle\PostMotorcycleActionFactory;
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,6 +63,25 @@ class MotorcycleController extends FOSRestController implements ClassResourceInt
         $deleteMotorcycleActionFactory = new DeleteMotorcycleActionFactory($user, $em);
         $deleteMotorcycleAction = $deleteMotorcycleActionFactory->createDeleteAction();
         $deleteMotorcycleAction->delete($id);
+    }
+
+    public function patchAction($id, Request $request)
+    {
+        $user = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $formFactory = $this->get('form.factory');
+        $sfValidator = $this->get('validator');
+        $patchMotorcycleActionFactory = new PatchMotorcycleActionFactory($user, $em, $formFactory, $sfValidator);
+        $patchMotorcycleAction = $patchMotorcycleActionFactory->createPatchAction();
+        
+        try {
+            $motorcycle = $patchMotorcycleAction->patch($id, $request->request->all());
+        }
+        catch (ValidationFailedException $ex) {
+            $view = $this->view($ex->getErrors(), Response::HTTP_BAD_REQUEST);
+            return $view;
+        }
+        return $motorcycle;
     }
     
     private function createLocationHeaderContent($id, $request)
