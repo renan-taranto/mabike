@@ -8,7 +8,7 @@ class UserRegistrationDTO
     private $password;
     private $roles;
     
-    public function __construct(array $roles)
+    public function __construct(array $roles = null)
     {
         $this->roles = $roles;
     }

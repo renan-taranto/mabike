@@ -2,11 +2,11 @@
 namespace Rtaranto\Presentation\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
-use Rtaranto\Application\Command\Security\UserRegistrationCommand;
+use Rtaranto\Application\Command\Security\BikerRegistrationCommand;
 use Rtaranto\Application\Dto\Security\UserRegistrationDTO;
 use Rtaranto\Application\Exception\ValidationFailedException;
+use Rtaranto\Application\Service\Security\Factory\BikerRegistrationServiceFactory;
 use Rtaranto\Application\Service\Validator\Validator;
-use Rtaranto\Domain\Entity\User;
 use Rtaranto\Presentation\Form\RegistrationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,10 +18,7 @@ class RegistrationController extends FOSRestController
      */
     public function registrationAction(Request $request)
     {
-        $registrationForm = $this->createForm(
-            RegistrationType::class,
-            new UserRegistrationDTO(array(User::ROLE_BIKER))
-        );
+        $registrationForm = $this->createForm(RegistrationType::class, new UserRegistrationDTO());
         $registrationForm->submit($request->request->all());
 
         /* @var $validator Validator */
@@ -30,11 +27,11 @@ class RegistrationController extends FOSRestController
             $errors = $validator->getErrors($registrationForm->getData());
             return $this->view($errors, Response::HTTP_BAD_REQUEST);
         }
-        
-        $registerUserService = $this->get('app.user_registration');
-        $registerUserCommand = new UserRegistrationCommand($registerUserService);
+
+        $bikerRegistrationService = $this->createBikerRegistrationService();
+        $bikerRegistrationCommand = new BikerRegistrationCommand($bikerRegistrationService);
         try {
-            $registerUserCommand->execute($registrationForm->getData());
+            $bikerRegistrationCommand->execute($registrationForm->getData());
         } catch (ValidationFailedException $ex) {
             $view = $this->view($ex->getErrors(), Response::HTTP_BAD_REQUEST);
             return $view;
@@ -46,5 +43,18 @@ class RegistrationController extends FOSRestController
             'login_url' => $this->generateUrl('api_v1_login')
         );
         return $data;
+    }
+    
+    private function createBikerRegistrationService()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $userPasswordEncoder = $this->get('security.password_encoder');
+        $sfValidator = $this->get('validator');
+        $bikerRegistrationServiceFactory = new BikerRegistrationServiceFactory(
+            $em,
+            $userPasswordEncoder,
+            $sfValidator
+        );
+        return $bikerRegistrationServiceFactory->createUserRegistrationService();
     }
 }

@@ -19,10 +19,13 @@ class RegistrationControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $post = new JsonPostRequest($client);
+        $username = 'brand_new_biker';
+        $email = 'user@email.com';
+        $password = 'userpass';
         $data = array(
-            'username' => 'user',
-            'email' => 'user@email.com',
-            'password' => 'userpass');
+            'username' => $username,
+            'email' => $email,
+            'password' => $password);
         
         $response = $post->post($this->getRegistrationUri(), $data);
         
@@ -31,7 +34,7 @@ class RegistrationControllerTest extends WebTestCase
         
         /* @var $persistedUser User */
         $userRepository = $em->getRepository('Domain:User');
-        $persistedUser = $userRepository->findOneBy(array('username' => 'user'));
+        $persistedUser = $userRepository->findOneBy(array('username' => $username));
         $this->assertEquals(array('ROLE_BIKER'), $persistedUser->getRoles());
         
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
