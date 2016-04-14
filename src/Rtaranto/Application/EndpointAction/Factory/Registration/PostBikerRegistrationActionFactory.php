@@ -7,7 +7,7 @@ use Rtaranto\Application\EndpointAction\Registration\PostBikerRegistrationAction
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
 use Rtaranto\Application\Service\Security\BikerRegistrationService;
 use Rtaranto\Application\Service\Validator\Validator;
-use Rtaranto\Presentation\Form\UserRegistrationDTOType;
+use Rtaranto\Presentation\Form\Registration\UserRegistrationDTOType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 

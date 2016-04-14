@@ -1,5 +1,5 @@
 <?php
-namespace Rtaranto\Presentation\Form;
+namespace Rtaranto\Presentation\Form\Registration;
 
 use Rtaranto\Application\Dto\Security\UserRegistrationDTO;
 use Symfony\Component\Form\AbstractType;
