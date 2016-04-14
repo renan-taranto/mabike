@@ -15,11 +15,15 @@ class Validator implements ValidatorInterface
 {
     private $symfonyValidator;
     
-    public function __construct(SymfonyValidatorInterface $symfonyValidator)
+    public function __construct(SymfonyValidatorInterface $sfValidator)
     {
-        $this->symfonyValidator = $symfonyValidator;
+        $this->symfonyValidator = $sfValidator;
     }
     
+    /**
+     * @param object $object
+     * @throws ValidationFailedException
+     */
     public function throwValidationFailedIfNotValid($object)
     {
         if (!$this->isValid($object)) {
