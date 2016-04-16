@@ -1,7 +1,8 @@
 <?php
 namespace Rtaranto\Domain\Entity;
 
-use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 abstract class Maintenance
 {
@@ -9,31 +10,60 @@ abstract class Maintenance
      * @var int
      */
     protected $id;
+    /**
+     * @var ArrayCollection
+     */
+    protected $performedMaintenances;
+    /**
+     * @var int
+     */
+    protected $kmsPerMaintenance;
+    /**
+     * @var Motorcycle
+     */
+    protected $motorcycle;
+    
+    abstract public function getKmsForNextMaintenance();
     
     /**
-     * @var integer
+     * @param int $kms
+     * @throws Exception
      */
-    protected $kmsDriven;
-    
-    /**
-     * @var DateTime
-     */
-    protected $date;
-    
-    /**
-     * @return int
-     */
-    public function getKmsDriven()
+    public function setKmsPerMaintenance($kms)
     {
-        return $this->kmsDriven;
+        if ((int)$kms != $kms or (int)$kms < 1) {
+            throw new Exception('KmsPerMaintenance must be an int value greater than 0.');
+        }
+        
+        $this->kmsPerMaintenance = $kms;
     }
     
     /**
-     * @return int
+     * @return int kms
      */
-    public function getId()
+    protected function getKmsDrivenAtLastMaintenance()
     {
-        return $this->id;
+        if ($this->performedMaintenances->isEmpty()) {
+            return;
+        }
+        
+        /* @var $lastPerformedMaintenancePerformed Maintenance */
+        $lastMaintenancePerformed = $this->performedMaintenances[0];
+        /* @var $maintenance PerformedMaintenance */
+        foreach ($this->performedMaintenances as $maintenance) {
+            if ($maintenance->getKmsDriven() > $lastMaintenancePerformed->getKmsDriven()) {
+                $lastMaintenancePerformed = $maintenance;
+            }
+        }
+        
+        return $lastMaintenancePerformed->getKmsDriven();
     }
-
+    
+    /**
+     * @param PerformedMaintenance $performedMaintenance
+     */
+    protected function addPerformedMaintenance(PerformedMaintenance $performedMaintenance)
+    {
+        $this->performedMaintenances->add($performedMaintenance);
+    }
 }

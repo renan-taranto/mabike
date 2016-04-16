@@ -1,69 +1,32 @@
 <?php
 namespace Rtaranto\Domain\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Config\Definition\Exception\Exception;
+use DateTime;
 
-abstract class MaintenancePerformer
+class MaintenancePerformer implements OilChangerInterface
 {
     /**
      * @var int
      */
-    protected $id;
+    private $id;
     /**
-     * @var ArrayCollection
+     * @var OilChangeMaintenance
      */
-    protected $maintenancesPerformed;
-    /**
-     * @var int
-     */
-    protected $kmsPerMaintenance;
+    private $oilChangeMaintenance;
+    
     /**
      * @var Motorcycle
      */
-    protected $motorcycle;
+    private $motorcycle;
     
-    abstract public function getKmsForNextMaintenance();
-    
-    /**
-     * @param int $kms
-     * @throws Exception
-     */
-    public function setKmsPerMaintenance($kms)
+    public function __construct(Motorcycle $motorcycle)
     {
-        if ((int)$kms != $kms or (int)$kms < 1) {
-            throw new Exception('KmsPerMaintenance must be an int value greater than 0.');
-        }
-        
-        $this->kmsPerMaintenance = $kms;
+        $this->motorcycle = $motorcycle;
+        $this->oilChangeMaintenance = new OilChangeMaintenance($motorcycle);
     }
-    
-    /**
-     * @return int kms
-     */
-    protected function getKmsDrivenAtLastMaintenance()
+
+    public function changeOil($kmsDriven, DateTime $date = null)
     {
-        if (empty($this->maintenancesPerformed)) {
-            return;
-        }
-        
-        /* @var $lastMaintenancePerformed Maintenance */
-        $lastMaintenancePerformed = $this->maintenancesPerformed[0];
-        /* @var $maintenance Maintenance */
-        foreach ($this->maintenancesPerformed as $maintenance) {
-            if ($maintenance->getKmsDriven() > $lastMaintenancePerformed->getKmsDriven()) {
-                $lastMaintenancePerformed = $maintenance;
-            }
-        }
-        
-        return $lastMaintenancePerformed->getKmsDriven();
-    }
-    
-    /**
-     * @param Maintenance $maintenance
-     */
-    protected function addMaintenancePerformed(Maintenance $maintenance)
-    {
-        $this->maintenancesPerformed->add($maintenance);
+        return $this->oilChangeMaintenance->changeOil($kmsDriven, $date);
     }
 }

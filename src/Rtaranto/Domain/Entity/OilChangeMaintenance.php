@@ -5,19 +5,19 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 
-class OilChangePerformer extends MaintenancePerformer implements OilChangerInterface
+class OilChangeMaintenance extends Maintenance implements OilChangerInterface
 {
     public function __construct(Motorcycle $motorcycle, $kmsPerOilChange = null)
     {
-        $this->maintenancesPerformed = new ArrayCollection();
+        $this->performedMaintenances = new ArrayCollection();
         $this->motorcycle = $motorcycle;    
-        $this->kmsPerOilChange = $kmsPerOilChange;
+        $this->kmsPerMaintenance = $kmsPerOilChange;
     }
     
     /**
      * @param int $kmsDriven
      * @param DateTime $date
-     * @return OilChange
+     * @return PerformedOilChange
      */
     public function changeOil($kmsDriven = null, DateTime $date = null)
     {
@@ -28,10 +28,10 @@ class OilChangePerformer extends MaintenancePerformer implements OilChangerInter
             $date = new DateTime('now');
         }
         
-        $oilChange = new OilChange($kmsDriven, $date);
-        $this->addMaintenancePerformed($oilChange);
+        $performedOilChange = new PerformedOilChange($kmsDriven, $date);
+        $this->addPerformedMaintenance($performedOilChange);
         
-        return $oilChange;
+        return $performedOilChange;
     }
     
     public function getKmsForNextMaintenance()

@@ -1,3 +1,0 @@
-Rtaranto\Domain\Entity\OilChangePerformer:
-    type: entity
-    repositoryClass: Rtaranto\Infrastructure\Repository\DoctrineOilChangePerformerRepository

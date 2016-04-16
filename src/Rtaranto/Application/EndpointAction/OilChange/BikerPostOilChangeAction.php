@@ -2,56 +2,57 @@
 namespace Rtaranto\Application\EndpointAction\OilChange;
 
 use Exception;
-use Rtaranto\Application\Dto\Maintenance\MaintenanceDTO;
+use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
 use Rtaranto\Application\EndpointAction\PostSubresourceActionInterface;
 use Rtaranto\Application\ParametersBinder\ParametersBinderInterface;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
-use Rtaranto\Domain\Entity\OilChangePerformer;
-use Rtaranto\Domain\Entity\Repository\OilChangePerformerRepositoryInterface;
+use Rtaranto\Domain\Entity\MaintenancePerformer;
+use Rtaranto\Domain\Entity\Repository\MaintenancePerformerRepositoryInterface;
 
 class BikerPostOilChangeAction implements PostSubresourceActionInterface
 {
     private $parametersBinder;
     private $validator;
-    private $oilChangePerformerRepository;
+    private $maintenancePerformerRepository;
     
     public function __construct(
         ParametersBinderInterface $parametersBinder,
         ValidatorInterface $validator,
-        OilChangePerformerRepositoryInterface $oilChangePerformerRepository
+        MaintenancePerformerRepositoryInterface $maintenancePerformerRepository
     ) {
         $this->parametersBinder = $parametersBinder;
         $this->validator = $validator;
-        $this->oilChangePerformerRepository = $oilChangePerformerRepository;
+        $this->maintenancePerformerRepository = $maintenancePerformerRepository;
     }
     
     public function post($parentResourceId, array $requestBodyParameters)
     {
-        /* @var $maintenanceDTO MaintenanceDTO */
-        $maintenanceDTO = $this->parametersBinder->bind($requestBodyParameters, new MaintenanceDTO());
+        /* @var $maintenanceDTO PerformedMaintenanceDTO */
+        $maintenanceDTO = $this->parametersBinder->bind($requestBodyParameters, new PerformedMaintenanceDTO());
         $this->validator->throwValidationFailedIfNotValid($maintenanceDTO);
         
-        $oilChangePerformer = $this->getOilChangePerformer($parentResourceId);
-        $oilChange = $oilChangePerformer->changeOil($maintenanceDTO->getKmsDriven(), $maintenanceDTO->getDate());
-        $this->validator->throwValidationFailedIfNotValid($oilChange);
+        $maintenacePerformer = $this->getMaintenancePerformer($parentResourceId);
+        $oilChangePerformed = $maintenacePerformer->changeOil($maintenanceDTO->getKmsDriven(), $maintenanceDTO->getDate());
+        $this->validator->throwValidationFailedIfNotValid($maintenacePerformer);
         
-        $this->oilChangePerformerRepository->update($oilChangePerformer);
-        return $oilChange;
+        $this->maintenancePerformerRepository->update($maintenacePerformer);
+        
+        return $oilChangePerformed;
     }
     
     /**
      * @param int $motorcycleId
-     * @return OilChangePerformer
+     * @return MaintenancePerformer
      * @throws Exception
      */
-    private function getOilChangePerformer($motorcycleId)
+    private function getMaintenancePerformer($motorcycleId)
     {
-        $oilChangePerformer = $this->oilChangePerformerRepository
+        $maintenancePerformer = $this->maintenancePerformerRepository
             ->findByMotorcycle($motorcycleId);
-        if (empty($oilChangePerformer)) {
+        if (empty($maintenancePerformer)) {
             throw new Exception('OilChangePerformer not found.');
         }
         
-        return $oilChangePerformer;
+        return $maintenancePerformer;
     }
 }

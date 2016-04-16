@@ -6,8 +6,8 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Rtaranto\Domain\Entity\Biker;
+use Rtaranto\Domain\Entity\MaintenancePerformer;
 use Rtaranto\Domain\Entity\Motorcycle;
-use Rtaranto\Domain\Entity\OilChangePerformer;
 
 class LoadBikerTestingData extends AbstractFixture implements FixtureInterface, OrderedFixtureInterface
 {
@@ -18,7 +18,7 @@ class LoadBikerTestingData extends AbstractFixture implements FixtureInterface, 
         
         $model = 'Ducati Hypermotard 796';
         $motorcycle = new Motorcycle($model, 1560);
-        $oilChangePerformer = new OilChangePerformer($motorcycle);
+        $maintenancePerformer = new MaintenancePerformer($motorcycle);
         
         $biker->addMotorcycle($motorcycle);
         
@@ -27,7 +27,7 @@ class LoadBikerTestingData extends AbstractFixture implements FixtureInterface, 
         
         $manager->persist($biker);
         $manager->persist($aSecondBiker);
-        $manager->persist($oilChangePerformer);
+        $manager->persist($maintenancePerformer);
         $manager->flush();
         
         $this->addReference('ducati', $motorcycle);

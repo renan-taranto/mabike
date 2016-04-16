@@ -4,23 +4,23 @@ namespace Tests\Rtaranto\Domain\Entity;
 use DateTime;
 use Exception;
 use Rtaranto\Domain\Entity\Motorcycle;
-use Rtaranto\Domain\Entity\OilChange;
-use Rtaranto\Domain\Entity\OilChangePerformer;
+use Rtaranto\Domain\Entity\PerformedOilChange;
+use Rtaranto\Domain\Entity\OilChangeMaintenance;
 
-class OilChangePerformerTest extends \PHPUnit_Framework_TestCase
+class OilChangeMaintenaneTest extends \PHPUnit_Framework_TestCase
 {
     public function testChangeOilReturnsOilChange()
     {
         $motorcycle = $this->prophesize(Motorcycle::class)->reveal();
-        $oilChangeMaintenance = new OilChangePerformer($motorcycle, 1500);
+        $oilChangeMaintenance = new OilChangeMaintenance($motorcycle, 1500);
         $oilChange = $oilChangeMaintenance->changeOil(1234, new DateTime('2016-01-19'));
-        $this->assertInstanceOf(OilChange::class, $oilChange);
+        $this->assertInstanceOf(PerformedOilChange::class, $oilChange);
     }
     
     public function testGetKmsForNextOilChangeReturnsKms()
     {
         $motorcycle = $this->prophesize(Motorcycle::class)->reveal();
-        $oilChangeMaintenance = new OilChangePerformer($motorcycle);
+        $oilChangeMaintenance = new OilChangeMaintenance($motorcycle);
         $oilChangeMaintenance->setKmsPerMaintenance(1500);
         $oilChangeMaintenance->changeOil(4560, new DateTime('2016-05-19'));
         $oilChangeMaintenance->changeOil(0, new DateTime('2016-01-19'));
@@ -36,7 +36,7 @@ class OilChangePerformerTest extends \PHPUnit_Framework_TestCase
     public function testGetKmsForNextOilChangeWithNoPreviousOilChangeThrowsException()
     {
         $motorcycle = $this->prophesize(Motorcycle::class)->reveal();
-        $oilChangeMaintenance = new OilChangePerformer($motorcycle, 1500);
+        $oilChangeMaintenance = new OilChangeMaintenance($motorcycle, 1500);
         $this->setExpectedException(Exception::class);
         $oilChangeMaintenance->getKmsForNextMaintenance();
     }
@@ -44,7 +44,7 @@ class OilChangePerformerTest extends \PHPUnit_Framework_TestCase
     public function testGetKmsForNextOilChangeWithoutSettingKmsPerOilChangeThrowsException()
     {
         $motorcycle = $this->prophesize(Motorcycle::class)->reveal();
-        $oilChangeMaintenance = new OilChangePerformer($motorcycle);
+        $oilChangeMaintenance = new OilChangeMaintenance($motorcycle);
         $this->setExpectedException(Exception::class);
         $oilChangeMaintenance->getKmsForNextMaintenance();
     }

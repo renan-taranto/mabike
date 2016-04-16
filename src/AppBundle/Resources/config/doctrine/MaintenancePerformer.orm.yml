@@ -1,26 +1,13 @@
 Rtaranto\Domain\Entity\MaintenancePerformer:
     type: entity
-    inheritanceType: SINGLE_TABLE
-    discriminatorColumn:
-        name: discr
-        type: string
-    discriminatorMap:
-        oilchangeperformer: Rtaranto\Domain\Entity\OilChangePerformer
-    
+    table: null
+    repositoryClass: Rtaranto\Infrastructure\Repository\DoctrineMaintenancePerformerRepository
     id:
         id:
             type: integer
             id: true
             generator:
                 strategy: AUTO
-                
-    fields:
-        kmsPerMaintenance:
-            type: integer
-            nullable: true
-            options:
-                unsigned: true
-                
     oneToOne:
         motorcycle:
             targetEntity: Motorcycle
@@ -28,17 +15,12 @@ Rtaranto\Domain\Entity\MaintenancePerformer:
                 name: motorcycle_id
                 referencedColumnName: id
                 onDelete: cascade
-    manyToMany:
-        maintenancesPerformed:
-            targetEntity: Maintenance
-            joinTable:
-                name: maintenanceperformers_maintenances
-            joinColumns:
-                maintenanceperformer_id:
-                    referencedColumnName: id
-            inverseJoinColumns:
-                maintenance_id:
-                    referencedColumnName: id
-                    unique: true
+        oilChangeMaintenance:
+            targetEntity: OilChangeMaintenance
+            joinColumn:
+                name: oilchangemaintenance_id
+                referencedColumnName: id
             cascade: ["persist", "remove"]
             orphanRemoval: true
+                            
+    lifecycleCallbacks: {  }

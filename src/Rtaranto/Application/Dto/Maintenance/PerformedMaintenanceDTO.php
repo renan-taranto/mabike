@@ -1,7 +1,7 @@
 <?php
 namespace Rtaranto\Application\Dto\Maintenance;
 
-class MaintenanceDTO
+class PerformedMaintenanceDTO
 {
     /**
      * @var int

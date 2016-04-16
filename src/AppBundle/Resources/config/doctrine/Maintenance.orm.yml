@@ -5,7 +5,7 @@ Rtaranto\Domain\Entity\Maintenance:
         name: discr
         type: string
     discriminatorMap:
-        oilchange: Rtaranto\Domain\Entity\OilChange
+        oilchangeperformer: Rtaranto\Domain\Entity\OilChangeMaintenance
     
     id:
         id:
@@ -13,10 +13,32 @@ Rtaranto\Domain\Entity\Maintenance:
             id: true
             generator:
                 strategy: AUTO
+                
     fields:
-        kmsDriven:
+        kmsPerMaintenance:
             type: integer
+            nullable: true
             options:
                 unsigned: true
-        date:
-            type: date
+                
+    oneToOne:
+        motorcycle:
+            targetEntity: Motorcycle
+            joinColumn:
+                name: motorcycle_id
+                referencedColumnName: id
+                
+    manyToMany:
+        performedMaintenances:
+            targetEntity: PerformedMaintenance
+            joinTable:
+                name: maintenances_performedmaintenances
+            joinColumns:
+                maintenanceperformer_id:
+                    referencedColumnName: id
+            inverseJoinColumns:
+                maintenance_id:
+                    referencedColumnName: id
+                    unique: true
+            cascade: ["persist", "remove"]
+            orphanRemoval: true

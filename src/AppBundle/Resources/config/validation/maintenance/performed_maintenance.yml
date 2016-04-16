@@ -1,6 +1,7 @@
-Rtaranto\Application\Dto\Maintenance\MaintenanceDTO:
+Rtaranto\Domain\Entity\PerformedMaintenance:
     properties:
         date:
+            - NotBlank: ~
             - Date: ~
         kmsDriven:
             - Range:

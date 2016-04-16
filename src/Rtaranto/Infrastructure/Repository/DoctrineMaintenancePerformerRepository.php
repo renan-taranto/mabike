@@ -3,9 +3,9 @@ namespace Rtaranto\Infrastructure\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Rtaranto\Domain\Entity\MaintenancePerformer;
-use Rtaranto\Domain\Entity\Repository\OilChangePerformerRepositoryInterface;
+use Rtaranto\Domain\Entity\Repository\MaintenancePerformerRepositoryInterface;
 
-class DoctrineOilChangePerformerRepository extends EntityRepository implements OilChangePerformerRepositoryInterface
+class DoctrineMaintenancePerformerRepository extends EntityRepository implements MaintenancePerformerRepositoryInterface
 {
     public function add(MaintenancePerformer $maintenancePerformer)
     {

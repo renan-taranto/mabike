@@ -3,7 +3,7 @@ namespace Rtaranto\Domain\Entity;
 
 use DateTime;
  
-class OilChange extends Maintenance
+class PerformedOilChange extends PerformedMaintenance
 {
     /**
      * @param int $kmsDriven

@@ -1,6 +1,0 @@
-Rtaranto\Domain\Entity\MaintenancePerformer:
-    properties:
-        kmsPerMaintenance:
-            - Range:
-                min: 0
-                max: 100000

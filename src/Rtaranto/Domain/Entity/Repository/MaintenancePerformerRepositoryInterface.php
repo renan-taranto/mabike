@@ -3,7 +3,7 @@ namespace Rtaranto\Domain\Entity\Repository;
 
 use Rtaranto\Domain\Entity\MaintenancePerformer;
 
-interface OilChangePerformerRepositoryInterface
+interface MaintenancePerformerRepositoryInterface
 {
     public function add(MaintenancePerformer $maintenancePerformer);
 
