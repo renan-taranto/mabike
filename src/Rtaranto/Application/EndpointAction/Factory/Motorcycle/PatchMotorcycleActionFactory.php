@@ -58,11 +58,13 @@ class PatchMotorcycleActionFactory implements PatchActionFactoryInterface
      */
     public function createPatchAction()
     {
-        $motorcycleRepository = new DoctrineMotorcycleRepository($this->em);
         $bikerRepository = new DoctrineBikerRepository($this->em);
         $biker = $bikerRepository->findOneByUser($this->user);
+
         $parametersBinder = new ParametersBinder($this->formFactory, MotorcycleDTOType::class);
         $validator = new Validator($this->sfValidator);
+        
+        $motorcycleRepository = new DoctrineMotorcycleRepository($this->em);
         
         return new PatchMotorcycleAction($motorcycleRepository, $biker, $parametersBinder, $validator);
     }

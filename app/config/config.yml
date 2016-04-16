@@ -118,3 +118,12 @@ nelmio_cors:
             allow_headers: ['*']
             allow_methods: ['POST', 'PUT', 'PATCH', 'GET', 'HEAD', 'DELETE', 'OPTIONS']
             max_age: 3600
+            
+            
+jms_serializer:
+    metadata:
+        auto_detection: true
+        directories:
+            AppBundle:
+                namespace_prefix: ""
+                path: "@AppBundle/Resources/config/serializer"

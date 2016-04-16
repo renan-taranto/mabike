@@ -7,6 +7,7 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Motorcycle;
+use Rtaranto\Domain\Entity\OilChangePerformer;
 
 class LoadBikerTestingData extends AbstractFixture implements FixtureInterface, OrderedFixtureInterface
 {
@@ -14,8 +15,11 @@ class LoadBikerTestingData extends AbstractFixture implements FixtureInterface, 
     {
         $biker = new Biker('Test Biker', 'testbiker@email.com');
         $biker->setUser($this->getReference('biker_user_1'));
+        
         $model = 'Ducati Hypermotard 796';
         $motorcycle = new Motorcycle($model, 1560);
+        $oilChangePerformer = new OilChangePerformer($motorcycle);
+        
         $biker->addMotorcycle($motorcycle);
         
         $aSecondBiker = new Biker('Test Biker2', 'testbiker2@email.com');
@@ -23,7 +27,10 @@ class LoadBikerTestingData extends AbstractFixture implements FixtureInterface, 
         
         $manager->persist($biker);
         $manager->persist($aSecondBiker);
+        $manager->persist($oilChangePerformer);
         $manager->flush();
+        
+        $this->addReference('ducati', $motorcycle);
     }
 
     public function getOrder()

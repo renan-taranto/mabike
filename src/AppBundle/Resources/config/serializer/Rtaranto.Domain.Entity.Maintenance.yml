@@ -1,0 +1,14 @@
+Rtaranto\Domain\Entity\Maintenance:
+    exclusion_policy: ALL
+    discriminator:
+        field_name: type
+        map:
+            oilchange: Rtaranto\Domain\Entity\OilChange
+    properties:
+        id:
+            groups: [view]
+        kmsDriven:
+            groups: [view]
+        date:
+            type: DateTime<'Y-m-d'>
+            groups: [view]

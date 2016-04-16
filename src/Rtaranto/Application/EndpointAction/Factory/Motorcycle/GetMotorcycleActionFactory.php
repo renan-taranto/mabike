@@ -19,6 +19,9 @@ class GetMotorcycleActionFactory implements GetActionFactoryInterface
         $this->em = $em;
     }
     
+    /**
+     * @return GetMotorcycleAction
+     */
     public function createGetAction()
     {
         $bikerRepository = new DoctrineBikerRepository($this->em);

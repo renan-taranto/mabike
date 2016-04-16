@@ -29,6 +29,6 @@ Rtaranto\Domain\Entity\Biker:
         motorcycles:
             targetEntity: Motorcycle
             mappedBy: biker
-            cascade: ["persist", "merge"]
+            cascade: ["persist", "remove"]
             orphanRemoval: true
                     

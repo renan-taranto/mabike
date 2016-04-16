@@ -1,0 +1,9 @@
+Rtaranto\Domain\Entity\Maintenance:
+    properties:
+        date:
+            - NotBlank: ~
+            - Date: ~
+        kmsDriven:
+            - Range:
+                min: 0
+                max: 1000000

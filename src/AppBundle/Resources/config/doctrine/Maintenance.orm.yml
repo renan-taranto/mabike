@@ -1,0 +1,22 @@
+Rtaranto\Domain\Entity\Maintenance:
+    type: entity
+    inheritanceType: SINGLE_TABLE
+    discriminatorColumn:
+        name: discr
+        type: string
+    discriminatorMap:
+        oilchange: Rtaranto\Domain\Entity\OilChange
+    
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        kmsDriven:
+            type: integer
+            options:
+                unsigned: true
+        date:
+            type: date

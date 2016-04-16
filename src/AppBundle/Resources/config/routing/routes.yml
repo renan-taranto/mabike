@@ -22,3 +22,9 @@ api_motorcycles:
     type:         rest
     resource:     Rtaranto\Presentation\Controller\MotorcycleController
     name_prefix:  api_v1_
+    
+api_oil_changes:
+    type:     rest
+    parent:   api_motorcycles
+    resource: Rtaranto\Presentation\Controller\OilchangeController
+    name_prefix:  api_v1_

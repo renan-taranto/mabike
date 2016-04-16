@@ -32,6 +32,9 @@ class PostMotorcycleActionFactory implements PostActionFactoryInterface
         $this->sfValidator = $sfValidator;
     }
     
+    /**
+     * @return PostMotorcycleAction
+     */
     public function createPostAction()
     {
         $bikerRepository = new DoctrineBikerRepository($this->em);
