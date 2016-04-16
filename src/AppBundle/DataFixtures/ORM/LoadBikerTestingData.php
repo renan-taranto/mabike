@@ -30,6 +30,7 @@ class LoadBikerTestingData extends AbstractFixture implements FixtureInterface, 
         $manager->persist($maintenancePerformer);
         $manager->flush();
         
+        $this->addReference('biker1', $biker);
         $this->addReference('ducati', $motorcycle);
     }
 

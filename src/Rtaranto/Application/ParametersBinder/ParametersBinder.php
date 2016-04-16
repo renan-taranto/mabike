@@ -16,15 +16,20 @@ class ParametersBinder implements ParametersBinderInterface
     
     public function bind(array $parameters, $object)
     {
-        $form = $this->formFactory->create($this->formTypeClassName, $object);
+        $form = $this->createForm($object);
         $form->submit($parameters);
         return $form->getData();
     }
     
     public function bindIgnoringMissingFields(array $parameters, $object)
     {
-        $form = $this->formFactory->create($this->formTypeClassName, $object);
+        $form = $this->createForm($object);
         $form->submit($parameters, false);
         return $form->getData();
+    }
+    
+    private function createForm($object)
+    {
+        return $this->formFactory->create($this->formTypeClassName, $object);
     }
 }

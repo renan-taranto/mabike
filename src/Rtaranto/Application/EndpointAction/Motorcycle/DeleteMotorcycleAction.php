@@ -1,18 +1,15 @@
 <?php
 namespace Rtaranto\Application\EndpointAction\Motorcycle;
 
-use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Repository\MotorcycleRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DeleteMotorcycleAction
 {
-    private $biker;
     private $motorcycleRepository;
     
-    public function __construct(Biker $biker, MotorcycleRepositoryInterface $motorcycleRepository)
+    public function __construct(MotorcycleRepositoryInterface $motorcycleRepository)
     {
-        $this->biker = $biker;
         $this->motorcycleRepository = $motorcycleRepository;
     }
     
@@ -24,7 +21,7 @@ class DeleteMotorcycleAction
     
     private function findOrThrowNotFound($id)
     {
-        $motorcycle = $this->motorcycleRepository->findOneByBikerAndId($this->biker, $id);
+        $motorcycle = $this->motorcycleRepository->get($id);
         
         if (empty($motorcycle)) {
             throw new NotFoundHttpException(

@@ -2,7 +2,6 @@
 namespace Rtaranto\Application\EndpointAction\Motorcycle;
 
 use Rtaranto\Application\EndpointAction\GetActionInterface;
-use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Motorcycle;
 use Rtaranto\Domain\Entity\Repository\MotorcycleRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -14,15 +13,9 @@ class GetMotorcycleAction implements GetActionInterface
      */
     private $motorcycleRepository;
     
-    /**
-     * @var Biker
-     */
-    private $biker;
-    
-    public function __construct(MotorcycleRepositoryInterface $motorcycleRepository, Biker $biker)
+    public function __construct(MotorcycleRepositoryInterface $motorcycleRepository)
     {
         $this->motorcycleRepository = $motorcycleRepository;
-        $this->biker = $biker;
     }
     
     /**
@@ -37,7 +30,7 @@ class GetMotorcycleAction implements GetActionInterface
     
     private function findOrThrowNotFound($id)
     {
-        $motorcycle = $this->motorcycleRepository->findOneByBikerAndId($this->biker, $id);
+        $motorcycle = $this->motorcycleRepository->get($id);
         
         if (empty($motorcycle)) {
             throw new NotFoundHttpException(

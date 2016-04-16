@@ -4,8 +4,11 @@ namespace Rtaranto\Application\EndpointAction\Factory\Motorcycle;
 use Doctrine\ORM\EntityManagerInterface;
 use Rtaranto\Application\EndpointAction\Factory\PostActionFactoryInterface;
 use Rtaranto\Application\EndpointAction\Motorcycle\PostMotorcycleAction;
+use Rtaranto\Application\EndpointAction\RequestParamsProcessor;
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
+use Rtaranto\Application\Service\Motorcycle\MotorcycleRegistration;
 use Rtaranto\Application\Service\Validator\Validator;
+use Rtaranto\Domain\Entity\MaintenancePerformer;
 use Rtaranto\Domain\Entity\User;
 use Rtaranto\Infrastructure\Repository\DoctrineBikerRepository;
 use Rtaranto\Infrastructure\Repository\DoctrineMotorcycleRepository;
@@ -37,11 +40,22 @@ class PostMotorcycleActionFactory implements PostActionFactoryInterface
      */
     public function createPostAction()
     {
+        $validator = new Validator($this->sfValidator);
+        
+        $motorcycleRepository = new DoctrineMotorcycleRepository($this->em);
+        $maintenancePerformerRepository = $this->em->getRepository(MaintenancePerformer::class);
+        $motorcycleRegistration = new MotorcycleRegistration(
+            $validator,
+            $motorcycleRepository,
+            $maintenancePerformerRepository
+        );
+        
+        $parametersBinder = new ParametersBinder($this->formFactory, MotorcycleDTOType::class);
+        $inputProcessor = new RequestParamsProcessor($parametersBinder, $validator);
+        
         $bikerRepository = new DoctrineBikerRepository($this->em);
         $biker = $bikerRepository->findOneByUser($this->user);
-        $motorcycleRepository = new DoctrineMotorcycleRepository($this->em, $bikerRepository);
-        $parametersBinder = new ParametersBinder($this->formFactory, MotorcycleDTOType::class);
-        $validator = new Validator($this->sfValidator);
-        return new PostMotorcycleAction($biker, $motorcycleRepository, $parametersBinder, $validator);
+        
+        return new PostMotorcycleAction($biker, $motorcycleRegistration, $inputProcessor);
     }
 }

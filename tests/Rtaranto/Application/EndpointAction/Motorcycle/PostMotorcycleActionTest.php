@@ -2,80 +2,88 @@
 namespace Tests\Rtaranto\Application\EndpointAction\Motorcycle;
 
 use Rtaranto\Application\Dto\Motorcycle\MotorcycleDTO;
+use Rtaranto\Application\EndpointAction\InputProcessorInterface;
 use Rtaranto\Application\EndpointAction\Motorcycle\PostMotorcycleAction;
 use Rtaranto\Application\Exception\ValidationFailedException;
-use Rtaranto\Application\ParametersBinder\ParametersBinderInterface;
-use Rtaranto\Application\Service\Validator\ValidatorInterface;
+use Rtaranto\Application\Service\Motorcycle\MotorcycleRegistrationInterface;
 use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Motorcycle;
-use Rtaranto\Domain\Entity\Repository\MotorcycleRepositoryInterface;
 
 class PostMotorcycleActionTest extends \PHPUnit_Framework_TestCase
 {
     public function testSuccessfullyPostMotorcycle()
     {
-        $biker = $this->getMockBuilder(Biker::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $model = 'YBR';
-        $kmsDriven = 43278;
-        $motorcycle = new Motorcycle($model, $kmsDriven);
-        $motorcycleRepository = $this->getMock(MotorcycleRepositoryInterface::class);
-        $motorcycleRepository->expects($this->once())
-            ->method('add')
-            ->will($this->returnValue($motorcycle));
-        $parametersBinder = $this->getMock(ParametersBinderInterface::class);
-        $parametersBinder->expects($this->once())
-            ->method('bind')
-            ->will($this->returnValue(new MotorcycleDTO()));
-        $validator = $this->getMock(ValidatorInterface::class);
+        $model = 'a valid model';
+        $kmsDriven = 23124;
+        $motorcycleDTO = new MotorcycleDTO($model, $kmsDriven);
         
-        $postMotorcycleAction = new PostMotorcycleAction($biker, $motorcycleRepository, $parametersBinder, $validator);
-        $params = array('model' => $model, 'kmsDriven'=> $kmsDriven);
-        $returnedMotorcycle = $postMotorcycleAction->post($params);
+        $data = array('model' => $model, 'kms_driven' => $kmsDriven);
+        
+        $biker = $this->prophesize(Biker::class);
+        
+        $motorcycleRegistration = $this->prophesize(MotorcycleRegistrationInterface::class);
+        $motorcycle = new Motorcycle($model, $kmsDriven);
+        $motorcycleRegistration->registerMotorcycle($biker->reveal(), $model, $kmsDriven)->willReturn($motorcycle);
+        
+        $inputProcessor = $this->prophesize(InputProcessorInterface::class);
+        $inputProcessor->processInput($data, new MotorcycleDTO())->willReturn($motorcycleDTO);
+        
+        $postMotorcycleAction = new PostMotorcycleAction(
+            $biker->reveal(),
+            $motorcycleRegistration->reveal(),
+            $inputProcessor->reveal()
+        );
+        
+        $returnedMotorcycle = $postMotorcycleAction->post($data);
         
         $this->assertInstanceOf(Motorcycle::class, $returnedMotorcycle);
     }
     
-    public function testPostMotorcycleThrowsValidationFailed()
+    public function testPostBadParamsThrowsValidationFailed()
     {
-        $biker = $this->getMockBuilder(Biker::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $motorcycleRepository = $this->getMock(MotorcycleRepositoryInterface::class);
-        $parametersBinder = $this->getMock(ParametersBinderInterface::class);
-        $parametersBinder->expects($this->once())
-            ->method('bind')
-            ->will($this->returnValue(new MotorcycleDTO()));
-        $validator = $this->getMock(ValidatorInterface::class);
-        $validator->expects($this->any())
-            ->method('throwValidationFailedIfNotValid')
-            ->will($this->throwException(new ValidationFailedException(array())));
+        $model = '';
+        $kmsDriven = -1;
+        $data = array('model' => $model, 'kms_driven' => $kmsDriven);
         
-        $postMotorcycleAction = new PostMotorcycleAction($biker, $motorcycleRepository, $parametersBinder, $validator);
+        $biker = $this->prophesize(Biker::class);
+        $inputProcessor = $this->prophesize(InputProcessorInterface::class);
+        $inputProcessor->processInput($data, new MotorcycleDTO())->willThrow(ValidationFailedException::class);
+        $motorcycleRegistration = $this->prophesize(MotorcycleRegistrationInterface::class);
+        
+        $postMotorcycleAction = new PostMotorcycleAction(
+            $biker->reveal(),
+            $motorcycleRegistration->reveal(),
+            $inputProcessor->reveal()
+        );
         
         $this->setExpectedException(ValidationFailedException::class);
-        $postMotorcycleAction->post(array());
+        $postMotorcycleAction->post($data);
     }
     
     public function testPostMotorcycleWithInvalidBusinessRulesThrowsValidationFailed()
     {
-        $biker = $this->getMockBuilder(Biker::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $motorcycleRepository = $this->getMock(MotorcycleRepositoryInterface::class);
-        $parametersBinder = $this->getMock(ParametersBinderInterface::class);
-        $parametersBinder->expects($this->once())
-            ->method('bind')
-            ->will($this->returnValue(new MotorcycleDTO()));
-        $validator = $this->getMock(ValidatorInterface::class);
-        $validator->expects($this->at(1))
-            ->method('throwValidationFailedIfNotValid')
-            ->will($this->throwException(new ValidationFailedException(array())));
+        $model = 'a invalid motorcycle model';
+        $kmsDriven = -1;
+        $motorcycleDTO = new MotorcycleDTO($model, $kmsDriven);
+        $data = array('model' => $model, 'kms_driven' => $kmsDriven);
         
-        $postMotorcycleAction = new PostMotorcycleAction($biker, $motorcycleRepository, $parametersBinder, $validator);
+        $biker = $this->prophesize(Biker::class);
+        
+        $inputProcessor = $this->prophesize(InputProcessorInterface::class);
+        $inputProcessor->processInput($data, new MotorcycleDTO())->willReturn($motorcycleDTO);
+        
+        $motorcycleRegistration = $this->prophesize(MotorcycleRegistrationInterface::class);
+        $motorcycleRegistration->registerMotorcycle($biker->reveal(), $model, $kmsDriven)
+            ->willThrow(ValidationFailedException::class);
+        
+        $postMotorcycleAction = new PostMotorcycleAction(
+            $biker->reveal(),
+            $motorcycleRegistration->reveal(),
+            $inputProcessor->reveal()
+        );
         
         $this->setExpectedException(ValidationFailedException::class);
-        $postMotorcycleAction->post(array());
+        
+        $postMotorcycleAction->post($data);
     }
 }

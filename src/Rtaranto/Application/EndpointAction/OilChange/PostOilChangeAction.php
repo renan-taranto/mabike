@@ -9,7 +9,7 @@ use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\MaintenancePerformer;
 use Rtaranto\Domain\Entity\Repository\MaintenancePerformerRepositoryInterface;
 
-class BikerPostOilChangeAction implements PostSubresourceActionInterface
+class PostOilChangeAction implements PostSubresourceActionInterface
 {
     private $parametersBinder;
     private $validator;

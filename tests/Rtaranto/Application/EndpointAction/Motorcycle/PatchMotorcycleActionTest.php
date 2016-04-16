@@ -2,133 +2,122 @@
 namespace Tests\Rtaranto\Application\EndpointAction\Motorcycle;
 
 use Rtaranto\Application\Dto\Motorcycle\MotorcycleDTO;
+use Rtaranto\Application\EndpointAction\InputProcessorInterface;
 use Rtaranto\Application\EndpointAction\Motorcycle\PatchMotorcycleAction;
 use Rtaranto\Application\Exception\ValidationFailedException;
-use Rtaranto\Application\ParametersBinder\ParametersBinderInterface;
-use Rtaranto\Application\Service\Validator\ValidatorInterface;
-use Rtaranto\Domain\Entity\Biker;
+use Rtaranto\Application\Service\Motorcycle\MotorcyclePatcherInterface;
 use Rtaranto\Domain\Entity\Motorcycle;
 use Rtaranto\Domain\Entity\Repository\MotorcycleRepositoryInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PatchMotorcycleActionTest extends \PHPUnit_Framework_TestCase
 {
     public function testSuccessfullyPatchMotorcycle()
     {
-        $model = 'model';
+        $id = 1;
+        $newModel = 'model';
         $kmsDriven = 90000;
-        $params = array('model' => $model, 'kms_driven'=> $kmsDriven);
+        $params = array('model' => $newModel, 'kms_driven'=> $kmsDriven);
         
-        $biker = $this->prophesize(Biker::class);
+        $currentModel = 'cur model';
+        $motorcycle = new Motorcycle($currentModel);
         
         $motorcycleRepository = $this->prophesize(MotorcycleRepositoryInterface::class);
-        $id = 1;
-        $persistedMotorcycle = new Motorcycle('persisted bike', 3456);
-        $motorcycleRepository->findOneByBikerAndId($biker, $id)->willReturn($persistedMotorcycle);
-        $motorcycleRepository->update($persistedMotorcycle)->willReturn(new Motorcycle($model, $kmsDriven));
+        $motorcycleRepository->get($id)->willReturn($motorcycle);
         
-        $parametersBinder = $this->prophesize(ParametersBinderInterface::class);
-        $validator = $this->prophesize(ValidatorInterface::class);
+        $motorcycleDTO = new MotorcycleDTO($currentModel);
+        $inputProcessor = $this->prophesize(InputProcessorInterface::class);
+        $inputProcessor->processInput($params, $motorcycleDTO, true)
+            ->willReturn($motorcycleDTO);
+        
+        $motorcyclePatcher = $this->prophesize(MotorcyclePatcherInterface::class);
+        $motorcyclePatcher->patchMotorcycle($motorcycle, $motorcycleDTO)
+            ->willReturn($motorcycle);
         
         
         $patchMotorcycleAction = new PatchMotorcycleAction(
-            $motorcycleRepository->reveal(),
-            $biker->reveal(),
-            $parametersBinder->reveal(),
-            $validator->reveal()
+            $inputProcessor->reveal(),
+            $motorcyclePatcher->reveal(),
+            $motorcycleRepository->reveal()
         );
         
-        $patchedMotorcycle = $patchMotorcycleAction->patch(1, $params);
+        
+        $patchedMotorcycle = $patchMotorcycleAction->patch($id, $params);
         $this->assertInstanceOf(Motorcycle::class, $patchedMotorcycle);
     }
     
     public function testPatchMotorcycleWithInvalidParamsThrowsValidationFailed()
     {
+        $id = 1;
         $model = 'm';
         $kmsDriven = -1;
         $params = array('model' => $model, 'kms_driven'=> $kmsDriven);
         
-        $biker = $this->prophesize(Biker::class);
-        
         $motorcycleRepository = $this->prophesize(MotorcycleRepositoryInterface::class);
-        $id = 1;
-        $persistedBikeModel = 'persisted bike';
-        $persistedBikeKmsDriven = 5456;
-        $persistedMotorcycle = new Motorcycle($persistedBikeModel, $persistedBikeKmsDriven);
-        $motorcycleRepository->findOneByBikerAndId($biker, $id)->willReturn($persistedMotorcycle);
+        $motorcycle = $this->prophesize(Motorcycle::class);
+        $motorcycleRepository->get($id)->willReturn($motorcycle->reveal());
         
-        $parametersBinder = $this->prophesize(ParametersBinderInterface::class);
-        $validator = $this->prophesize(ValidatorInterface::class);
-        $validator->throwValidationFailedIfNotValid(new MotorcycleDTO($persistedBikeModel, $persistedBikeKmsDriven))
-            ->willThrow(ValidationFailedException::class);
+        $inputProcessor = $this->prophesize(InputProcessorInterface::class);
+        $inputProcessor->processInput($params, new MotorcycleDTO(), true)->willThrow(ValidationFailedException::class);
+        
+        $motorcyclePatcher = $this->prophesize(MotorcyclePatcherInterface::class);
         
         $patchMotorcycleAction = new PatchMotorcycleAction(
-            $motorcycleRepository->reveal(),
-            $biker->reveal(),
-            $parametersBinder->reveal(),
-            $validator->reveal()
+            $inputProcessor->reveal(),
+            $motorcyclePatcher->reveal(),
+            $motorcycleRepository->reveal()
         );
         
         $this->setExpectedException(ValidationFailedException::class);
-        $patchMotorcycleAction->patch(1, $params);
+        $patchMotorcycleAction->patch($id, $params);
     }
     
     public function testPatchMotorcycleWithInvalidBusinessRulesThrowsValidationFailed()
     {
+        $id = 1;
         $model = 'm';
         $kmsDriven = -1;
         $params = array('model' => $model, 'kms_driven'=> $kmsDriven);
         
-        $biker = $this->prophesize(Biker::class);
-        
         $motorcycleRepository = $this->prophesize(MotorcycleRepositoryInterface::class);
-        $id = 1;
-        $persistedBikeModel = 'persisted bike';
-        $persistedBikeKmsDriven = 5456;
-        $persistedMotorcycle = new Motorcycle($persistedBikeModel, $persistedBikeKmsDriven);
-        $motorcycleRepository->findOneByBikerAndId($biker, $id)->willReturn($persistedMotorcycle);
+        $motorcycle = $this->prophesize(Motorcycle::class);
+        $motorcycleRepository->get($id)->willReturn($motorcycle->reveal());
         
-        $parametersBinder = $this->prophesize(ParametersBinderInterface::class);
-        $validator = $this->prophesize(ValidatorInterface::class);
-        $validator->throwValidationFailedIfNotValid(new MotorcycleDTO($persistedBikeModel, $persistedBikeKmsDriven))
-            ->shouldBeCalled();
-        $validator->throwValidationFailedIfNotValid(new MotorcycleDTO($persistedBikeModel, $persistedBikeKmsDriven))
+        $inputProcessor = $this->prophesize(InputProcessorInterface::class);
+        $inputProcessor->processInput($params, new MotorcycleDTO(), true)->willReturn(new MotorcycleDTO());
+        
+        $motorcyclePatcher = $this->prophesize(MotorcyclePatcherInterface::class);
+        $motorcyclePatcher->patchMotorcycle($motorcycle, new MotorcycleDTO())
             ->willThrow(ValidationFailedException::class);
         
         $patchMotorcycleAction = new PatchMotorcycleAction(
-            $motorcycleRepository->reveal(),
-            $biker->reveal(),
-            $parametersBinder->reveal(),
-            $validator->reveal()
+            $inputProcessor->reveal(),
+            $motorcyclePatcher->reveal(),
+            $motorcycleRepository->reveal()
         );
         
         $this->setExpectedException(ValidationFailedException::class);
-        $patchMotorcycleAction->patch(1, $params);
+        $patchMotorcycleAction->patch($id, $params);
     }
     
     public function testPatchMotorcycleThrowsNotFound()
     {
-        $model = 'model';
-        $kmsDriven = 90000;
+        $id = 1;
+        $model = 'm';
+        $kmsDriven = -1;
         $params = array('model' => $model, 'kms_driven'=> $kmsDriven);
         
-        $biker = $this->prophesize(Biker::class);
-        
         $motorcycleRepository = $this->prophesize(MotorcycleRepositoryInterface::class);
-        $id = 1;
-        $motorcycleRepository->findOneByBikerAndId($biker, $id)->willThrow(ValidationFailedException::class);
-        
-        $parametersBinder = $this->prophesize(ParametersBinderInterface::class);
-        $validator = $this->prophesize(ValidatorInterface::class);
-        
+        $inputProcessor = $this->prophesize(InputProcessorInterface::class);
+        $motorcyclePatcher = $this->prophesize(MotorcyclePatcherInterface::class);
         
         $patchMotorcycleAction = new PatchMotorcycleAction(
-            $motorcycleRepository->reveal(),
-            $biker->reveal(),
-            $parametersBinder->reveal(),
-            $validator->reveal()
+            $inputProcessor->reveal(),
+            $motorcyclePatcher->reveal(),
+            $motorcycleRepository->reveal()
         );
         
-        $this->setExpectedException(ValidationFailedException::class);
-        $patchMotorcycleAction->patch(1, $params);
+        $this->setExpectedException(NotFoundHttpException::class);
+        $patchMotorcycleAction->patch($id, $params);
     }
 }

@@ -3,7 +3,7 @@ namespace Tests\Rtaranto\Application\EndpointAction\OilChange;
 
 use DateTime;
 use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
-use Rtaranto\Application\EndpointAction\OilChange\BikerPostOilChangeAction;
+use Rtaranto\Application\EndpointAction\OilChange\PostOilChangeAction;
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Rtaranto\Application\ParametersBinder\ParametersBinderInterface;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
@@ -34,7 +34,7 @@ class BikerPostOilChangeActionTest extends \PHPUnit_Framework_TestCase
         $maintenancePerformerRepository->findByMotorcycle($motorcycleId)->willReturn($maintenancePerformer->reveal());
         $maintenancePerformerRepository->update($maintenancePerformer)->shouldBeCalled();
         
-        $bikerPostOilChangeAction = new BikerPostOilChangeAction(
+        $bikerPostOilChangeAction = new PostOilChangeAction(
             $parametersBinder->reveal(),
             $validator->reveal(),
             $maintenancePerformerRepository->reveal()
@@ -55,7 +55,7 @@ class BikerPostOilChangeActionTest extends \PHPUnit_Framework_TestCase
         
         $oilChangePerformerRepository = $this->prophesize(MaintenancePerformerRepositoryInterface::class);
         
-        $bikerPostOilChangeAction = new BikerPostOilChangeAction(
+        $bikerPostOilChangeAction = new PostOilChangeAction(
             $parametersBinder->reveal(),
             $validator->reveal(),
             $oilChangePerformerRepository->reveal()
@@ -87,7 +87,7 @@ class BikerPostOilChangeActionTest extends \PHPUnit_Framework_TestCase
         $oilChangePerformerRepository = $this->prophesize(MaintenancePerformerRepositoryInterface::class);
         $oilChangePerformerRepository->findByMotorcycle($motorcycleId)->willReturn($oilChangePerformer->reveal());
         
-        $bikerPostOilChangeAction = new BikerPostOilChangeAction(
+        $bikerPostOilChangeAction = new PostOilChangeAction(
             $parametersBinder->reveal(),
             $validator->reveal(),
             $oilChangePerformerRepository->reveal()

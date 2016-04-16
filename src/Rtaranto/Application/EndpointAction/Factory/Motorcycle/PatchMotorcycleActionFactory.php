@@ -4,9 +4,10 @@ namespace Rtaranto\Application\EndpointAction\Factory\Motorcycle;
 use Doctrine\ORM\EntityManagerInterface;
 use Rtaranto\Application\EndpointAction\Factory\PatchActionFactoryInterface;
 use Rtaranto\Application\EndpointAction\Motorcycle\PatchMotorcycleAction;
+use Rtaranto\Application\EndpointAction\RequestParamsProcessor;
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
+use Rtaranto\Application\Service\Motorcycle\MotorcyclePatcher;
 use Rtaranto\Application\Service\Validator\Validator;
-use Rtaranto\Infrastructure\Repository\DoctrineBikerRepository;
 use Rtaranto\Infrastructure\Repository\DoctrineMotorcycleRepository;
 use Rtaranto\Presentation\Form\Motorcycle\MotorcycleDTOType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -19,11 +20,6 @@ class PatchMotorcycleActionFactory implements PatchActionFactoryInterface
      * @var EntityManagerInterface
      */
     private $em;
-    
-    /**
-     * @var UserInterface
-     */
-    private $user;
     
     /**
      * @var FormFactoryInterface
@@ -42,12 +38,10 @@ class PatchMotorcycleActionFactory implements PatchActionFactoryInterface
      * @param ValidatorInterface $sfValidator
      */
     public function __construct(
-        UserInterface $user,
         EntityManagerInterface $em,
         FormFactoryInterface $formFactory,
         ValidatorInterface $sfValidator
     ) {
-        $this->user = $user;
         $this->em = $em;
         $this->formFactory = $formFactory;
         $this->sfValidator = $sfValidator;
@@ -58,14 +52,14 @@ class PatchMotorcycleActionFactory implements PatchActionFactoryInterface
      */
     public function createPatchAction()
     {
-        $bikerRepository = new DoctrineBikerRepository($this->em);
-        $biker = $bikerRepository->findOneByUser($this->user);
-
         $parametersBinder = new ParametersBinder($this->formFactory, MotorcycleDTOType::class);
         $validator = new Validator($this->sfValidator);
         
-        $motorcycleRepository = new DoctrineMotorcycleRepository($this->em);
+        $inputProcessor = new RequestParamsProcessor($parametersBinder, $validator);
         
-        return new PatchMotorcycleAction($motorcycleRepository, $biker, $parametersBinder, $validator);
+        $motorcycleRepository = new DoctrineMotorcycleRepository($this->em);
+        $motorcyclePatcher = new MotorcyclePatcher($motorcycleRepository, $validator);
+        
+        return new PatchMotorcycleAction($inputProcessor, $motorcyclePatcher, $motorcycleRepository);
     }
 }

@@ -1,39 +1,28 @@
 <?php
 namespace Rtaranto\Application\EndpointAction\Motorcycle;
 
-use Rtaranto\Application\Command\Motorcycle\PatchMotorcycleCommand;
 use Rtaranto\Application\Dto\Motorcycle\MotorcycleDTO;
+use Rtaranto\Application\EndpointAction\InputProcessorInterface;
 use Rtaranto\Application\EndpointAction\PatchActionInterface;
-use Rtaranto\Application\ParametersBinder\ParametersBinderInterface;
-use Rtaranto\Application\Service\Validator\ValidatorInterface;
-use Rtaranto\Domain\Entity\Biker;
+use Rtaranto\Application\Service\Motorcycle\MotorcyclePatcherInterface;
 use Rtaranto\Domain\Entity\Motorcycle;
 use Rtaranto\Domain\Entity\Repository\MotorcycleRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PatchMotorcycleAction implements PatchActionInterface
 {
+    private $inputProcessor;
+    private $motorcyclePatcher;        
     private $motorcycleRepository;
-    private $biker;
-    private $parametersBinder;
-    private $validator;
     
-    /**
-     * @param MotorcycleRepositoryInterface $motorcycleRepository
-     * @param Biker $biker
-     * @param ParametersBinderInterface $parametersBinder
-     * @param ValidatorInterface $validator
-     */
     public function __construct(
-        MotorcycleRepositoryInterface $motorcycleRepository,
-        Biker $biker,
-        ParametersBinderInterface $parametersBinder,
-        ValidatorInterface $validator    
+        InputProcessorInterface $inputProcessor,
+        MotorcyclePatcherInterface $motorcyclePatcher,
+        MotorcycleRepositoryInterface $motorcycleRepository
     ) {
+        $this->inputProcessor = $inputProcessor;
+        $this->motorcyclePatcher = $motorcyclePatcher;
         $this->motorcycleRepository = $motorcycleRepository;
-        $this->biker = $biker;
-        $this->parametersBinder = $parametersBinder;
-        $this->validator = $validator;
     }
     
     /**
@@ -46,14 +35,9 @@ class PatchMotorcycleAction implements PatchActionInterface
         $motorcycle = $this->findOrThrowNotFound($id);
         
         $motorcycleDTO = new MotorcycleDTO($motorcycle->getModel(), $motorcycle->getKmsDriven());
-        $this->parametersBinder->bindIgnoringMissingFields($requestBodyParameters, $motorcycleDTO);
-        $this->validator->throwValidationFailedIfNotValid($motorcycleDTO);
+        $patchedMotorcycleDTO = $this->inputProcessor->processInput($requestBodyParameters, $motorcycleDTO, true);
         
-        $patchMotorcycleCommand = new PatchMotorcycleCommand($motorcycle);
-        $patchMotorcycleCommand->execute($motorcycleDTO);
-        $this->validator->throwValidationFailedIfNotValid($motorcycle);
-        
-        return $this->motorcycleRepository->update($motorcycle);
+        return $this->motorcyclePatcher->patchMotorcycle($motorcycle, $patchedMotorcycleDTO);
     }
     
     /**
@@ -63,7 +47,7 @@ class PatchMotorcycleAction implements PatchActionInterface
      */
     private function findOrThrowNotFound($id)
     {
-        $motorcycle = $this->motorcycleRepository->findOneByBikerAndId($this->biker, $id);
+        $motorcycle = $this->motorcycleRepository->get($id);
         
         if (empty($motorcycle)) {
             throw new NotFoundHttpException(

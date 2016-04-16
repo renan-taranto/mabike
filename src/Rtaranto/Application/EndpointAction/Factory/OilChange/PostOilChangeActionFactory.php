@@ -4,7 +4,7 @@ namespace Rtaranto\Application\EndpointAction\Factory\OilChange;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Rtaranto\Application\EndpointAction\Factory\PostActionFactoryInterface;
-use Rtaranto\Application\EndpointAction\OilChange\BikerPostOilChangeAction;
+use Rtaranto\Application\EndpointAction\OilChange\PostOilChangeAction;
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
 use Rtaranto\Application\Service\Validator\Validator;
 use Rtaranto\Domain\Entity\MaintenancePerformer;
@@ -13,7 +13,7 @@ use Rtaranto\Presentation\Form\Maintenance\PerformedMaintenanceDTOType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class BikerPostOilChangeActionFactory implements PostActionFactoryInterface
+class PostOilChangeActionFactory implements PostActionFactoryInterface
 {
     private $formFactory;
     private $sfValidator;
@@ -35,7 +35,7 @@ class BikerPostOilChangeActionFactory implements PostActionFactoryInterface
         $validator = new Validator($this->sfValidator);
         $classMetadata = new ClassMetadata(MaintenancePerformer::class);
         $maintenancePerformerRepository = new DoctrineMaintenancePerformerRepository($this->em, $classMetadata);
-        return new BikerPostOilChangeAction(
+        return new PostOilChangeAction(
             $parametersBinder,
             $validator,
             $maintenancePerformerRepository

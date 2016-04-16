@@ -6,7 +6,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use JMS\Serializer\SerializationContext;
-use Rtaranto\Application\EndpointAction\Factory\OilChange\BikerPostOilChangeActionFactory;
+use Rtaranto\Application\EndpointAction\Factory\OilChange\PostOilChangeActionFactory;
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Rtaranto\Domain\Entity\User;
 use Rtaranto\Infrastructure\Repository\DoctrineBikerRepository;
@@ -39,9 +39,8 @@ class OilchangeController extends FOSRestController implements ClassResourceInte
         $em = $this->getDoctrine()->getManager();
         $formFactory = $this->get('form.factory');
         $sfValidator = $this->get('validator');
-        $factory = new BikerPostOilChangeActionFactory($formFactory, $sfValidator, $em);
+        $factory = new PostOilChangeActionFactory($formFactory, $sfValidator, $em);
         $action = $factory->createPostAction();
-        
         
         try {
             $oilChange = $action->post($motorcycleId, $request->request->all());
