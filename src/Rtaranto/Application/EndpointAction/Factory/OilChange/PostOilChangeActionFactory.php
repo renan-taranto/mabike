@@ -2,13 +2,13 @@
 namespace Rtaranto\Application\EndpointAction\Factory\OilChange;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Rtaranto\Application\EndpointAction\Factory\PostActionFactoryInterface;
 use Rtaranto\Application\EndpointAction\OilChange\PostOilChangeAction;
+use Rtaranto\Application\EndpointAction\RequestParamsProcessor;
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
+use Rtaranto\Application\Service\Maintenance\OilChange\OilChangePoster;
 use Rtaranto\Application\Service\Validator\Validator;
 use Rtaranto\Domain\Entity\MaintenancePerformer;
-use Rtaranto\Infrastructure\Repository\DoctrineMaintenancePerformerRepository;
 use Rtaranto\Presentation\Form\Maintenance\PerformedMaintenanceDTOType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -33,13 +33,11 @@ class PostOilChangeActionFactory implements PostActionFactoryInterface
     {
         $parametersBinder = new ParametersBinder($this->formFactory, PerformedMaintenanceDTOType::class);
         $validator = new Validator($this->sfValidator);
-        $classMetadata = new ClassMetadata(MaintenancePerformer::class);
-        $maintenancePerformerRepository = new DoctrineMaintenancePerformerRepository($this->em, $classMetadata);
-        return new PostOilChangeAction(
-            $parametersBinder,
-            $validator,
-            $maintenancePerformerRepository
-        );
+        $inputProcessor = new RequestParamsProcessor($parametersBinder, $validator);
+        
+        $maintenancePerformerRepository = $this->em->getRepository(MaintenancePerformer::class);
+        $oilChangePoster = new OilChangePoster($validator, $maintenancePerformerRepository);
+        return new PostOilChangeAction($inputProcessor, $oilChangePoster);
     }
 
 }

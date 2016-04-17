@@ -3,16 +3,13 @@ namespace Tests\Rtaranto\Application\EndpointAction\OilChange;
 
 use DateTime;
 use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
+use Rtaranto\Application\EndpointAction\InputProcessorInterface;
 use Rtaranto\Application\EndpointAction\OilChange\PostOilChangeAction;
 use Rtaranto\Application\Exception\ValidationFailedException;
-use Rtaranto\Application\ParametersBinder\ParametersBinderInterface;
-use Rtaranto\Application\Service\Validator\ValidatorInterface;
-use Rtaranto\Domain\Entity\MaintenancePerformer;
-use Rtaranto\Domain\Entity\OilChangeMaintenance;
+use Rtaranto\Application\Service\Maintenance\OilChange\OilChangePosterInterface;
 use Rtaranto\Domain\Entity\PerformedOilChange;
-use Rtaranto\Domain\Entity\Repository\MaintenancePerformerRepositoryInterface;
 
-class BikerPostOilChangeActionTest extends \PHPUnit_Framework_TestCase
+class PostOilChangeActionTest extends \PHPUnit_Framework_TestCase
 {
     public function testPostReturnsOilChange()
     {
@@ -21,45 +18,29 @@ class BikerPostOilChangeActionTest extends \PHPUnit_Framework_TestCase
         $date = new DateTime('2016-03-04');
         $params = array('kms_driven' => $kmsDriven, 'date' => $date);
         
-        $maintenanceDTO = new PerformedMaintenanceDTO($kmsDriven, $date);
-        $parametersBinder = $this->prophesize(ParametersBinderInterface::class);
-        $parametersBinder->bind($params, new PerformedMaintenanceDTO())->willReturn($maintenanceDTO);
+        $inputProcessor = $this->prophesize(InputProcessorInterface::class);
+        $inputProcessor->processInput($params, new PerformedMaintenanceDTO)
+            ->willReturn(new PerformedMaintenanceDTO());
+                
+        $oilChangePoster = $this->prophesize(OilChangePosterInterface::class);
+        $performedOilChange = $this->prophesize(PerformedOilChange::class);
+        $oilChangePoster->postOilChange($motorcycleId, new PerformedMaintenanceDTO())
+            ->willReturn($performedOilChange->reveal());
         
-        $validator = $this->prophesize(ValidatorInterface::class);
+        $postOilChangeAction = new PostOilChangeAction($inputProcessor->reveal(), $oilChangePoster->reveal());
         
-        $maintenancePerformer = $this->prophesize(MaintenancePerformer::class);
-        $oilChange = new PerformedOilChange($kmsDriven, $date);
-        $maintenancePerformer->changeOil($kmsDriven, $date)->willReturn($oilChange);
-        $maintenancePerformerRepository = $this->prophesize(MaintenancePerformerRepositoryInterface::class);
-        $maintenancePerformerRepository->findByMotorcycle($motorcycleId)->willReturn($maintenancePerformer->reveal());
-        $maintenancePerformerRepository->update($maintenancePerformer)->shouldBeCalled();
-        
-        $bikerPostOilChangeAction = new PostOilChangeAction(
-            $parametersBinder->reveal(),
-            $validator->reveal(),
-            $maintenancePerformerRepository->reveal()
-        );
-        
-        $returnedOilChange = $bikerPostOilChangeAction->post($motorcycleId, $params);
-        $this->assertInstanceOf(PerformedOilChange::class, $returnedOilChange);
+        $this->assertInstanceOf(PerformedOilChange::class, $postOilChangeAction->post($motorcycleId, $params));
     }
     
     public function testPostBadParamsThrowsValidationFailed()
     {
-        $maintenanceDTO = new PerformedMaintenanceDTO(null, null);
-        $parametersBinder = $this->prophesize(ParametersBinderInterface::class);
-        $parametersBinder->bind(array(), new PerformedMaintenanceDTO())->willReturn($maintenanceDTO);
+        $inputProcessor = $this->prophesize(InputProcessorInterface::class);
+        $inputProcessor->processInput(array(), new PerformedMaintenanceDTO)
+            ->willThrow(ValidationFailedException::class);
         
-        $validator = $this->prophesize(ValidatorInterface::class);
-        $validator->throwValidationFailedIfNotValid($maintenanceDTO)->willThrow(ValidationFailedException::class);
+        $oilChangePoster = $this->prophesize(OilChangePosterInterface::class);
         
-        $oilChangePerformerRepository = $this->prophesize(MaintenancePerformerRepositoryInterface::class);
-        
-        $bikerPostOilChangeAction = new PostOilChangeAction(
-            $parametersBinder->reveal(),
-            $validator->reveal(),
-            $oilChangePerformerRepository->reveal()
-        );
+        $bikerPostOilChangeAction = new PostOilChangeAction($inputProcessor->reveal(), $oilChangePoster->reveal());
         
         $this->setExpectedException(ValidationFailedException::class);
         
@@ -73,28 +54,18 @@ class BikerPostOilChangeActionTest extends \PHPUnit_Framework_TestCase
         $date = new DateTime('2016-03-04');
         $params = array('kms_driven' => $kmsDriven, 'date' => $date);
         
-        $maintenanceDTO = new PerformedMaintenanceDTO($kmsDriven, $date);
-        $parametersBinder = $this->prophesize(ParametersBinderInterface::class);
-        $parametersBinder->bind($params, new PerformedMaintenanceDTO())->willReturn($maintenanceDTO);
+        $inputProcessor = $this->prophesize(InputProcessorInterface::class);
+        $inputProcessor->processInput($params, new PerformedMaintenanceDTO)
+            ->willReturn(new PerformedMaintenanceDTO());
         
-        $validator = $this->prophesize(ValidatorInterface::class);
-        $validator->throwValidationFailedIfNotValid($maintenanceDTO)->shouldBeCalled();
-        $validator->throwValidationFailedIfNotValid($maintenanceDTO)->willThrow(ValidationFailedException::class);
+        $oilChangePoster = $this->prophesize(OilChangePosterInterface::class);
+        $oilChangePoster->postOilChange($motorcycleId, new PerformedMaintenanceDTO())
+            ->willThrow(ValidationFailedException::class);
         
-        $oilChangePerformer = $this->prophesize(OilChangeMaintenance::class);
-        $oilChange = new PerformedOilChange($kmsDriven, $date);
-        $oilChangePerformer->changeOil($kmsDriven, $date)->willReturn($oilChange);
-        $oilChangePerformerRepository = $this->prophesize(MaintenancePerformerRepositoryInterface::class);
-        $oilChangePerformerRepository->findByMotorcycle($motorcycleId)->willReturn($oilChangePerformer->reveal());
-        
-        $bikerPostOilChangeAction = new PostOilChangeAction(
-            $parametersBinder->reveal(),
-            $validator->reveal(),
-            $oilChangePerformerRepository->reveal()
-        );
+        $bikerPostOilChangeAction = new PostOilChangeAction($inputProcessor->reveal(), $oilChangePoster->reveal());
         
         $this->setExpectedException(ValidationFailedException::class);
         
-        $bikerPostOilChangeAction->post($motorcycleId, $params);
+        $bikerPostOilChangeAction->post(1, $params);
     }
 }
