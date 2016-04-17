@@ -1,0 +1,6 @@
+Rtaranto\Domain\Entity\Biker:
+    properties:
+        user:
+            exclude: true
+        motorcycles:
+            exclude: true

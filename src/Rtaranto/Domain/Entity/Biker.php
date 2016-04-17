@@ -2,23 +2,34 @@
 namespace Rtaranto\Domain\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Annotation\Exclude;
 
 class Biker
 {
+    /**
+     * @var int
+     */
     private $id;
+    /**
+     * @var string 
+     */
     private $name;
+    /**
+     * @var string 
+     */
     private $email;
     /**
-     * @Exclude
+     * @var ArrayCollection
      */
     private $motorcycles;
     /**
-     * @Exclude
      * @var User
      */
     private $user;
     
+    /**
+     * @param string $name
+     * @param string $email
+     */
     public function __construct($name, $email)
     {
         $this->name = $name;

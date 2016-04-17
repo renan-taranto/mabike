@@ -1,8 +1,5 @@
 <?php
-
 namespace Rtaranto\Domain\Entity;
-
-use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Motorcycle
@@ -25,7 +22,6 @@ class Motorcycle
     private $kmsDriven;
     
     /**
-     * @Exclude
      * @var Biker
      */
     private $biker;
