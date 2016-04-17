@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Rtaranto\Application\Service\Motorcycle;
 
-use AppBundle\DataFixtures\ORM\LoadBikerTestingData;
+use AppBundle\DataFixtures\ORM\LoadMotorcycleTestingData;
 use AppBundle\DataFixtures\ORM\LoadUserTestingData;
 use Doctrine\ORM\EntityManagerInterface;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
@@ -19,7 +19,7 @@ class MotorcycleRegistrationTest extends WebTestCase
     
     public function setUp()
     {
-        $this->fixtures = $this->loadFixtures(array(LoadUserTestingData::class, LoadBikerTestingData::class));
+        $this->fixtures = $this->loadFixtures(array(LoadUserTestingData::class, LoadMotorcycleTestingData::class));
     }
     
     public function testRegisterMotorcycleReturnsMotorcycle()

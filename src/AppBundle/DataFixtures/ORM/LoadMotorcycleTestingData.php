@@ -5,32 +5,24 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\MaintenancePerformer;
 use Rtaranto\Domain\Entity\Motorcycle;
 
-class LoadBikerTestingData extends AbstractFixture implements FixtureInterface, OrderedFixtureInterface
+class LoadMotorcycleTestingData extends AbstractFixture implements FixtureInterface, OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $biker = new Biker('Test Biker', 'testbiker@email.com');
-        $biker->setUser($this->getReference('biker_user_1'));
-        
         $model = 'Ducati Hypermotard 796';
         $motorcycle = new Motorcycle($model, 1560);
         $maintenancePerformer = new MaintenancePerformer($motorcycle);
-        
+  
+        $biker = $this->getReference('biker1');
         $biker->addMotorcycle($motorcycle);
         
-        $aSecondBiker = new Biker('Test Biker2', 'testbiker2@email.com');
-        $aSecondBiker->setUser($this->getReference('biker_user_2'));
-        
         $manager->persist($biker);
-        $manager->persist($aSecondBiker);
+        $manager->persist($motorcycle);
         $manager->persist($maintenancePerformer);
         $manager->flush();
-        
-        $this->addReference('biker1', $biker);
         $this->addReference('ducati', $motorcycle);
     }
 

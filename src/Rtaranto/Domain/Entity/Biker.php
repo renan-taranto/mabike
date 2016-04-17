@@ -15,6 +15,7 @@ class Biker
     private $motorcycles;
     /**
      * @Exclude
+     * @var User
      */
     private $user;
     
@@ -53,6 +54,11 @@ class Biker
     public function setUser(User $user)
     {
         $this->user = $user;
+    }
+    
+    public function updateApiKey($apiKey, $apiKeyExpirationTime)
+    {
+        $this->user->updateApiKey($apiKey, $apiKeyExpirationTime);
     }
     
     public function getMotorcycles()

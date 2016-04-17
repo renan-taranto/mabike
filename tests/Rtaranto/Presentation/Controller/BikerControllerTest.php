@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Rtaranto\Presentation\Controller;
 
-use AppBundle\DataFixtures\ORM\LoadBikerTestingData;
+use AppBundle\DataFixtures\ORM\LoadMotorcycleTestingData;
 use AppBundle\DataFixtures\ORM\LoadUserTestingData;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +16,7 @@ class BikerControllerTest extends WebTestCase
     
     public function setUp()
     {
-        $this->fixtures = $this->loadFixtures(array(LoadUserTestingData::class, LoadBikerTestingData::class));
+        $this->fixtures = $this->loadFixtures(array(LoadUserTestingData::class, LoadMotorcycleTestingData::class));
     }
     
     public function testSuccessfullyPostBiker()

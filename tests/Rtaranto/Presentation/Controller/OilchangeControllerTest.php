@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Rtaranto\Presentation\Controller;
 
-use AppBundle\DataFixtures\ORM\LoadBikerTestingData;
+use AppBundle\DataFixtures\ORM\LoadMotorcycleTestingData;
 use AppBundle\DataFixtures\ORM\LoadUserTestingData;
 use DateTime;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
@@ -14,7 +14,7 @@ class OilchangeControllerTest extends WebTestCase
     
     public function setUp()
     {
-        $this->fixtures = $this->loadFixtures(array(LoadUserTestingData::class, LoadBikerTestingData::class));
+        $this->fixtures = $this->loadFixtures(array(LoadUserTestingData::class, LoadMotorcycleTestingData::class));
     }
     
     public function testPostReturnsOilChangeRepresentation()
