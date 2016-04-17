@@ -4,21 +4,27 @@ namespace Rtaranto\Application\EndpointAction\OilChange;
 use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
 use Rtaranto\Application\EndpointAction\InputProcessorInterface;
 use Rtaranto\Application\EndpointAction\PostSubresourceActionInterface;
-use Rtaranto\Application\Service\Maintenance\OilChange\OilChangePosterInterface;
+use Rtaranto\Application\Service\Maintenance\OilChange\OilChangerInterface;
+use Rtaranto\Domain\Entity\PerformedOilChange;
 
 class PostOilChangeAction implements PostSubresourceActionInterface
 {
     private $inputProcessor;
-    private $oilChangePoster;
+    private $oilChanger;
     
     public function __construct(
         InputProcessorInterface $inputProcessor,
-        OilChangePosterInterface $oilChangePoster
+        OilChangerInterface $oilChangePoster
     ) {
         $this->inputProcessor = $inputProcessor;
-        $this->oilChangePoster = $oilChangePoster;
+        $this->oilChanger = $oilChangePoster;
     }
     
+    /**
+     * @param int $parentResourceId Motorcycle id
+     * @param array $requestBodyParameters Request body contents
+     * @return PerformedOilChange
+     */
     public function post($parentResourceId, array $requestBodyParameters)
     {
         $performedMaintenanceDTO = $this->inputProcessor->processInput(
@@ -26,6 +32,6 @@ class PostOilChangeAction implements PostSubresourceActionInterface
             new PerformedMaintenanceDTO()
         );
         
-        return $this->oilChangePoster->postOilChange($parentResourceId, $performedMaintenanceDTO);
+        return $this->oilChanger->changeOil($parentResourceId, $performedMaintenanceDTO);
     }
 }

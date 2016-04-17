@@ -7,7 +7,7 @@ use Rtaranto\Domain\Entity\MaintenancePerformer;
 use Rtaranto\Domain\Entity\Repository\MaintenancePerformerRepositoryInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
-class OilChangePoster implements OilChangePosterInterface
+class OilChanger implements OilChangerInterface
 {
     private $validator;
     private $maintenancePerformerRepository;
@@ -20,7 +20,7 @@ class OilChangePoster implements OilChangePosterInterface
         $this->maintenancePerformerRepository = $maintenancePerformerRepository;
     }
     
-    public function postOilChange($motorcycleId, PerformedMaintenanceDTO $performedMaintenanceDTO)
+    public function changeOil($motorcycleId, PerformedMaintenanceDTO $performedMaintenanceDTO)
     {
         $maintenacePerformer = $this->getMaintenancePerformer($motorcycleId);
         $oilChangePerformed = $maintenacePerformer->changeOil(

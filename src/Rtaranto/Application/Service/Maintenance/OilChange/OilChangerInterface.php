@@ -3,7 +3,7 @@ namespace Rtaranto\Application\Service\Maintenance\OilChange;
 
 use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
 
-interface OilChangePosterInterface
+interface OilChangerInterface
 {
-    public function postOilChange($motorcycleId, PerformedMaintenanceDTO $performedMaintenanceDTO);
+    public function changeOil($motorcycleId, PerformedMaintenanceDTO $performedMaintenanceDTO);
 }
