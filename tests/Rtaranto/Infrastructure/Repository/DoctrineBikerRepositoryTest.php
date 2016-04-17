@@ -5,13 +5,16 @@ use AppBundle\DataFixtures\ORM\LoadMotorcycleTestingData;
 use AppBundle\DataFixtures\ORM\LoadUserTestingData;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Rtaranto\Domain\Entity\Biker;
+use Rtaranto\Domain\Entity\User;
 use Rtaranto\Infrastructure\Repository\DoctrineBikerRepository;
 
 class DoctrineBikerRepositoryTest extends WebTestCase
 {
+    private $fixtures;
+    
     public function setUp()
     {
-        $this->loadFixtures(array(LoadUserTestingData::class, LoadMotorcycleTestingData::class));
+        $this->fixtures = $this->loadFixtures(array(LoadUserTestingData::class));
     }
     
     public function testSuccessfullyFindBiker()
@@ -32,7 +35,8 @@ class DoctrineBikerRepositoryTest extends WebTestCase
     {
         $em = $this->getEntityManager();
         $doctrineBikerRepository = new DoctrineBikerRepository($em);
-        $biker = new Biker('test user 2', 'testuser2@email.com');
+        $user = $this->fixtures->getReferenceRepository()->getReference('user');
+        $biker = new Biker('test user 2', 'testuser2@email.com', $user);
         $doctrineBikerRepository->add($biker);
         $this->assertInstanceOf(Biker::class, $doctrineBikerRepository->get(3));
     }

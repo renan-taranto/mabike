@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Tests\DeleteRequestImpl;
 use Tests\JsonGetRequest;
 use Tests\JsonPatchRequest;
-use Tests\JsonPostRequest;
 
 class BikerControllerTest extends WebTestCase
 {
@@ -18,134 +17,7 @@ class BikerControllerTest extends WebTestCase
     {
         $this->fixtures = $this->loadFixtures(array(LoadUserTestingData::class, LoadMotorcycleTestingData::class));
     }
-    
-    public function testSuccessfullyPostBiker()
-    {
-        $client = static::createClient();
-        
-        $name = 'Test Post Biker';
-        $email = 'testpostbiker@email.com';
-        
-        $post = new JsonPostRequest($client);
-        $data = array('name' => $name, 'email' => $email);
-        
-        $apiKey = $this->getApiKeyForUserWithDevRole();
-        $response = $post->post($this->getBikersEndpointUri(), $data, $apiKey);
-        $content = json_decode($response->getContent(), true);
-        
-        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
-        
-        $this->assertTrue($response->headers->contains('Content-Type','application/json'));
-        
-        $returnedLocationHeader = $response->headers->get('Location');
-        $expectedLocationHeader = $this->getUrl('api_v1_get_biker', array('id' => 3));
-        $this->assertEquals($expectedLocationHeader, $returnedLocationHeader);
-        
-        $returnedAllowHeaderAsArray = explode(',', $response->headers->get('Allow'));
-        $expectedAllowHeaders = array('POST', 'OPTIONS', 'GET');
-        $this->assertEquals(sort($expectedAllowHeaders), sort($returnedAllowHeaderAsArray));
-        
-        $this->assertContains($name, $content['name']);
-        $this->assertContains($email, $content['email']);
-    }
-    
-    public function testPostBlankNameReturnsBadRequest()
-    {
-        $client = static::createClient();
-        
-        $post = new JsonPostRequest($client);
-        $data = array();
-        
-        $apiKey = $this->getApiKeyForUserWithDevRole();
-        $response = $post->post($this->getBikersEndpointUri(), $data, $apiKey);
-        $content = json_decode($response->getContent(), true);
-        
-        $this->assertContains('This value should not be blank.',
-            $content['errors']['name'][0]);
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-    }
-    
-    public function testPostBlankEmailReturnsBadRequest()
-    {
-        $client = static::createClient();
-        
-        $post = new JsonPostRequest($client);
-        $data = array();
-        
-        $apiKey = $this->getApiKeyForUserWithDevRole();
-        $response = $post->post($this->getBikersEndpointUri(), $data, $apiKey);
-        $content = json_decode($response->getContent(), true);
-        
-        $this->assertContains('This value should not be blank.',
-            $content['errors']['email'][0]);
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-    }
-    
-    public function testPostEmailAlreadyInUseReturnsBadRequest()
-    {
-        $client = static::createClient();
-        
-        $post = new JsonPostRequest($client);
-        $data = array(
-            'name' => 'new test biker',
-            'email' => 'testbiker@email.com');
-        
-        $apiKey = $this->getApiKeyForUserWithDevRole();
-        $response = $post->post($this->getBikersEndpointUri(), $data, $apiKey);
-        $content = json_decode($response->getContent(), true);
-        
-        $this->assertContains('E-mail address already in use.', $content['errors']['email'][0]);
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-    }
-    
-    public function testPostNameAlreadyInUseReturnsBadRequest()
-    {
-        $client = static::createClient();
-        
-        $post = new JsonPostRequest($client);
-        $data = array(
-            'name' => 'Test Biker',
-            'email' => 'testnewbiker@email.com');
-        
-        $apiKey = $this->getApiKeyForUserWithDevRole();
-        $response = $post->post($this->getBikersEndpointUri(), $data, $apiKey);
-        $content = json_decode($response->getContent(), true);
-        
-        $this->assertContains('Name already in use.', $content['errors']['name'][0]);
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-    }
-    
-    public function testPostNameBelowMinLengthReturnsBadRequest()
-    {
-        $client = static::createClient();
-        
-        $post = new JsonPostRequest($client);
-        $data = array('name' => str_repeat('u', 7));
-        
-        $apiKey = $this->getApiKeyForUserWithDevRole();
-        $response = $post->post($this->getBikersEndpointUri(), $data, $apiKey);
-        $content = json_decode($response->getContent(), true);
-        
-        $this->assertContains('Validation Failed', $content['message']);
-        $this->assertContains('This value is too short.', $content['errors']['name'][0]);
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-    }
-    
-    public function testPostNameOverMinLengthReturnsBadRequest()
-    {
-        $client = static::createClient();
-        $post = new JsonPostRequest($client);
-        $data = array('name' => str_repeat('u', 51));
-        
-        $apiKey = $this->getApiKeyForUserWithDevRole();
-        $response = $post->post($this->getBikersEndpointUri(), $data, $apiKey);
-        $content = json_decode($response->getContent(), true);
-        
-        $this->assertContains('Validation Failed', $content['message']);
-        $this->assertContains('This value is too long.', $content['errors']['name'][0]);
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-    }
-    
+   
     public function testGetReturnsBiker()
     {
         $client = static::createClient();
@@ -182,7 +54,7 @@ class BikerControllerTest extends WebTestCase
         $this->assertEquals($expectedContent, $content);
         
         $returnedAllowHeaderAsArray = explode(',', $response->headers->get('Allow'));
-        $expectedAllowHeaders = array('POST', 'OPTIONS', 'GET');
+        $expectedAllowHeaders = array('OPTIONS', 'GET');
         $this->assertEquals(sort($expectedAllowHeaders), sort($returnedAllowHeaderAsArray));
         
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
@@ -351,7 +223,7 @@ class BikerControllerTest extends WebTestCase
         
         $response = $client->getResponse();
         $returnedAllowHeaderAsArray = explode(',', $response->headers->get('Allow'));
-        $expectedAllowHeaders = array('OPTIONS', 'POST', 'GET');
+        $expectedAllowHeaders = array('OPTIONS', 'GET');
         $this->assertEquals(sort($expectedAllowHeaders), sort($returnedAllowHeaderAsArray));
     }
     
@@ -436,24 +308,6 @@ class BikerControllerTest extends WebTestCase
         
         $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
     }
-    
-    public function testPostReturnsForbiddenForUserWithoutDevRole()
-    {
-        $client = static::createClient();
-        
-        $post = new JsonPostRequest($client);
-        $data = array();
-        
-        $apiKey = $this->getApiKeyForUserWithoutDevRole();
-        $response = $post->post($this->getBikersEndpointUri(), $data, $apiKey);
-        
-        $content = json_decode($response->getContent(), true);
-        $expected = $this->createForbiddenMessageAsArray();
-        $this->assertEquals($expected, $content);
-        
-        $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
-    }
-    
         
     public function testPatchReturnsForbiddenForUserWithoutDevRole()
     {
@@ -474,7 +328,7 @@ class BikerControllerTest extends WebTestCase
     
     private function createExpectedAllowHeadersForCollectionEndpoint()
     {
-        return array('POST', 'GET', 'OPTIONS');
+        return array('GET', 'OPTIONS');
     }
     
     private function createForbiddenMessageAsArray()

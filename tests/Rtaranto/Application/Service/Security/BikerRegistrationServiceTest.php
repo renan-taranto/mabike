@@ -15,17 +15,20 @@ class BikerRegistrationServiceTest extends \PHPUnit_Framework_TestCase
     {
         $username = 'username';
         $email = 'bikername@email.com';
+        $user = $this->prophesize(User::class)->reveal();
+        $biker = new Biker($username, $email, $user);
+        
         $password = 'pass12345';
-        $biker = new Biker($username, $email);
         
         $userRegistrationService = $this->prophesize(UserRegistrationInterface::class);
-        $user = $this->prophesize(User::class);
         $userRegistrationService->registerUser($username, $email, $password, array(User::ROLE_BIKER))
-            ->willReturn($user);
-        $biker->setUser($user->reveal());
+                ->willReturn($user);
+        
         $bikerRepository = $this->prophesize(BikerRepositoryInterface::class);
         $bikerRepository->add($biker)->willReturn($biker);
         $validator = $this->prophesize(ValidatorInterface::class);
+        
+        
         
         $bikerRegistrationService = new BikerRegistrationService(
             $userRegistrationService->reveal(),
@@ -41,13 +44,12 @@ class BikerRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         $username = 'username';
         $email = 'bikername@email.com';
         $password = 'pass12345';
-        $biker = new Biker($username, $email);
+        $user = $this->prophesize(User::class)->reveal();
+        $biker = new Biker($username, $email, $user);
         
         $userRegistrationService = $this->prophesize(UserRegistrationInterface::class);
-        $user = $this->prophesize(User::class);
         $userRegistrationService->registerUser($username, $email, $password, array(User::ROLE_BIKER))
             ->willReturn($user);
-        $biker->setUser($user->reveal());
         $bikerRepository = $this->prophesize(BikerRepositoryInterface::class);
         
         $validator = $this->prophesize(ValidatorInterface::class);

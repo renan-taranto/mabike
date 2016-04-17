@@ -29,11 +29,13 @@ class Biker
     /**
      * @param string $name
      * @param string $email
+     * @param User $user
      */
-    public function __construct($name, $email)
+    public function __construct($name, $email, User $user)
     {
         $this->name = $name;
         $this->email = $email;
+        $this->user = $user;
         $this->motorcycles = new ArrayCollection();
     }
     
@@ -60,11 +62,6 @@ class Biker
     public function getEmail()
     {
         return $this->email;
-    }
-    
-    public function setUser(User $user)
-    {
-        $this->user = $user;
     }
     
     public function updateApiKey($apiKey, $apiKeyExpirationTime)

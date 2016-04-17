@@ -46,8 +46,7 @@ class LoadUserTestingData extends AbstractFixture implements FixtureInterface, C
         $user1->updateApiKey('testuserkey', $datetime);
         $manager->persist($user1);
         
-        $biker1 = new Biker('Test Biker', 'testbiker@email.com');
-        $biker1->setUser($user1);
+        $biker1 = new Biker('Test Biker', 'testbiker@email.com', $user1);
         $manager->persist($biker1);
         
         
@@ -55,8 +54,7 @@ class LoadUserTestingData extends AbstractFixture implements FixtureInterface, C
         $user2->updateApiKey('testuser2key', $datetime);
         $manager->persist($user2);
         
-        $biker2 = new Biker('Test Biker2', 'testbiker2@email.com');
-        $biker2->setUser($user2);
+        $biker2 = new Biker('Test Biker2', 'testbiker2@email.com', $user2);
         $manager->persist($biker2);
         
         $manager->flush();

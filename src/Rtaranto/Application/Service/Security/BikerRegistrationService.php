@@ -44,8 +44,7 @@ class BikerRegistrationService implements BikerRegistrationServiceInterface
         $user = $this->userRegistrationService
             ->registerUser($username, $email, $password, array(User::ROLE_BIKER));
         
-        $biker = new Biker($username, $email);
-        $biker->setUser($user);
+        $biker = new Biker($username, $email, $user);
         $this->validator->throwValidationFailedIfNotValid($biker);
         
         return $this->bikerRepository->add($biker);
