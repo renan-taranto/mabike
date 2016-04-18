@@ -22,4 +22,6 @@ interface MaintenancePerformerRepositoryInterface
         $limit = null,
         $offset = null
     );
+    
+    public function getPerformedOilChangeByMotorcycleAndId($motorcycleId, $performedOilChangeId);
 }

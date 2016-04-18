@@ -10,8 +10,14 @@ use Rtaranto\Presentation\Controller\QueryParam\QueryParamsFetcher;
 
 class CgetOilChangeActionFactory implements CgetActionFactoryInterface
 {
+    /**
+     * @var EntityManagerInterface
+     */
     private $em;
     
+    /**
+     * @param EntityManagerInterface $em
+     */
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;

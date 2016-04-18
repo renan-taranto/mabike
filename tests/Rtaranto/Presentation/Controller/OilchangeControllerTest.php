@@ -44,7 +44,7 @@ class OilchangeControllerTest extends WebTestCase
         $this->assertStatusCode(Response::HTTP_CREATED, $client);
         $returnedLocationHeader = $response->headers->get('Location');
         $expectedLocationHeader = $this->getOilChangeResourceUri(
-            array('motorcycleId' => $motorcycleId, 'oilChangeId' => $content['id'])
+            array('motorcycleId' => $motorcycleId, 'performedOilChangeId' => $content['id'])
         );
         $this->assertEquals($expectedLocationHeader, $returnedLocationHeader);
     }
@@ -83,7 +83,7 @@ class OilchangeControllerTest extends WebTestCase
         $expectedDate = $expectedDate->format('Y-m-d');
         $expectedKmsDriven = $this->fixtures->getReferenceRepository()->getReference('ducati')->getKmsDriven();
         $expectedLocationHeader = $this->getOilChangeResourceUri(
-            array('motorcycleId' => $motorcycleId, 'oilChangeId' => $content['id'])
+            array('motorcycleId' => $motorcycleId, 'performedOilChangeId' => $content['id'])
         );
         
         $this->assertEquals($expectedKmsDriven, $content['kms_driven']);
@@ -114,6 +114,27 @@ class OilchangeControllerTest extends WebTestCase
         $this->assertEquals($performedOilChange3->getId(), $content[2]['id']);
         $this->assertEquals($performedOilChange3->getKmsDriven(), $content[2]['kms_driven']);
         
+        $this->assertStatusCode(200, $client);
+    }
+    
+    public function testGetReturnsPerformedOilChangeRepresentation()
+    {
+        
+        $client = static::createClient();
+        $uri = $this->getOilChangeResourceUri(array('motorcycleId' => 1, 'performedOilChangeId' => 2));
+        $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
+        $getRequest = new JsonGetRequest($client);
+        
+        $response = $getRequest->get($uri, $apiKey);
+        $content = json_decode($response->getContent(), true);
+        
+        $referenceRepo = $this->fixtures->getReferenceRepository();
+        $performedOilChange2 = $referenceRepo->getReference('performed_oil_change_2');
+        
+        $this->assertEquals($performedOilChange2->getId(), $content['id']);
+        $this->assertEquals($performedOilChange2->getKmsDriven(), $content['kms_driven']);
+        
+        $this->assertStatusCode(200, $client);
     }
     
     private function getOilChangesCollectionUri(array $params = array())

@@ -60,4 +60,17 @@ class DoctrineMaintenancePerformerRepository extends EntityRepository implements
             $offset
         );
     }
+
+    public function getPerformedOilChangeByMotorcycleAndId($motorcycleId, $performedOilChangeId)
+    {
+        $maintenancePerformer = $this->findByMotorcycle($motorcycleId);
+        $oilChangeMaintenance = $maintenancePerformer->getOilChangeMaintenance();
+        
+        /* @var $performedMaintenanceRepository PerformedMaintenanceRepositoryInterface */
+        $performedMaintenanceRepository = $this->getEntityManager()->getRepository(PerformedMaintenance::class);
+        
+        return $performedMaintenanceRepository
+            ->getByMaintenanceAndId($oilChangeMaintenance, $performedOilChangeId);
+    }
+
 }

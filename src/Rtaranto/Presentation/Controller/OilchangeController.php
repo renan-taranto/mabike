@@ -7,6 +7,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use JMS\Serializer\SerializationContext;
 use Rtaranto\Application\EndpointAction\Factory\OilChange\CgetOilChangeActionFactory;
+use Rtaranto\Application\EndpointAction\Factory\OilChange\GetOilChangeActionFactory;
 use Rtaranto\Application\EndpointAction\Factory\OilChange\PostOilChangeActionFactory;
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Rtaranto\Domain\Entity\User;
@@ -36,10 +37,22 @@ class OilchangeController extends FOSRestController implements ClassResourceInte
         return $view;
     }
     
-    public function getAction($motorcycleId, $oilChangeId)
+    public function getAction($motorcycleId, $performedOilChangeId)
     {
         $this->throwExceptionIfNotBiker();
         $this->throwNotFoundIfMotorcycleDoesntBelongsToBiker($motorcycleId);
+        
+        $em = $this->getDoctrine()->getManager();
+        $getOilChangeActionFactory = new GetOilChangeActionFactory($em);
+        $getOilChangeAction = $getOilChangeActionFactory->createGetAction();
+        
+        $performedOilChange = $getOilChangeAction->get($motorcycleId, $performedOilChangeId);
+        
+        $context = SerializationContext::create()->setGroups(array('view'));
+        $view = $this->view($performedOilChange);
+        $view->setSerializationContext($context);
+        
+        return $view;
     }
     
     public function postAction($motorcycleId, Request $request)
@@ -90,11 +103,11 @@ class OilchangeController extends FOSRestController implements ClassResourceInte
         }
     }
     
-    private function createLocationHeaderContent($motorycleId, $oilChangeId, $request)
+    private function createLocationHeaderContent($motorycleId, $performedOilChangeId, $request)
     {
         $routeParameters = array(
             'motorcycleId'      => $motorycleId,
-            'oilChangeId'      => $oilChangeId,
+            'performedOilChangeId'      => $performedOilChangeId,
             '_format' => $request->get('_format')
         );
         return $this->generateUrl('api_v1_get_motorcycle_oilchange', $routeParameters);
