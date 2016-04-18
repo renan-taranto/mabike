@@ -28,3 +28,4 @@ Rtaranto\Domain\Entity\PerformedMaintenance:
             joinColumn:
                 name: maintenance_id
                 referencedColumnName: id
+                onDelete: CASCADE
