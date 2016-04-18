@@ -3,6 +3,7 @@ namespace Rtaranto\Application\EndpointAction\OilChange;
 
 use Rtaranto\Application\EndpointAction\GetSubresourceActionInterface;
 use Rtaranto\Domain\Entity\Repository\MaintenancePerformerRepositoryInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class GetOilChangeAction implements GetSubresourceActionInterface
 {
@@ -15,7 +16,15 @@ class GetOilChangeAction implements GetSubresourceActionInterface
     
     public function get($parentResourceId, $resourceId)
     {
-        return $this->maintenancePerformerRepository
+        $performedOilChange = $this->maintenancePerformerRepository
             ->getPerformedOilChangeByMotorcycleAndId($parentResourceId, $resourceId);
+        
+        if (empty($performedOilChange)) {
+            throw new NotFoundHttpException(
+                sprintf('The Oil Change resource of id \'%s\' was not found.', $resourceId)
+            );
+        }
+        
+        return $performedOilChange;
     }
 }

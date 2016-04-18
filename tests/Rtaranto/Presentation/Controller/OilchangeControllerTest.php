@@ -137,6 +137,19 @@ class OilchangeControllerTest extends WebTestCase
         $this->assertStatusCode(200, $client);
     }
     
+    public function testGetReturnsNotFound()
+    {
+        
+        $client = static::createClient();
+        $uri = $this->getOilChangeResourceUri(array('motorcycleId' => 1, 'performedOilChangeId' => 1000));
+        $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
+        $getRequest = new JsonGetRequest($client);
+        
+        $getRequest->get($uri, $apiKey);
+        
+        $this->assertStatusCode(Response::HTTP_NOT_FOUND, $client);
+    }
+    
     private function getOilChangesCollectionUri(array $params = array())
     {
         return $this->getUrl('api_v1_get_motorcycle_oilchanges', $params);
