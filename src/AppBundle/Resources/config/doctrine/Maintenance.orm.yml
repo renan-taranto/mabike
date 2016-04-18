@@ -28,17 +28,9 @@ Rtaranto\Domain\Entity\Maintenance:
                 name: motorcycle_id
                 referencedColumnName: id
                 
-    manyToMany:
+    oneToMany:
         performedMaintenances:
             targetEntity: PerformedMaintenance
-            joinTable:
-                name: maintenances_performedmaintenances
-            joinColumns:
-                maintenanceperformer_id:
-                    referencedColumnName: id
-            inverseJoinColumns:
-                maintenance_id:
-                    referencedColumnName: id
-                    unique: true
+            mappedBy: maintenance
             cascade: ["persist", "remove"]
             orphanRemoval: true

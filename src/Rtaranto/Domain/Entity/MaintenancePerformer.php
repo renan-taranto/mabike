@@ -29,4 +29,11 @@ class MaintenancePerformer implements OilChangerInterface
     {
         return $this->oilChangeMaintenance->changeOil($kmsDriven, $date);
     }
+    
+    public function getOilChangeMaintenance()
+    {
+        return $this->oilChangeMaintenance;
+    }
+
+
 }

@@ -2,10 +2,12 @@
 namespace Tests\Rtaranto\Presentation\Controller;
 
 use AppBundle\DataFixtures\ORM\LoadMotorcycleTestingData;
+use AppBundle\DataFixtures\ORM\LoadPerformedOilChangeData;
 use AppBundle\DataFixtures\ORM\LoadUserTestingData;
 use DateTime;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
+use Tests\JsonGetRequest;
 use Tests\JsonPostRequest;
 
 class OilchangeControllerTest extends WebTestCase
@@ -14,14 +16,19 @@ class OilchangeControllerTest extends WebTestCase
     
     public function setUp()
     {
-        $this->fixtures = $this->loadFixtures(array(LoadUserTestingData::class, LoadMotorcycleTestingData::class));
+        $this->fixtures = $this->loadFixtures(array(
+            LoadUserTestingData::class,
+            LoadMotorcycleTestingData::class,
+            LoadPerformedOilChangeData::class
+        ));
     }
     
     public function testPostReturnsOilChangeRepresentation()
     {
         $client = static::createClient();
         $postRequest = new JsonPostRequest($client);
-        $uri = $this->getOilChangesCollectionUri(array('motorcycleId' => 1));
+        $motorcycleId = 1;
+        $uri = $this->getOilChangesCollectionUri(array('motorcycleId' => $motorcycleId));
         $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
         
         $kmsDriven = 321412;
@@ -37,7 +44,7 @@ class OilchangeControllerTest extends WebTestCase
         $this->assertStatusCode(Response::HTTP_CREATED, $client);
         $returnedLocationHeader = $response->headers->get('Location');
         $expectedLocationHeader = $this->getOilChangeResourceUri(
-            array('motorcycleId' => 1, 'oilChangeId' => 1)
+            array('motorcycleId' => $motorcycleId, 'oilChangeId' => $content['id'])
         );
         $this->assertEquals($expectedLocationHeader, $returnedLocationHeader);
     }
@@ -62,9 +69,10 @@ class OilchangeControllerTest extends WebTestCase
     
     public function testPostBlankParametersCreatesOilChangeWithCurrentDateAndCurrentKmsDriven()
     {
+        $motorcycleId = 1;
         $client = static::createClient();
         $postRequest = new JsonPostRequest($client);
-        $uri = $this->getOilChangesCollectionUri(array('motorcycleId' => 1));
+        $uri = $this->getOilChangesCollectionUri(array('motorcycleId' => $motorcycleId));
         $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
         $data = array();
         
@@ -75,7 +83,7 @@ class OilchangeControllerTest extends WebTestCase
         $expectedDate = $expectedDate->format('Y-m-d');
         $expectedKmsDriven = $this->fixtures->getReferenceRepository()->getReference('ducati')->getKmsDriven();
         $expectedLocationHeader = $this->getOilChangeResourceUri(
-            array('motorcycleId' => 1, 'oilChangeId' => 1)
+            array('motorcycleId' => $motorcycleId, 'oilChangeId' => $content['id'])
         );
         
         $this->assertEquals($expectedKmsDriven, $content['kms_driven']);
@@ -83,6 +91,29 @@ class OilchangeControllerTest extends WebTestCase
         $this->assertStatusCode(Response::HTTP_CREATED, $client);
         $returnedLocationHeader = $response->headers->get('Location');
         $this->assertEquals($expectedLocationHeader, $returnedLocationHeader);
+    }
+    
+    public function testCgetReturnsCollection()
+    {
+        $client = static::createClient();
+        $uri = $this->getOilChangesCollectionUri(array('motorcycleId' => 1));
+        $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
+        $getRequest = new JsonGetRequest($client);
+        
+        $response = $getRequest->get($uri, $apiKey);
+        $content = json_decode($response->getContent(), true);
+        $referenceRepo = $this->fixtures->getReferenceRepository();
+        $performedOilChange1 = $referenceRepo->getReference('performed_oil_change_1');
+        $performedOilChange2 = $referenceRepo->getReference('performed_oil_change_2');
+        $performedOilChange3 = $referenceRepo->getReference('performed_oil_change_3');
+        
+        $this->assertEquals($performedOilChange1->getId(), $content[0]['id']);
+        $this->assertEquals($performedOilChange1->getKmsDriven(), $content[0]['kms_driven']);
+        $this->assertEquals($performedOilChange2->getId(), $content[1]['id']);
+        $this->assertEquals($performedOilChange2->getKmsDriven(), $content[1]['kms_driven']);
+        $this->assertEquals($performedOilChange3->getId(), $content[2]['id']);
+        $this->assertEquals($performedOilChange3->getKmsDriven(), $content[2]['kms_driven']);
+        
     }
     
     private function getOilChangesCollectionUri(array $params = array())

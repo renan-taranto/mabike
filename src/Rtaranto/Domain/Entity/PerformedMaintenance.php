@@ -21,6 +21,11 @@ abstract class PerformedMaintenance
     protected $date;
     
     /**
+     * @var Maintenance
+     */
+    protected $maintenance;
+    
+    /**
      * @return int
      */
     public function getKmsDriven()
@@ -35,5 +40,4 @@ abstract class PerformedMaintenance
     {
         return $this->id;
     }
-
 }

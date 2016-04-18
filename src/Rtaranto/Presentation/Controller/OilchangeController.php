@@ -6,6 +6,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use JMS\Serializer\SerializationContext;
+use Rtaranto\Application\EndpointAction\Factory\OilChange\CgetOilChangeActionFactory;
 use Rtaranto\Application\EndpointAction\Factory\OilChange\PostOilChangeActionFactory;
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Rtaranto\Domain\Entity\User;
@@ -19,21 +20,31 @@ class OilchangeController extends FOSRestController implements ClassResourceInte
 {
     public function cgetAction(ParamFetcher $paramFetcher, $motorcycleId)
     {
+        $this->throwExceptionIfNotBiker();
+        $this->throwNotFoundIfMotorcycleDoesntBelongsToBiker($motorcycleId);
         
+        $em = $this->getDoctrine()->getManager();
+        $cgetOilChangeActionFactory = new CgetOilChangeActionFactory($em);
+        
+        $cgetOilChangeAction = $cgetOilChangeActionFactory->createCgetAction($paramFetcher);
+        $performedOilChanges = $cgetOilChangeAction->cGet($motorcycleId);
+        
+        $context = SerializationContext::create()->setGroups(array('view'));
+        $view = $this->view($performedOilChanges);
+        $view->setSerializationContext($context);
+        
+        return $view;
     }
     
     public function getAction($motorcycleId, $oilChangeId)
     {
-        
+        $this->throwExceptionIfNotBiker();
+        $this->throwNotFoundIfMotorcycleDoesntBelongsToBiker($motorcycleId);
     }
     
     public function postAction($motorcycleId, Request $request)
     {
-        if (!$this->isGranted(User::ROLE_BIKER)) {
-            throw new Exception('There is no class that implements'
-                . 'the PostActionInterface for this given user role.'
-            );
-        }
+        $this->throwExceptionIfNotBiker();
         $this->throwNotFoundIfMotorcycleDoesntBelongsToBiker($motorcycleId);
         
         $em = $this->getDoctrine()->getManager();
@@ -87,5 +98,14 @@ class OilchangeController extends FOSRestController implements ClassResourceInte
             '_format' => $request->get('_format')
         );
         return $this->generateUrl('api_v1_get_motorcycle_oilchange', $routeParameters);
+    }
+    
+    private function throwExceptionIfNotBiker()
+    {
+        if (!$this->isGranted(User::ROLE_BIKER)) {
+            throw new Exception('There is no class that implements'
+                . 'the PostActionInterface for this given user role.'
+            );
+        }
     }
 }

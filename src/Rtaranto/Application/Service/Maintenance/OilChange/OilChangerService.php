@@ -7,7 +7,7 @@ use Rtaranto\Domain\Entity\MaintenancePerformer;
 use Rtaranto\Domain\Entity\Repository\MaintenancePerformerRepositoryInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
-class OilChanger implements OilChangerInterface
+class OilChangerService implements OilChangerServiceInterface
 {
     private $validator;
     private $maintenancePerformerRepository;
@@ -28,7 +28,7 @@ class OilChanger implements OilChangerInterface
             $performedMaintenanceDTO->getDate()
         );
         $this->validator->throwValidationFailedIfNotValid($maintenacePerformer);
-        
+
         $this->maintenancePerformerRepository->update($maintenacePerformer);
         
         return $oilChangePerformed;

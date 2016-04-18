@@ -14,4 +14,12 @@ interface MaintenancePerformerRepositoryInterface
     public function update(MaintenancePerformer $maintenancePerformer);
     
     public function findByMotorcycle($motorcycle);
+    
+    public function findAllPerformedOilChangesByMotorcycle(
+        $motorcycleId,
+        $filters = array(),
+        $orderBy = null,
+        $limit = null,
+        $offset = null
+    );
 }

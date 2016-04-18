@@ -6,7 +6,7 @@ use Rtaranto\Application\EndpointAction\Factory\PostActionFactoryInterface;
 use Rtaranto\Application\EndpointAction\OilChange\PostOilChangeAction;
 use Rtaranto\Application\EndpointAction\RequestParamsProcessor;
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
-use Rtaranto\Application\Service\Maintenance\OilChange\OilChanger;
+use Rtaranto\Application\Service\Maintenance\OilChange\OilChangerService;
 use Rtaranto\Application\Service\Validator\Validator;
 use Rtaranto\Domain\Entity\MaintenancePerformer;
 use Rtaranto\Presentation\Form\Maintenance\PerformedMaintenanceDTOType;
@@ -36,7 +36,7 @@ class PostOilChangeActionFactory implements PostActionFactoryInterface
         $inputProcessor = new RequestParamsProcessor($parametersBinder, $validator);
         
         $maintenancePerformerRepository = $this->em->getRepository(MaintenancePerformer::class);
-        $oilChangePoster = new OilChanger($validator, $maintenancePerformerRepository);
+        $oilChangePoster = new OilChangerService($validator, $maintenancePerformerRepository);
         return new PostOilChangeAction($inputProcessor, $oilChangePoster);
     }
 

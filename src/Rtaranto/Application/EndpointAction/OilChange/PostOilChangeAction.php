@@ -4,7 +4,7 @@ namespace Rtaranto\Application\EndpointAction\OilChange;
 use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
 use Rtaranto\Application\EndpointAction\InputProcessorInterface;
 use Rtaranto\Application\EndpointAction\PostSubresourceActionInterface;
-use Rtaranto\Application\Service\Maintenance\OilChange\OilChangerInterface;
+use Rtaranto\Application\Service\Maintenance\OilChange\OilChangerServiceInterface;
 use Rtaranto\Domain\Entity\PerformedOilChange;
 
 class PostOilChangeAction implements PostSubresourceActionInterface
@@ -14,7 +14,7 @@ class PostOilChangeAction implements PostSubresourceActionInterface
     
     public function __construct(
         InputProcessorInterface $inputProcessor,
-        OilChangerInterface $oilChangePoster
+        OilChangerServiceInterface $oilChangePoster
     ) {
         $this->inputProcessor = $inputProcessor;
         $this->oilChanger = $oilChangePoster;

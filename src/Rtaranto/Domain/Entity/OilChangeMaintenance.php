@@ -28,7 +28,8 @@ class OilChangeMaintenance extends Maintenance implements OilChangerInterface
             $date = new DateTime('now');
         }
         
-        $performedOilChange = new PerformedOilChange($kmsDriven, $date);
+        $performedOilChange = new PerformedOilChange($this, $kmsDriven, $date);
+        
         $this->addPerformedMaintenance($performedOilChange);
         
         return $performedOilChange;

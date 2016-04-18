@@ -7,6 +7,7 @@ use Rtaranto\Application\EndpointAction\InputProcessorInterface;
 use Rtaranto\Application\EndpointAction\OilChange\PostOilChangeAction;
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Rtaranto\Application\Service\Maintenance\OilChange\OilChangerInterface;
+use Rtaranto\Application\Service\Maintenance\OilChange\OilChangerServiceInterface;
 use Rtaranto\Domain\Entity\PerformedOilChange;
 
 class PostOilChangeActionTest extends \PHPUnit_Framework_TestCase
@@ -22,7 +23,7 @@ class PostOilChangeActionTest extends \PHPUnit_Framework_TestCase
         $inputProcessor->processInput($params, new PerformedMaintenanceDTO)
             ->willReturn(new PerformedMaintenanceDTO());
                 
-        $oilChangePoster = $this->prophesize(OilChangerInterface::class);
+        $oilChangePoster = $this->prophesize(OilChangerServiceInterface::class);
         $performedOilChange = $this->prophesize(PerformedOilChange::class);
         $oilChangePoster->changeOil($motorcycleId, new PerformedMaintenanceDTO())
             ->willReturn($performedOilChange->reveal());
@@ -38,7 +39,7 @@ class PostOilChangeActionTest extends \PHPUnit_Framework_TestCase
         $inputProcessor->processInput(array(), new PerformedMaintenanceDTO)
             ->willThrow(ValidationFailedException::class);
         
-        $oilChangePoster = $this->prophesize(OilChangerInterface::class);
+        $oilChangePoster = $this->prophesize(OilChangerServiceInterface::class);
         
         $bikerPostOilChangeAction = new PostOilChangeAction($inputProcessor->reveal(), $oilChangePoster->reveal());
         
@@ -58,7 +59,7 @@ class PostOilChangeActionTest extends \PHPUnit_Framework_TestCase
         $inputProcessor->processInput($params, new PerformedMaintenanceDTO)
             ->willReturn(new PerformedMaintenanceDTO());
         
-        $oilChangePoster = $this->prophesize(OilChangerInterface::class);
+        $oilChangePoster = $this->prophesize(OilChangerServiceInterface::class);
         $oilChangePoster->changeOil($motorcycleId, new PerformedMaintenanceDTO())
             ->willThrow(ValidationFailedException::class);
         

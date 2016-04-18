@@ -6,6 +6,7 @@ Rtaranto\Domain\Entity\PerformedMaintenance:
         type: string
     discriminatorMap:
         oilchange: Rtaranto\Domain\Entity\PerformedOilChange
+    repositoryClass: Rtaranto\Infrastructure\Repository\DoctrinePerformedMaintenanceRepository
     
     id:
         id:
@@ -20,3 +21,10 @@ Rtaranto\Domain\Entity\PerformedMaintenance:
                 unsigned: true
         date:
             type: date
+    manyToOne:
+        maintenance:
+            targetEntity: Maintenance
+            inversedBy: performedMaintenances
+            joinColumn:
+                name: maintenance_id
+                referencedColumnName: id
