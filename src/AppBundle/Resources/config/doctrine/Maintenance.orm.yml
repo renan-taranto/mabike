@@ -27,6 +27,7 @@ Rtaranto\Domain\Entity\Maintenance:
             joinColumn:
                 name: motorcycle_id
                 referencedColumnName: id
+                onDelete: CASCADE
                 
     oneToMany:
         performedMaintenances:
