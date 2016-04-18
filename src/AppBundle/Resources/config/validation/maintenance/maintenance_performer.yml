@@ -1,4 +1,0 @@
-Rtaranto\Domain\Entity\MaintenancePerformer:
-    properties:
-        oilChangeMaintenance:
-            - Valid: ~

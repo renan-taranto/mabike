@@ -5,7 +5,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Rtaranto\Application\Service\Maintenance\OilChange\OilChangerService;
 use Rtaranto\Application\Service\Validator\Validator;
 use Rtaranto\Application\Service\Validator\ValidatorInterface as ValidatorInterface2;
-use Rtaranto\Domain\Entity\MaintenancePerformer;
+use Rtaranto\Infrastructure\Repository\DoctrineOilChangeRepository;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class OilChangerServiceFactory implements OilChangerServiceFactoryInterface
@@ -30,8 +30,8 @@ class OilChangerServiceFactory implements OilChangerServiceFactoryInterface
      */
     public function createOilChangerService()
     {
-        $maintenancePerformerRepository = $this->em->getRepository(MaintenancePerformer::class);
-        return new OilChangerService($this->validator, $maintenancePerformerRepository);
+        $oilChangeRepository = new DoctrineOilChangeRepository($this->em);
+        return new OilChangerService($this->validator, $oilChangeRepository);
     }
 
 }

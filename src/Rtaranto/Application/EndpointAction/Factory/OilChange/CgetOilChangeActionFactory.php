@@ -5,7 +5,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use Rtaranto\Application\EndpointAction\Factory\CgetActionFactoryInterface;
 use Rtaranto\Application\EndpointAction\OilChange\CgetOilChangeAction;
-use Rtaranto\Domain\Entity\MaintenancePerformer;
+use Rtaranto\Infrastructure\Repository\DoctrinePerformedOilChangeRepository;
 use Rtaranto\Presentation\Controller\QueryParam\QueryParamsFetcher;
 
 class CgetOilChangeActionFactory implements CgetActionFactoryInterface
@@ -29,8 +29,8 @@ class CgetOilChangeActionFactory implements CgetActionFactoryInterface
      */
     public function createCgetAction(ParamFetcherInterface $paramFetcher)
     {
+        $performedOilChangeRepository = new DoctrinePerformedOilChangeRepository($this->em);
         $queryParamsFetcher = new QueryParamsFetcher($paramFetcher);
-        $maintenancePerformerRepository = $this->em->getRepository(MaintenancePerformer::class);
-        return new CgetOilChangeAction($maintenancePerformerRepository, $queryParamsFetcher);
+        return new CgetOilChangeAction($performedOilChangeRepository, $queryParamsFetcher);
     }
 }

@@ -37,8 +37,7 @@ class DoctrineMotorcycleRepository implements MotorcycleRepositoryInterface
 
     public function update(Motorcycle $motorcycle)
     {
-        $em = $this->em;
-        $em->flush($motorcycle);
+        $this->em->flush($motorcycle);
         return $motorcycle;
     }
     

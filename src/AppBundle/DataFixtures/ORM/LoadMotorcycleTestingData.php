@@ -5,24 +5,27 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Rtaranto\Domain\Entity\MaintenancePerformer;
-use Rtaranto\Domain\Entity\Motorcycle;
+use Rtaranto\Application\Service\Motorcycle\MotorcycleRegistrationService;
+use Rtaranto\Application\Service\Validator\Validator;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class LoadMotorcycleTestingData extends AbstractFixture implements FixtureInterface, OrderedFixtureInterface
+class LoadMotorcycleTestingData extends AbstractFixture implements FixtureInterface, OrderedFixtureInterface, ContainerAwareInterface
 {
+    private $container;
+    
     public function load(ObjectManager $manager)
     {
-        $model = 'Ducati Hypermotard 796';
-        $motorcycle = new Motorcycle($model, 1560);
-        $maintenancePerformer = new MaintenancePerformer($motorcycle);
-  
-        $biker = $this->getReference('biker1');
-        $biker->addMotorcycle($motorcycle);
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $sfValidator = $this->container->get('validator');
+        $validator = new Validator($sfValidator);
+        $motorcycleRegistrationService = new MotorcycleRegistrationService($validator, $em);
         
-        $manager->persist($biker);
-        $manager->persist($motorcycle);
-        $manager->persist($maintenancePerformer);
-        $manager->flush();
+        $biker = $this->getReference('biker1');
+        $model = 'Ducati Hypermotard 796';
+        $kmsDriven = 1560;
+        $motorcycle = $motorcycleRegistrationService->registerMotorcycle($biker, $model, $kmsDriven);
+        
         $this->addReference('ducati', $motorcycle);
     }
 
@@ -30,5 +33,11 @@ class LoadMotorcycleTestingData extends AbstractFixture implements FixtureInterf
     {
         return 2;
     }
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
 }
 

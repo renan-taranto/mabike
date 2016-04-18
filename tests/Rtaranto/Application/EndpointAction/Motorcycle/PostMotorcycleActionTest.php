@@ -5,7 +5,7 @@ use Rtaranto\Application\Dto\Motorcycle\MotorcycleDTO;
 use Rtaranto\Application\EndpointAction\InputProcessorInterface;
 use Rtaranto\Application\EndpointAction\Motorcycle\PostMotorcycleAction;
 use Rtaranto\Application\Exception\ValidationFailedException;
-use Rtaranto\Application\Service\Motorcycle\MotorcycleRegistrationInterface;
+use Rtaranto\Application\Service\Motorcycle\MotorcycleRegistrationServiceInterface;
 use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Motorcycle;
 
@@ -21,7 +21,7 @@ class PostMotorcycleActionTest extends \PHPUnit_Framework_TestCase
         
         $biker = $this->prophesize(Biker::class);
         
-        $motorcycleRegistration = $this->prophesize(MotorcycleRegistrationInterface::class);
+        $motorcycleRegistration = $this->prophesize(MotorcycleRegistrationServiceInterface::class);
         $motorcycle = new Motorcycle($model, $kmsDriven);
         $motorcycleRegistration->registerMotorcycle($biker->reveal(), $model, $kmsDriven)->willReturn($motorcycle);
         
@@ -48,7 +48,7 @@ class PostMotorcycleActionTest extends \PHPUnit_Framework_TestCase
         $biker = $this->prophesize(Biker::class);
         $inputProcessor = $this->prophesize(InputProcessorInterface::class);
         $inputProcessor->processInput($data, new MotorcycleDTO())->willThrow(ValidationFailedException::class);
-        $motorcycleRegistration = $this->prophesize(MotorcycleRegistrationInterface::class);
+        $motorcycleRegistration = $this->prophesize(MotorcycleRegistrationServiceInterface::class);
         
         $postMotorcycleAction = new PostMotorcycleAction(
             $biker->reveal(),
@@ -72,7 +72,7 @@ class PostMotorcycleActionTest extends \PHPUnit_Framework_TestCase
         $inputProcessor = $this->prophesize(InputProcessorInterface::class);
         $inputProcessor->processInput($data, new MotorcycleDTO())->willReturn($motorcycleDTO);
         
-        $motorcycleRegistration = $this->prophesize(MotorcycleRegistrationInterface::class);
+        $motorcycleRegistration = $this->prophesize(MotorcycleRegistrationServiceInterface::class);
         $motorcycleRegistration->registerMotorcycle($biker->reveal(), $model, $kmsDriven)
             ->willThrow(ValidationFailedException::class);
         

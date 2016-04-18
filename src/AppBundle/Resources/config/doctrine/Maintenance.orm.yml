@@ -5,7 +5,7 @@ Rtaranto\Domain\Entity\Maintenance:
         name: discr
         type: string
     discriminatorMap:
-        oilchangeperformer: Rtaranto\Domain\Entity\OilChangeMaintenance
+        oilchange: Rtaranto\Domain\Entity\OilChange
     
     id:
         id:
@@ -28,10 +28,18 @@ Rtaranto\Domain\Entity\Maintenance:
                 name: motorcycle_id
                 referencedColumnName: id
                 onDelete: CASCADE
-                
-    oneToMany:
+            
+    manyToMany:
         performedMaintenances:
             targetEntity: PerformedMaintenance
-            mappedBy: maintenance
+            joinTable:
+                name: maintenances_performedmaintenances
+                joinColumns:
+                    maintenance_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    performedmaintenance_id:
+                        referencedColumnName: id
+                        unique: true
             cascade: ["persist", "remove"]
             orphanRemoval: true

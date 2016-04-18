@@ -21,9 +21,9 @@ abstract class PerformedMaintenance
     protected $date;
     
     /**
-     * @var Maintenance
+     * @var Motorcycle
      */
-    protected $maintenance;
+    protected $motorcycle;
     
     /**
      * @return int

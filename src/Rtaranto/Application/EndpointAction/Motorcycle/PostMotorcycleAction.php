@@ -4,7 +4,7 @@ namespace Rtaranto\Application\EndpointAction\Motorcycle;
 use Rtaranto\Application\Dto\Motorcycle\MotorcycleDTO;
 use Rtaranto\Application\EndpointAction\InputProcessorInterface;
 use Rtaranto\Application\EndpointAction\PostActionInterface;
-use Rtaranto\Application\Service\Motorcycle\MotorcycleRegistrationInterface;
+use Rtaranto\Application\Service\Motorcycle\MotorcycleRegistrationServiceInterface;
 use Rtaranto\Domain\Entity\Biker;
 
 class PostMotorcycleAction implements PostActionInterface
@@ -15,7 +15,7 @@ class PostMotorcycleAction implements PostActionInterface
     
     public function __construct(
         Biker $biker,
-        MotorcycleRegistrationInterface $motorcycleRegistration,
+        MotorcycleRegistrationServiceInterface $motorcycleRegistration,
         InputProcessorInterface $inputProcessor
     ) {
         $this->biker = $biker;

@@ -5,14 +5,14 @@ use DateTime;
 use Exception;
 use Rtaranto\Domain\Entity\Motorcycle;
 use Rtaranto\Domain\Entity\PerformedOilChange;
-use Rtaranto\Domain\Entity\OilChangeMaintenance;
+use Rtaranto\Domain\Entity\OilChange;
 
 class OilChangeMaintenaneTest extends \PHPUnit_Framework_TestCase
 {
     public function testChangeOilReturnsOilChange()
     {
         $motorcycle = $this->prophesize(Motorcycle::class)->reveal();
-        $oilChangeMaintenance = new OilChangeMaintenance($motorcycle, 1500);
+        $oilChangeMaintenance = new OilChange($motorcycle, 1500);
         $oilChange = $oilChangeMaintenance->changeOil(1234, new DateTime('2016-01-19'));
         $this->assertInstanceOf(PerformedOilChange::class, $oilChange);
     }
@@ -20,7 +20,7 @@ class OilChangeMaintenaneTest extends \PHPUnit_Framework_TestCase
     public function testGetKmsForNextOilChangeReturnsKms()
     {
         $motorcycle = $this->prophesize(Motorcycle::class)->reveal();
-        $oilChangeMaintenance = new OilChangeMaintenance($motorcycle);
+        $oilChangeMaintenance = new OilChange($motorcycle);
         $oilChangeMaintenance->setKmsPerMaintenance(1500);
         $oilChangeMaintenance->changeOil(4560, new DateTime('2016-05-19'));
         $oilChangeMaintenance->changeOil(0, new DateTime('2016-01-19'));
@@ -36,7 +36,7 @@ class OilChangeMaintenaneTest extends \PHPUnit_Framework_TestCase
     public function testGetKmsForNextOilChangeWithNoPreviousOilChangeThrowsException()
     {
         $motorcycle = $this->prophesize(Motorcycle::class)->reveal();
-        $oilChangeMaintenance = new OilChangeMaintenance($motorcycle, 1500);
+        $oilChangeMaintenance = new OilChange($motorcycle, 1500);
         $this->setExpectedException(Exception::class);
         $oilChangeMaintenance->getKmsForNextMaintenance();
     }
@@ -44,7 +44,7 @@ class OilChangeMaintenaneTest extends \PHPUnit_Framework_TestCase
     public function testGetKmsForNextOilChangeWithoutSettingKmsPerOilChangeThrowsException()
     {
         $motorcycle = $this->prophesize(Motorcycle::class)->reveal();
-        $oilChangeMaintenance = new OilChangeMaintenance($motorcycle);
+        $oilChangeMaintenance = new OilChange($motorcycle);
         $this->setExpectedException(Exception::class);
         $oilChangeMaintenance->getKmsForNextMaintenance();
     }

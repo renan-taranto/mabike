@@ -4,7 +4,7 @@ namespace Rtaranto\Application\EndpointAction\Factory\OilChange;
 use Doctrine\ORM\EntityManagerInterface;
 use Rtaranto\Application\EndpointAction\Factory\GetActionFactoryInterface;
 use Rtaranto\Application\EndpointAction\OilChange\GetOilChangeAction;
-use Rtaranto\Domain\Entity\MaintenancePerformer;
+use Rtaranto\Infrastructure\Repository\DoctrinePerformedOilChangeRepository;
 
 class GetOilChangeActionFactory implements GetActionFactoryInterface
 {
@@ -25,8 +25,8 @@ class GetOilChangeActionFactory implements GetActionFactoryInterface
      */
     public function createGetAction()
     {
-        $maintenancePerformerRepository = $this->em->getRepository(MaintenancePerformer::class);
-        return new GetOilChangeAction($maintenancePerformerRepository);
+        $performedOilChangeRepository = new DoctrinePerformedOilChangeRepository($this->em);
+        return new GetOilChangeAction($performedOilChangeRepository);
     }
 
 }

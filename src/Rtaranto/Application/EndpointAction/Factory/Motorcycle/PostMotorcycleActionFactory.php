@@ -6,12 +6,10 @@ use Rtaranto\Application\EndpointAction\Factory\PostActionFactoryInterface;
 use Rtaranto\Application\EndpointAction\Motorcycle\PostMotorcycleAction;
 use Rtaranto\Application\EndpointAction\RequestParamsProcessor;
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
-use Rtaranto\Application\Service\Motorcycle\MotorcycleRegistration;
+use Rtaranto\Application\Service\Motorcycle\MotorcycleRegistrationService;
 use Rtaranto\Application\Service\Validator\Validator;
-use Rtaranto\Domain\Entity\MaintenancePerformer;
 use Rtaranto\Domain\Entity\User;
 use Rtaranto\Infrastructure\Repository\DoctrineBikerRepository;
-use Rtaranto\Infrastructure\Repository\DoctrineMotorcycleRepository;
 use Rtaranto\Presentation\Form\Motorcycle\MotorcycleDTOType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -41,14 +39,7 @@ class PostMotorcycleActionFactory implements PostActionFactoryInterface
     public function createPostAction()
     {
         $validator = new Validator($this->sfValidator);
-        
-        $motorcycleRepository = new DoctrineMotorcycleRepository($this->em);
-        $maintenancePerformerRepository = $this->em->getRepository(MaintenancePerformer::class);
-        $motorcycleRegistration = new MotorcycleRegistration(
-            $validator,
-            $motorcycleRepository,
-            $maintenancePerformerRepository
-        );
+        $motorcycleRegistration = new MotorcycleRegistrationService($validator, $this->em);
         
         $parametersBinder = new ParametersBinder($this->formFactory, MotorcycleDTOType::class);
         $inputProcessor = new RequestParamsProcessor($parametersBinder, $validator);

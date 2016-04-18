@@ -2,15 +2,15 @@
 namespace Rtaranto\Application\EndpointAction\OilChange;
 
 use Rtaranto\Application\EndpointAction\CgetSubresourceActionInterface;
-use Rtaranto\Domain\Entity\Repository\MaintenancePerformerRepositoryInterface;
+use Rtaranto\Domain\Entity\Repository\PerformedOilChangeRepositoryInterface;
 use Rtaranto\Presentation\Controller\QueryParam\QueryParamsFetcherInterface;
 
 class CgetOilChangeAction implements CgetSubresourceActionInterface
 {
     /**
-     * @var MaintenancePerformerRepositoryInterface
+     * @var PerformedOilChangeRepositoryInterface
      */
-    private $maintenancePerformerRepository;
+    private $performedOilChangeRepository;
     
     /**
      * @var QueryParamsFetcherInterface
@@ -18,14 +18,14 @@ class CgetOilChangeAction implements CgetSubresourceActionInterface
     private $queryParamsFetcher;
     
     /**
-     * @param MaintenancePerformerRepositoryInterface $maintenancePerformerRepository
+     * @param PerformedOilChangeRepositoryInterface $performedOilChangeRepository
      * @param QueryParamsFetcherInterface $queryParamsFetcher
      */
     public function __construct(
-        MaintenancePerformerRepositoryInterface $maintenancePerformerRepository,
+        PerformedOilChangeRepositoryInterface $performedOilChangeRepository,
         QueryParamsFetcherInterface $queryParamsFetcher
     ) {
-        $this->maintenancePerformerRepository = $maintenancePerformerRepository;
+        $this->performedOilChangeRepository = $performedOilChangeRepository;
         $this->queryParamsFetcher = $queryParamsFetcher;
     }
     
@@ -36,7 +36,7 @@ class CgetOilChangeAction implements CgetSubresourceActionInterface
         $limit = $this->queryParamsFetcher->getLimitParam();
         $offset = $this->queryParamsFetcher->getOffsetParam();
         
-        return $this->maintenancePerformerRepository->
-            findAllPerformedOilChangesByMotorcycle($parentResourceId, $filters, $orderBy, $limit, $offset);
+        return $this->performedOilChangeRepository
+            ->findAllByMotorcycle($parentResourceId, $filters, $orderBy, $limit, $offset);
     }
 }

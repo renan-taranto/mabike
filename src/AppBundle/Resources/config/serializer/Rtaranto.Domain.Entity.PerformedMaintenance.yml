@@ -3,7 +3,7 @@ Rtaranto\Domain\Entity\PerformedMaintenance:
     discriminator:
         field_name: type
         map:
-            oilchange: Rtaranto\Domain\Entity\PerformedOilChange
+            performedoilchange: Rtaranto\Domain\Entity\PerformedOilChange
     properties:
         id:
             groups: [view]

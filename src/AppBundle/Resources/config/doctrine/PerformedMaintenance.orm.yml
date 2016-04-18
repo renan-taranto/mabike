@@ -5,8 +5,8 @@ Rtaranto\Domain\Entity\PerformedMaintenance:
         name: discr
         type: string
     discriminatorMap:
-        oilchange: Rtaranto\Domain\Entity\PerformedOilChange
-    repositoryClass: Rtaranto\Infrastructure\Repository\DoctrinePerformedMaintenanceRepository
+        performedoilchange: Rtaranto\Domain\Entity\PerformedOilChange
+#    repositoryClass: Rtaranto\Infrastructure\Repository\DoctrinePerformedMaintenanceRepository
     
     id:
         id:
@@ -21,11 +21,11 @@ Rtaranto\Domain\Entity\PerformedMaintenance:
                 unsigned: true
         date:
             type: date
-    manyToOne:
-        maintenance:
-            targetEntity: Maintenance
-            inversedBy: performedMaintenances
+            
+    oneToOne:
+        motorcycle:
+            targetEntity: Motorcycle
             joinColumn:
-                name: maintenance_id
+                name: motorcycle_id
                 referencedColumnName: id
                 onDelete: CASCADE

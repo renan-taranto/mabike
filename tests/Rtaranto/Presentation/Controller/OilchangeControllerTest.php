@@ -102,6 +102,7 @@ class OilchangeControllerTest extends WebTestCase
         
         $response = $getRequest->get($uri, $apiKey);
         $content = json_decode($response->getContent(), true);
+        
         $referenceRepo = $this->fixtures->getReferenceRepository();
         $performedOilChange1 = $referenceRepo->getReference('performed_oil_change_1');
         $performedOilChange2 = $referenceRepo->getReference('performed_oil_change_2');

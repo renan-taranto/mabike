@@ -5,7 +5,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 
-class OilChangeMaintenance extends Maintenance implements OilChangerInterface
+class OilChange extends Maintenance implements OilChangerInterface
 {
     public function __construct(Motorcycle $motorcycle, $kmsPerOilChange = null)
     {
@@ -28,7 +28,7 @@ class OilChangeMaintenance extends Maintenance implements OilChangerInterface
             $date = new DateTime('now');
         }
         
-        $performedOilChange = new PerformedOilChange($this, $kmsDriven, $date);
+        $performedOilChange = new PerformedOilChange($this->motorcycle, $kmsDriven, $date);
         
         $this->addPerformedMaintenance($performedOilChange);
         
