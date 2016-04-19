@@ -4,6 +4,7 @@ Rtaranto\Domain\Entity\PerformedMaintenance:
         field_name: type
         map:
             performedoilchange: Rtaranto\Domain\Entity\PerformedOilChange
+            performedreartirechange: Rtaranto\Domain\Entity\PerformedRearTireChange
     properties:
         id:
             groups: [view]

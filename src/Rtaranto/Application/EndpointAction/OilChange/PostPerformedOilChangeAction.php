@@ -10,14 +10,14 @@ use Rtaranto\Domain\Entity\PerformedOilChange;
 class PostPerformedOilChangeAction implements PostSubresourceActionInterface
 {
     private $inputProcessor;
-    private $oilChanger;
+    private $oilChangerService;
     
     public function __construct(
         InputProcessorInterface $inputProcessor,
-        OilChangerServiceInterface $oilChangePoster
+        OilChangerServiceInterface $oilChangerService
     ) {
         $this->inputProcessor = $inputProcessor;
-        $this->oilChanger = $oilChangePoster;
+        $this->oilChangerService = $oilChangerService;
     }
     
     /**
@@ -32,6 +32,6 @@ class PostPerformedOilChangeAction implements PostSubresourceActionInterface
             new PerformedMaintenanceDTO()
         );
         
-        return $this->oilChanger->changeOil($parentResourceId, $performedMaintenanceDTO);
+        return $this->oilChangerService->changeOil($parentResourceId, $performedMaintenanceDTO);
     }
 }

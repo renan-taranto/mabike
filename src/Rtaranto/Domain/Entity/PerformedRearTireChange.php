@@ -2,11 +2,11 @@
 namespace Rtaranto\Domain\Entity;
 
 use DateTime;
- 
-class PerformedOilChange extends PerformedMaintenance
+
+class PerformedRearTireChange extends PerformedMaintenance
 {
     /**
-     * @param Motorcycle $motorcycle
+     * @param Maintenance $motorcycle
      * @param int $kmsDriven
      * @param DateTime $date
      */

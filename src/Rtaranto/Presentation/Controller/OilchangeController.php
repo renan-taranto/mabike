@@ -10,7 +10,7 @@ use Rtaranto\Application\Exception\ValidationFailedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class OilchangeController extends BaseMaintenanceController
+class OilchangeController extends BasePerformedMaintenanceController
 {
     private static $PATH_GET_ACTION = 'api_v1_get_motorcycle_oilchange';
     private static $SERIALIZATION_GROUP = 'view';

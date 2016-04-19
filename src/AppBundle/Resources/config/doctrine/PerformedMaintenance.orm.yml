@@ -6,6 +6,7 @@ Rtaranto\Domain\Entity\PerformedMaintenance:
         type: string
     discriminatorMap:
         performedoilchange: Rtaranto\Domain\Entity\PerformedOilChange
+        performedreartirechange: Rtaranto\Domain\Entity\PerformedRearTireChange
     
     id:
         id:

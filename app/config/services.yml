@@ -31,6 +31,10 @@ services:
     app.performed_oil_change.delete_action:
         class: Rtaranto\Application\EndpointAction\OilChange\DeletePerformedOilChangeAction
         factory: ["@app.action.factory.delete_performed_oil_change", createDeleteAction]
+    ##Performed Rear Tire Change
+    app.performed_rear_tire_change.post_action:
+        class: Rtaranto\Application\EndpointAction\RearTireChange\PostPerformedRearTireChangeAction
+        factory: ["@app.action.factory.post_performed_rear_tire_change", createPostAction]
         
     ##Endpoint Action Factory
     app.action.cget_bikers_factory:
@@ -55,6 +59,10 @@ services:
     app.action.factory.delete_performed_oil_change:
         class: Rtaranto\Application\EndpointAction\Factory\OilChange\DeletePerformedOilChangeActionFactory
         arguments: ['@doctrine.orm.entity_manager']
+    #Performed Rear Tire Change
+    app.action.factory.post_performed_rear_tire_change:
+        class: Rtaranto\Application\EndpointAction\Factory\RearTireChange\PostPerformedRearTireChangeActionFactory
+        arguments: ['@form.factory', '@validator', '@doctrine.orm.entity_manager']
         
     #Validator
     app.validator:

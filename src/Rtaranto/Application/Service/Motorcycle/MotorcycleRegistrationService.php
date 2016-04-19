@@ -6,6 +6,7 @@ use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\Motorcycle;
 use Rtaranto\Domain\Entity\OilChange;
+use Rtaranto\Domain\Entity\RearTireChange;
 
 class MotorcycleRegistrationService implements MotorcycleRegistrationServiceInterface
 {
@@ -32,9 +33,13 @@ class MotorcycleRegistrationService implements MotorcycleRegistrationServiceInte
         $oilChange = new OilChange($motorcycle);
         $this->validator->throwValidationFailedIfNotValid($oilChange);
         
+        $rearTireChange = new RearTireChange($motorcycle);
+        $this->validator->throwValidationFailedIfNotValid($rearTireChange);
+        
         $this->em->persist($motorcycle);
         $this->em->persist($biker);
         $this->em->persist($oilChange);
+        $this->em->persist($rearTireChange);
         $this->em->flush();
 
         return $motorcycle;
