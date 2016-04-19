@@ -9,14 +9,21 @@ use Rtaranto\Application\EndpointAction\OilChange\PostPerformedOilChangeAction;
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Patch;
+use FOS\RestBundle\Controller\Annotations\Delete;
 
-class OilchangeController extends BasePerformedMaintenanceController
+class OilChangeController extends BasePerformedMaintenanceController
 {
-    private static $PATH_GET_ACTION = 'api_v1_get_motorcycle_oilchange';
+    private static $PATH_GET_ACTION = 'api_v1_get_motorcycle_oil_change';
     private static $SERIALIZATION_GROUP = 'view';
     private static $PARAM_NAME_SUB_RESOURCE_ID = 'performedOilChangeId';
     private static $PARAM_NAME_MOTORCYCLE_ID = 'motorcycleId';
             
+    /**
+     * @Get("/motorcycles/{motorcycleId}/oil-changes")
+     */
     public function cgetAction(ParamFetcher $paramFetcher, $motorcycleId)
     {
         $this->throwExceptionIfNotBiker();
@@ -30,6 +37,9 @@ class OilchangeController extends BasePerformedMaintenanceController
         return $this->createViewWithSerializationContext($performedOilChanges);
     }
     
+    /**
+     * @Get("/motorcycles/{motorcycleId}/oil-changes/{performedOilChangeId}")
+     */
     public function getAction($motorcycleId, $performedOilChangeId)
     {
         $this->throwExceptionIfNotBiker();
@@ -41,6 +51,9 @@ class OilchangeController extends BasePerformedMaintenanceController
         return $this->createViewWithSerializationContext($performedOilChange);
     }
     
+    /**
+     * @Post("/motorcycles/{motorcycleId}/oil-changes")
+     */
     public function postAction($motorcycleId, Request $request)
     {
         $this->throwExceptionIfNotBiker();
@@ -61,6 +74,9 @@ class OilchangeController extends BasePerformedMaintenanceController
             createViewWithSerializationContext($oilChange, Response::HTTP_CREATED, array('Location' => $location));
     }
     
+    /**
+     * @Patch("/motorcycles/{motorcycleId}/oil-changes/{performedOilChangeId}")
+     */
     public function patchAction($motorcycleId, $performedOilChangeId, Request $request)
     {
         $this->throwExceptionIfNotBiker();
@@ -79,6 +95,9 @@ class OilchangeController extends BasePerformedMaintenanceController
         return $this->createViewWithSerializationContext($performedOilChange);
     }
     
+    /**
+     * @Delete("/motorcycles/{motorcycleId}/oil-changes/{performedOilChangeId}")
+     */
     public function deleteAction($motorcycleId, $performedOilChangeId)
     {
         $this->throwExceptionIfNotBiker();
@@ -108,5 +127,4 @@ class OilchangeController extends BasePerformedMaintenanceController
     {
         return self::$PARAM_NAME_MOTORCYCLE_ID;
     }
-
 }

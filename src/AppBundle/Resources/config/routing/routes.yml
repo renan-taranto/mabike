@@ -26,11 +26,11 @@ api_motorcycles:
 api_oil_changes:
     type:     rest
     parent:   api_motorcycles
-    resource: Rtaranto\Presentation\Controller\OilchangeController
+    resource: Rtaranto\Presentation\Controller\OilChangeController
     name_prefix:  api_v1_
     
 api_rear_tire_changes:
     type:     rest
     parent:   api_motorcycles
-    resource: Rtaranto\Presentation\Controller\ReartirechangeController
+    resource: Rtaranto\Presentation\Controller\RearTireChangeController
     name_prefix:  api_v1_

@@ -5,15 +5,19 @@ use Rtaranto\Application\EndpointAction\RearTireChange\PostPerformedRearTireChan
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Get;
 
-class ReartirechangeController extends BasePerformedMaintenanceController
+class RearTireChangeController extends BasePerformedMaintenanceController
 {
-    private static $PATH_GET_ACTION = 'api_v1_get_motorcycle_reartirechange';
+    private static $PATH_GET_ACTION = 'api_v1_get_motorcycle_reartire_change';
     private static $SERIALIZATION_GROUP = 'view';
     private static $PARAM_NAME_SUB_RESOURCE_ID = 'performedRearTireChangeId';
     private static $PARAM_NAME_MOTORCYCLE_ID = 'motorcycleId';
     
-    
+    /**
+     * @Post("/motorcycles/{motorcycleId}/rear-tire-changes")
+     */
     public function postAction($motorcycleId, Request $request)
     {
         $this->throwExceptionIfNotBiker();
@@ -34,11 +38,17 @@ class ReartirechangeController extends BasePerformedMaintenanceController
             createViewWithSerializationContext($oilChange, Response::HTTP_CREATED, array('Location' => $location));
     }
     
+    /**
+     * @Get("/motorcycles/{motorcycleId}/rear-tire-changes")
+     */
     public function cgetAction($motorcycleId)
     {
         
     }
     
+    /**
+     * @Get("/motorcycles/{motorcycleId}/rear-tire-changes/{performedRearTireChangeId}")
+     */
     public function getAction($motorcycleId, $performedRearTireChangeId)
     {
         

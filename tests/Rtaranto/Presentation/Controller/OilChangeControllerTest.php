@@ -13,7 +13,7 @@ use Tests\JsonGetRequest;
 use Tests\JsonPatchRequest;
 use Tests\JsonPostRequest;
 
-class OilchangeControllerTest extends WebTestCase
+class OilChangeControllerTest extends WebTestCase
 {
     private $fixtures;
     
@@ -355,12 +355,12 @@ class OilchangeControllerTest extends WebTestCase
     
     private function getOilChangesCollectionUri(array $params = array())
     {
-        return $this->getUrl('api_v1_get_motorcycle_oilchanges', $params);
+        return $this->getUrl('api_v1_get_motorcycle_oil_changes', $params);
     }
     
     private function getOilChangeResourceUri(array $params = array())
     {
-        return $this->getUrl('api_v1_get_motorcycle_oilchange', $params);
+        return $this->getUrl('api_v1_get_motorcycle_oil_change', $params);
     }
     
     private function getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles()

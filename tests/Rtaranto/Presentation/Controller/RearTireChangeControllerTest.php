@@ -9,7 +9,7 @@ use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\JsonPostRequest;
 
-class ReartirechangeControllerTest extends WebTestCase
+class RearTireChangeControllerTest extends WebTestCase
 {
     private $fixtures;
     
@@ -92,12 +92,12 @@ class ReartirechangeControllerTest extends WebTestCase
     
     private function getRearTireChangeCollectionUri(array $params = array())
     {
-        return $this->getUrl('api_v1_get_motorcycle_reartirechanges', $params);
+        return $this->getUrl('api_v1_get_motorcycle_reartire_changes', $params);
     }
     
     private function getRearTireChangeResourceUri(array $params = array())
     {
-        return $this->getUrl('api_v1_get_motorcycle_reartirechange', $params);
+        return $this->getUrl('api_v1_get_motorcycle_reartire_change', $params);
     }
     
     private function getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles()
