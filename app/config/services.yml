@@ -28,6 +28,9 @@ services:
     app.performed_oil_change.get_action:
         class: Rtaranto\Application\EndpointAction\OilChange\GetPerformedOilChangeAction
         factory: ["@app.action.factory.get_performed_oil_change", createGetAction]
+    app.performed_oil_change.delete_action:
+        class: Rtaranto\Application\EndpointAction\OilChange\DeletePerformedOilChangeAction
+        factory: ["@app.action.factory.delete_performed_oil_change", createDeleteAction]
         
     ##Endpoint Action Factory
     app.action.cget_bikers_factory:
@@ -49,8 +52,8 @@ services:
     app.action.factory.get_performed_oil_change:
         class: Rtaranto\Application\EndpointAction\Factory\OilChange\GetPerformedOilChangeActionFactory
         arguments: ['@doctrine.orm.entity_manager']
-    app.action.factory.cget_performed_oil_change:
-        class: Rtaranto\Application\EndpointAction\Factory\OilChange\CgetPerformedOilChangeActionFactory
+    app.action.factory.delete_performed_oil_change:
+        class: Rtaranto\Application\EndpointAction\Factory\OilChange\DeletePerformedOilChangeActionFactory
         arguments: ['@doctrine.orm.entity_manager']
         
     #Validator

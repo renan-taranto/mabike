@@ -32,6 +32,12 @@ class DoctrinePerformedOilChangeRepository implements PerformedOilChangeReposito
         return $performedOilChange;
     }
     
+    public function delete($performedOilChange)
+    {
+        $this->em->remove($performedOilChange);
+        $this->em->flush();
+    }
+    
     /**
      * @param Motorcycle|int $motorcycle
      * @param int $performedOilChangeId

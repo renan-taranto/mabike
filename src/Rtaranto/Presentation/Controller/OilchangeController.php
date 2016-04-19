@@ -7,6 +7,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use JMS\Serializer\SerializationContext;
 use Rtaranto\Application\EndpointAction\Factory\OilChange\CgetPerformedOilChangeActionFactory;
+use Rtaranto\Application\EndpointAction\OilChange\DeletePerformedOilChangeAction;
 use Rtaranto\Application\EndpointAction\OilChange\GetPerformedOilChangeAction;
 use Rtaranto\Application\EndpointAction\OilChange\PostPerformedOilChangeAction;
 use Rtaranto\Application\Exception\ValidationFailedException;
@@ -79,6 +80,16 @@ class OilchangeController extends FOSRestController implements ClassResourceInte
         }
         
         return $this->createViewWithSerializationContext($performedOilChange);
+    }
+    
+    public function deleteAction($motorcycleId, $performedOilChangeId)
+    {
+        $this->throwExceptionIfNotBiker();
+        $this->throwNotFoundIfMotorcycleDoesntBelongsToBiker($motorcycleId);
+        
+        /* @var $deletePerformedOilChangeAction DeletePerformedOilChangeAction */
+        $deletePerformedOilChangeAction = $this->get('app.performed_oil_change.delete_action');
+        $deletePerformedOilChangeAction->delete($motorcycleId, $performedOilChangeId);
     }
     
     /**

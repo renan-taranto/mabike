@@ -8,6 +8,7 @@ use DateTime;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Rtaranto\Domain\Entity\PerformedOilChange;
 use Symfony\Component\HttpFoundation\Response;
+use Tests\DeleteRequestImpl;
 use Tests\JsonGetRequest;
 use Tests\JsonPatchRequest;
 use Tests\JsonPostRequest;
@@ -280,6 +281,58 @@ class OilchangeControllerTest extends WebTestCase
         $this->assertEquals($performedOilChange1->getKmsDriven(), $content['kms_driven']);
         $this->assertEquals($performedOilChange1->getDate()->format('Y-m-d'), $content['date']);
         $this->assertEquals($performedOilChange1->getId(), $content['id']);
+    }
+    
+    public function testDeleteOilChangeReturnsNoContent()
+    {
+        $performedOilChangeId = 1;
+        $motorcycleId = 1;
+        $client = static::createClient();
+        $uri = $this->getOilChangeResourceUri(array(
+            'motorcycleId' => $motorcycleId,
+            'performedOilChangeId' => $performedOilChangeId)
+        );
+        $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
+        $deleteRequest = new DeleteRequestImpl($client);
+        
+        $deleteRequest->delete($uri, $apiKey);
+        $this->assertStatusCode(Response::HTTP_NO_CONTENT, $client);
+        
+        $getRequest = new JsonGetRequest($client);
+        $getRequest->get($uri, $apiKey);
+        $this->assertStatusCode(Response::HTTP_NOT_FOUND, $client);
+    }
+    
+    public function testDeleteOilChangeReturnsNotFoundIfMotorcycleDoesntBelongsToBiker()
+    {
+        $performedOilChangeId = 1;
+        $motorcycleId = 1000;
+        $client = static::createClient();
+        $uri = $this->getOilChangeResourceUri(array(
+            'motorcycleId' => $motorcycleId,
+            'performedOilChangeId' => $performedOilChangeId)
+        );
+        $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
+        $deleteRequest = new DeleteRequestImpl($client);
+        
+        $deleteRequest->delete($uri, $apiKey);
+        $this->assertStatusCode(Response::HTTP_NOT_FOUND, $client);
+    }
+    
+    public function testDeleteInexistentOilChangeReturnsNotFound()
+    {
+        $performedOilChangeId = 1000;
+        $motorcycleId = 1;
+        $client = static::createClient();
+        $uri = $this->getOilChangeResourceUri(array(
+            'motorcycleId' => $motorcycleId,
+            'performedOilChangeId' => $performedOilChangeId)
+        );
+        $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
+        $deleteRequest = new DeleteRequestImpl($client);
+        
+        $deleteRequest->delete($uri, $apiKey);
+        $this->assertStatusCode(Response::HTTP_NOT_FOUND, $client);
     }
     
     public function testPatchInexistentPerformedOilChangeThrowsException()
