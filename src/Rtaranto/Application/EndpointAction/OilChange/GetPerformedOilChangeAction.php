@@ -5,7 +5,7 @@ use Rtaranto\Application\EndpointAction\GetSubresourceActionInterface;
 use Rtaranto\Domain\Entity\Repository\PerformedOilChangeRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class GetOilChangeAction implements GetSubresourceActionInterface
+class GetPerformedOilChangeAction implements GetSubresourceActionInterface
 {
     private $performedOilChangeRepository;
     

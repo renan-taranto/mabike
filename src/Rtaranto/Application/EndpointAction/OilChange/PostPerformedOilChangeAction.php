@@ -7,7 +7,7 @@ use Rtaranto\Application\EndpointAction\PostSubresourceActionInterface;
 use Rtaranto\Application\Service\Maintenance\OilChange\OilChangerServiceInterface;
 use Rtaranto\Domain\Entity\PerformedOilChange;
 
-class PostOilChangeAction implements PostSubresourceActionInterface
+class PostPerformedOilChangeAction implements PostSubresourceActionInterface
 {
     private $inputProcessor;
     private $oilChanger;

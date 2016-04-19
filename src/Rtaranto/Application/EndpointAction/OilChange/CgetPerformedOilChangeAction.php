@@ -5,7 +5,7 @@ use Rtaranto\Application\EndpointAction\CgetSubresourceActionInterface;
 use Rtaranto\Domain\Entity\Repository\PerformedOilChangeRepositoryInterface;
 use Rtaranto\Presentation\Controller\QueryParam\QueryParamsFetcherInterface;
 
-class CgetOilChangeAction implements CgetSubresourceActionInterface
+class CgetPerformedOilChangeAction implements CgetSubresourceActionInterface
 {
     /**
      * @var PerformedOilChangeRepositoryInterface

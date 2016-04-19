@@ -3,7 +3,7 @@ namespace Rtaranto\Application\EndpointAction\Factory\OilChange;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Rtaranto\Application\EndpointAction\Factory\PostActionFactoryInterface;
-use Rtaranto\Application\EndpointAction\OilChange\PostOilChangeAction;
+use Rtaranto\Application\EndpointAction\OilChange\PostPerformedOilChangeAction;
 use Rtaranto\Application\EndpointAction\RequestParamsProcessor;
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
 use Rtaranto\Application\Service\Maintenance\OilChange\OilChangerService;
@@ -13,7 +13,7 @@ use Rtaranto\Presentation\Form\Maintenance\PerformedMaintenanceDTOType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class PostOilChangeActionFactory implements PostActionFactoryInterface
+class PostPerformedOilChangeActionFactory implements PostActionFactoryInterface
 {
     private $formFactory;
     private $sfValidator;
@@ -37,7 +37,7 @@ class PostOilChangeActionFactory implements PostActionFactoryInterface
         
         $doctrineOilChangerRepository = new DoctrineOilChangeRepository($this->em);
         $oilChangerService = new OilChangerService($validator, $doctrineOilChangerRepository);
-        return new PostOilChangeAction($inputProcessor, $oilChangerService);
+        return new PostPerformedOilChangeAction($inputProcessor, $oilChangerService);
     }
 
 }

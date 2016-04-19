@@ -6,9 +6,9 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use JMS\Serializer\SerializationContext;
-use Rtaranto\Application\EndpointAction\Factory\OilChange\CgetOilChangeActionFactory;
-use Rtaranto\Application\EndpointAction\Factory\OilChange\GetOilChangeActionFactory;
-use Rtaranto\Application\EndpointAction\Factory\OilChange\PostOilChangeActionFactory;
+use Rtaranto\Application\EndpointAction\Factory\OilChange\CgetPerformedOilChangeActionFactory;
+use Rtaranto\Application\EndpointAction\OilChange\GetPerformedOilChangeAction;
+use Rtaranto\Application\EndpointAction\OilChange\PostPerformedOilChangeAction;
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Rtaranto\Domain\Entity\User;
 use Rtaranto\Infrastructure\Repository\DoctrineBikerRepository;
@@ -25,16 +25,11 @@ class OilchangeController extends FOSRestController implements ClassResourceInte
         $this->throwNotFoundIfMotorcycleDoesntBelongsToBiker($motorcycleId);
         
         $em = $this->getDoctrine()->getManager();
-        $cgetOilChangeActionFactory = new CgetOilChangeActionFactory($em);
-        
+        $cgetOilChangeActionFactory = new CgetPerformedOilChangeActionFactory($em);
         $cgetOilChangeAction = $cgetOilChangeActionFactory->createCgetAction($paramFetcher);
+        
         $performedOilChanges = $cgetOilChangeAction->cGet($motorcycleId);
-        
-        $context = SerializationContext::create()->setGroups(array('view'));
-        $view = $this->view($performedOilChanges);
-        $view->setSerializationContext($context);
-        
-        return $view;
+        return $this->createViewWithSerializationContext($performedOilChanges);
     }
     
     public function getAction($motorcycleId, $performedOilChangeId)
@@ -42,17 +37,10 @@ class OilchangeController extends FOSRestController implements ClassResourceInte
         $this->throwExceptionIfNotBiker();
         $this->throwNotFoundIfMotorcycleDoesntBelongsToBiker($motorcycleId);
         
-        $em = $this->getDoctrine()->getManager();
-        $getOilChangeActionFactory = new GetOilChangeActionFactory($em);
-        $getOilChangeAction = $getOilChangeActionFactory->createGetAction();
-        
+        /* @var $getOilChangeAction GetPerformedOilChangeAction */
+        $getOilChangeAction = $this->get('app.performed_oil_change.get_action');
         $performedOilChange = $getOilChangeAction->get($motorcycleId, $performedOilChangeId);
-        
-        $context = SerializationContext::create()->setGroups(array('view'));
-        $view = $this->view($performedOilChange);
-        $view->setSerializationContext($context);
-        
-        return $view;
+        return $this->createViewWithSerializationContext($performedOilChange);
     }
     
     public function postAction($motorcycleId, Request $request)
@@ -60,26 +48,37 @@ class OilchangeController extends FOSRestController implements ClassResourceInte
         $this->throwExceptionIfNotBiker();
         $this->throwNotFoundIfMotorcycleDoesntBelongsToBiker($motorcycleId);
         
-        $em = $this->getDoctrine()->getManager();
-        $formFactory = $this->get('form.factory');
-        $sfValidator = $this->get('validator');
-        $factory = new PostOilChangeActionFactory($formFactory, $sfValidator, $em);
-        $action = $factory->createPostAction();
-        
+        /* @var $postPerformedOilChangeAction PostPerformedOilChangeAction */
+        $postPerformedOilChangeAction = $this->get('app.performed_oil_change.post_action');
         try {
-            $oilChange = $action->post($motorcycleId, $request->request->all());
+            $oilChange = $postPerformedOilChangeAction->post($motorcycleId, $request->request->all());
         }
         catch (ValidationFailedException $ex) {
             $view = $this->view($ex->getErrors(), Response::HTTP_BAD_REQUEST);
             return $view;
         }
         
-        $context = SerializationContext::create()->setGroups(array('view')); 
         $location = $this->createLocationHeaderContent($motorcycleId, $oilChange->getId(), $request);
-        $view = $this->view($oilChange, Response::HTTP_CREATED, array('Location' => $location));
-        $view->setSerializationContext($context);
+        return $this->
+            createViewWithSerializationContext($oilChange, Response::HTTP_CREATED, array('Location' => $location));
+    }
+    
+    public function patchAction($motorcycleId, $performedOilChangeId, Request $request)
+    {
+        $this->throwExceptionIfNotBiker();
+        $this->throwNotFoundIfMotorcycleDoesntBelongsToBiker($motorcycleId);
         
-        return $view;
+        $oilChangePatchAction = $this->get('app.performed_oil_change.patch_action');
+        try {
+            $performedOilChange = $oilChangePatchAction
+                ->patch($motorcycleId, $performedOilChangeId, $request->request->all());
+        }
+        catch (ValidationFailedException $ex) {
+            $view = $this->view($ex->getErrors(), Response::HTTP_BAD_REQUEST);
+            return $view;
+        }
+        
+        return $this->createViewWithSerializationContext($performedOilChange);
     }
     
     /**
@@ -120,5 +119,13 @@ class OilchangeController extends FOSRestController implements ClassResourceInte
                 . 'the PostActionInterface for this given user role.'
             );
         }
+    }
+    
+    private function createViewWithSerializationContext($data = null, $statusCode = null, $headers = array())
+    {
+        $context = SerializationContext::create()->setGroups(array('view'));
+        $view = $this->view($data, $statusCode, $headers);
+        $view->setSerializationContext($context);
+        return $view;
     }
 }

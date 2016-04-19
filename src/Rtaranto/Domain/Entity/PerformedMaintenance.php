@@ -33,6 +33,21 @@ abstract class PerformedMaintenance
         return $this->kmsDriven;
     }
     
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    public function setDate(DateTime $date)
+    {
+        $this->date = $date;
+    }
+
+    public function setKmsDriven($kmsDriven)
+    {
+        $this->kmsDriven = $kmsDriven;
+    }
+    
     /**
      * @return int
      */

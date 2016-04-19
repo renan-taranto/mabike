@@ -37,6 +37,7 @@ Rtaranto\Domain\Entity\Maintenance:
                 joinColumns:
                     maintenance_id:
                         referencedColumnName: id
+                        onDelete: CASCADE
                 inverseJoinColumns:
                     performedmaintenance_id:
                         referencedColumnName: id

@@ -3,7 +3,7 @@ namespace Rtaranto\Presentation\Form\Maintenance;
 
 use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,13 +13,7 @@ class PerformedMaintenanceDTOType extends AbstractType
     {
         $builder
             ->add('kmsDriven')
-            ->add('date', DateType::class, array(
-                'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd',
-                'empty_data'=> new \DateTime()
-                )
-            )
-        ;
+            ->add('date', TextType::class);
     }
     
     public function configureOptions(OptionsResolver $resolver)

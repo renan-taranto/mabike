@@ -5,7 +5,7 @@ parameters:
 
 services:
     ##################Application##################
-    #Endpoint Action
+    ###Endpoint Action
     app.action.bikers.post_action:
         class: Rtaranto\Application\EndpointAction\Biker\PostBikerAction
         factory: ["@app.action.post_biker_factory", createPostAction]
@@ -18,7 +18,18 @@ services:
     app.bikers.delete_action:
         class: Rtaranto\Application\EndpointAction\Biker\DeleteBikerAction
         arguments: ['@infra.repository.biker']
-    #Endpoint Action Factory
+    ##Performed Oil Change
+    app.performed_oil_change.patch_action:
+        class: Rtaranto\Application\EndpointAction\OilChange\PatchPerformedOilChangeAction
+        factory: ["@app.action.factory.patch_performed_oil_change", createPatchAction]
+    app.performed_oil_change.post_action:
+        class: Rtaranto\Application\EndpointAction\OilChange\PostPerformedOilChangeAction
+        factory: ["@app.action.factory.post_performed_oil_change", createPostAction]
+    app.performed_oil_change.get_action:
+        class: Rtaranto\Application\EndpointAction\OilChange\GetPerformedOilChangeAction
+        factory: ["@app.action.factory.get_performed_oil_change", createGetAction]
+        
+    ##Endpoint Action Factory
     app.action.cget_bikers_factory:
         class: Rtaranto\Application\EndpointAction\Factory\Biker\CgetBikersActionFactory
         arguments: ['@doctrine.orm.entity_manager']
@@ -27,7 +38,20 @@ services:
         arguments: ['@form.factory', '@validator', '@doctrine.orm.entity_manager']
     app.action.post_biker_factory:
         class: Rtaranto\Application\EndpointAction\Factory\Biker\PostBikerActionFactory
+        arguments: ['@form.factory', '@validator', '@doctrine.orm.entity_manager']    
+    #Performed Oil Change
+    app.action.factory.patch_performed_oil_change:
+        class: Rtaranto\Application\EndpointAction\Factory\OilChange\PatchPerformedOilChangeActionFactory
         arguments: ['@form.factory', '@validator', '@doctrine.orm.entity_manager']
+    app.action.factory.post_performed_oil_change:
+        class: Rtaranto\Application\EndpointAction\Factory\OilChange\PostPerformedOilChangeActionFactory
+        arguments: ['@form.factory', '@validator', '@doctrine.orm.entity_manager']
+    app.action.factory.get_performed_oil_change:
+        class: Rtaranto\Application\EndpointAction\Factory\OilChange\GetPerformedOilChangeActionFactory
+        arguments: ['@doctrine.orm.entity_manager']
+    app.action.factory.cget_performed_oil_change:
+        class: Rtaranto\Application\EndpointAction\Factory\OilChange\CgetPerformedOilChangeActionFactory
+        arguments: ['@doctrine.orm.entity_manager']
         
     #Validator
     app.validator:

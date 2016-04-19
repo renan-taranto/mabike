@@ -6,7 +6,6 @@ Rtaranto\Domain\Entity\PerformedMaintenance:
         type: string
     discriminatorMap:
         performedoilchange: Rtaranto\Domain\Entity\PerformedOilChange
-#    repositoryClass: Rtaranto\Infrastructure\Repository\DoctrinePerformedMaintenanceRepository
     
     id:
         id:

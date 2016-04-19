@@ -8,19 +8,20 @@ class PerformedMaintenanceDTO
      */
     private $kmsDriven;
     
+
     /**
-     * @var \DateTime
+     * @var string
      */
     private $date;
     
     /**
      * @param int $kmsDriven
-     * @param \DateTime $date
+     * @param string $date
      */
-    public function __construct($kmsDriven = null, \DateTime $date = null)
+    public function __construct($kmsDriven = null, $date = null)
     {
         $this->kmsDriven = $kmsDriven;
-        $this->date = $date;
+        $this->date = $this->convertDateToStringIfNeeded($date);
     }
     
     /**
@@ -32,11 +33,11 @@ class PerformedMaintenanceDTO
     }
 
     /**
-     * @return \DateTime
+     * @return string
      */
     public function getDate()
     {
-        return $this->date;
+        return new \DateTime($this->date);
     }
 
     /**
@@ -48,10 +49,18 @@ class PerformedMaintenanceDTO
     }
 
     /**
-     * @param \DateTime $date
+     * @param string $date
      */
-    public function setDate(\DateTime $date)
+    public function setDate($date)
     {
-        $this->date = $date;
+        $this->date = $this->convertDateToStringIfNeeded($date);
+    }
+    
+    public function convertDateToStringIfNeeded($date)
+    {
+        if ($date instanceof \DateTime) {
+            return $date->format('Y-m-d');
+        }
+        return $date;
     }
 }

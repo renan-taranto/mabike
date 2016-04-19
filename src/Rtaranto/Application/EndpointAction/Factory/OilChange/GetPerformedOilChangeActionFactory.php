@@ -3,10 +3,10 @@ namespace Rtaranto\Application\EndpointAction\Factory\OilChange;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Rtaranto\Application\EndpointAction\Factory\GetActionFactoryInterface;
-use Rtaranto\Application\EndpointAction\OilChange\GetOilChangeAction;
+use Rtaranto\Application\EndpointAction\OilChange\GetPerformedOilChangeAction;
 use Rtaranto\Infrastructure\Repository\DoctrinePerformedOilChangeRepository;
 
-class GetOilChangeActionFactory implements GetActionFactoryInterface
+class GetPerformedOilChangeActionFactory implements GetActionFactoryInterface
 {
     /**
      * @var EntityManagerInterface
@@ -21,12 +21,12 @@ class GetOilChangeActionFactory implements GetActionFactoryInterface
     }
     
     /**
-     * @return GetOilChangeAction
+     * @return GetPerformedOilChangeAction
      */
     public function createGetAction()
     {
         $performedOilChangeRepository = new DoctrinePerformedOilChangeRepository($this->em);
-        return new GetOilChangeAction($performedOilChangeRepository);
+        return new GetPerformedOilChangeAction($performedOilChangeRepository);
     }
 
 }
