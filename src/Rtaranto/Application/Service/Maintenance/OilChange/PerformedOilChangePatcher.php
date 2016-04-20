@@ -4,18 +4,18 @@ namespace Rtaranto\Application\Service\Maintenance\OilChange;
 use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\PerformedOilChange;
-use Rtaranto\Domain\Entity\Repository\PerformedOilChangeRepositoryInterface;
+use Rtaranto\Domain\Entity\Repository\SubResourceRepositoryInterface;
 
 class PerformedOilChangePatcher implements PerformedOilChangePatcherInterface
 {
-    private $performedOilChangeRepository;
+    private $subResourceRepository;
     private $validator;
     
     public function __construct(
-        PerformedOilChangeRepositoryInterface $performedOilChangeRepository,
+        SubResourceRepositoryInterface $subResourceRepository,
         ValidatorInterface $validator
     ) {
-        $this->performedOilChangeRepository = $performedOilChangeRepository;
+        $this->subResourceRepository = $subResourceRepository;
         $this->validator = $validator;
     }
     
@@ -28,6 +28,6 @@ class PerformedOilChangePatcher implements PerformedOilChangePatcherInterface
         
         $this->validator->throwValidationFailedIfNotValid($performedOilChange);
         
-        return $this->performedOilChangeRepository->update($performedOilChange);
+        return $this->subResourceRepository->update($performedOilChange);
     }
 }

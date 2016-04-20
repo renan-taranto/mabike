@@ -2,17 +2,21 @@
 namespace Rtaranto\Presentation\Controller;
 
 use FOS\RestBundle\Request\ParamFetcher;
-use Rtaranto\Application\EndpointAction\Factory\OilChange\CgetPerformedOilChangeActionFactory;
-use Rtaranto\Application\EndpointAction\OilChange\DeletePerformedOilChangeAction;
-use Rtaranto\Application\EndpointAction\OilChange\GetPerformedOilChangeAction;
+use Rtaranto\Application\EndpointAction\CgetSubResourceAction;
+use Rtaranto\Application\EndpointAction\DeleteSubResourceAction;
+use Rtaranto\Application\EndpointAction\GetSubResourceAction;
 use Rtaranto\Application\EndpointAction\OilChange\PostPerformedOilChangeAction;
 use Rtaranto\Application\Exception\ValidationFailedException;
+use Rtaranto\Domain\Entity\PerformedOilChange;
+use Rtaranto\Infrastructure\Repository\DoctrineSubResourceRepository;
+use Rtaranto\Presentation\Controller\QueryParam\QueryParamsFetcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Patch;
 use FOS\RestBundle\Controller\Annotations\Delete;
+
 
 class OilChangeController extends BasePerformedMaintenanceController
 {
@@ -29,11 +33,9 @@ class OilChangeController extends BasePerformedMaintenanceController
         $this->throwExceptionIfNotBiker();
         $this->throwNotFoundIfMotorcycleDoesntBelongsToBiker($motorcycleId);
         
-        $em = $this->getDoctrine()->getManager();
-        $cgetOilChangeActionFactory = new CgetPerformedOilChangeActionFactory($em);
-        $cgetOilChangeAction = $cgetOilChangeActionFactory->createCgetAction($paramFetcher);
-        
-        $performedOilChanges = $cgetOilChangeAction->cGet($motorcycleId);
+        $queryParamsFetcher = new QueryParamsFetcher($paramFetcher);
+        $cgetOilResourceAction = new CgetSubResourceAction($this->getSubResourceRepository(), $queryParamsFetcher);
+        $performedOilChanges = $cgetOilResourceAction->cGet($motorcycleId);
         return $this->createViewWithSerializationContext($performedOilChanges);
     }
     
@@ -44,10 +46,9 @@ class OilChangeController extends BasePerformedMaintenanceController
     {
         $this->throwExceptionIfNotBiker();
         $this->throwNotFoundIfMotorcycleDoesntBelongsToBiker($motorcycleId);
-        
-        /* @var $getOilChangeAction GetPerformedOilChangeAction */
-        $getOilChangeAction = $this->get('app.performed_oil_change.get_action');
-        $performedOilChange = $getOilChangeAction->get($motorcycleId, $performedOilChangeId);
+
+        $getSubResourceAction = new GetSubResourceAction($this->getSubResourceRepository());
+        $performedOilChange = $getSubResourceAction->get($motorcycleId, $performedOilChangeId);
         return $this->createViewWithSerializationContext($performedOilChange);
     }
     
@@ -103,9 +104,14 @@ class OilChangeController extends BasePerformedMaintenanceController
         $this->throwExceptionIfNotBiker();
         $this->throwNotFoundIfMotorcycleDoesntBelongsToBiker($motorcycleId);
         
-        /* @var $deletePerformedOilChangeAction DeletePerformedOilChangeAction */
-        $deletePerformedOilChangeAction = $this->get('app.performed_oil_change.delete_action');
-        $deletePerformedOilChangeAction->delete($motorcycleId, $performedOilChangeId);
+        $deleteSubResourceAction = new DeleteSubResourceAction($this->getSubResourceRepository());
+        $deleteSubResourceAction->delete($motorcycleId, $performedOilChangeId);
+    }
+    
+    private function getSubResourceRepository()
+    {
+        $em = $this->getDoctrine()->getManager();
+        return new DoctrineSubResourceRepository($em, 'motorcycle', PerformedOilChange::class);
     }
     
     protected function getSubResourceIdParamNameForGetPath()

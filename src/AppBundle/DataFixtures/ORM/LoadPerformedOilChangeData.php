@@ -1,5 +1,4 @@
 <?php
-
 namespace AppBundle\DataFixtures\ORM;
 
 use DateTime;
@@ -8,8 +7,11 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
-use Rtaranto\Application\Service\Maintenance\OilChange\Factory\OilChangerServiceFactory;
+use Rtaranto\Application\Service\Maintenance\OilChange\OilChangerService;
 use Rtaranto\Application\Service\Maintenance\OilChange\OilChangerServiceInterface;
+use Rtaranto\Application\Service\Validator\Validator;
+use Rtaranto\Domain\Entity\OilChange;
+use Rtaranto\Infrastructure\Repository\DoctrineSubResourceRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -29,8 +31,9 @@ class LoadPerformedOilChangeData extends AbstractFixture implements FixtureInter
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $sfValidator = $this->container->get('validator');
-        $oilChangerServiceFactory = new OilChangerServiceFactory($em, $sfValidator);
-        $this->oilChangerService = $oilChangerServiceFactory->createOilChangerService();
+        $validator = new Validator($sfValidator);
+        $subResourceRepository = new DoctrineSubResourceRepository($em, 'motorcycle', OilChange::class);
+        $this->oilChangerService = new OilChangerService($validator, $subResourceRepository);
         
         $this->createPerformedOilChanges();
     }

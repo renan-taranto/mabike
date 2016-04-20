@@ -2,9 +2,10 @@
 namespace Rtaranto\Application\EndpointAction\Factory\OilChange;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Rtaranto\Application\EndpointAction\DeleteSubResourceAction;
 use Rtaranto\Application\EndpointAction\Factory\DeleteActionFactoryInterface;
-use Rtaranto\Application\EndpointAction\OilChange\DeletePerformedOilChangeAction;
-use Rtaranto\Infrastructure\Repository\DoctrinePerformedOilChangeRepository;
+use Rtaranto\Domain\Entity\PerformedOilChange;
+use Rtaranto\Infrastructure\Repository\DoctrineSubResourceRepository;
 
 class DeletePerformedOilChangeActionFactory implements DeleteActionFactoryInterface
 {
@@ -22,11 +23,11 @@ class DeletePerformedOilChangeActionFactory implements DeleteActionFactoryInterf
     }
     
     /**
-     * @return DeletePerformedOilChangeAction
+     * @return DeleteSubResourceAction
      */
     public function createDeleteAction()
     {
-        $performedOilChangeRepository = new DoctrinePerformedOilChangeRepository($this->em);
-        return new DeletePerformedOilChangeAction($performedOilChangeRepository);
+        $subResourceRepository = new DoctrineSubResourceRepository($this->em, 'motorcycle', PerformedOilChange::class);
+        return new DeleteSubResourceAction($subResourceRepository);
     }
 }

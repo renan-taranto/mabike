@@ -3,9 +3,10 @@ namespace Rtaranto\Application\EndpointAction\Factory\OilChange;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Request\ParamFetcherInterface;
+use Rtaranto\Application\EndpointAction\CgetSubResourceAction;
 use Rtaranto\Application\EndpointAction\Factory\CgetActionFactoryInterface;
-use Rtaranto\Application\EndpointAction\OilChange\CgetPerformedOilChangeAction;
-use Rtaranto\Infrastructure\Repository\DoctrinePerformedOilChangeRepository;
+use Rtaranto\Domain\Entity\PerformedOilChange;
+use Rtaranto\Infrastructure\Repository\DoctrineSubResourceRepository;
 use Rtaranto\Presentation\Controller\QueryParam\QueryParamsFetcher;
 
 class CgetPerformedOilChangeActionFactory implements CgetActionFactoryInterface
@@ -25,12 +26,12 @@ class CgetPerformedOilChangeActionFactory implements CgetActionFactoryInterface
     
     /**
      * @param ParamFetcherInterface $paramFetcher
-     * @return CgetPerformedOilChangeAction
+     * @return CgetSubResourceAction
      */
     public function createCgetAction(ParamFetcherInterface $paramFetcher)
     {
-        $performedOilChangeRepository = new DoctrinePerformedOilChangeRepository($this->em);
+        $subResourceRepository = new DoctrineSubResourceRepository($this->em, 'motorcycle', PerformedOilChange::class);
         $queryParamsFetcher = new QueryParamsFetcher($paramFetcher);
-        return new CgetPerformedOilChangeAction($performedOilChangeRepository, $queryParamsFetcher);
+        return new CgetSubResourceAction($subResourceRepository, $queryParamsFetcher);
     }
 }

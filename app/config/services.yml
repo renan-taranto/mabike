@@ -25,12 +25,6 @@ services:
     app.performed_oil_change.post_action:
         class: Rtaranto\Application\EndpointAction\OilChange\PostPerformedOilChangeAction
         factory: ["@app.action.factory.post_performed_oil_change", createPostAction]
-    app.performed_oil_change.get_action:
-        class: Rtaranto\Application\EndpointAction\OilChange\GetPerformedOilChangeAction
-        factory: ["@app.action.factory.get_performed_oil_change", createGetAction]
-    app.performed_oil_change.delete_action:
-        class: Rtaranto\Application\EndpointAction\OilChange\DeletePerformedOilChangeAction
-        factory: ["@app.action.factory.delete_performed_oil_change", createDeleteAction]
     ##Performed Rear Tire Change
     app.performed_rear_tire_change.post_action:
         class: Rtaranto\Application\EndpointAction\RearTireChange\PostPerformedRearTireChangeAction
@@ -53,12 +47,6 @@ services:
     app.action.factory.post_performed_oil_change:
         class: Rtaranto\Application\EndpointAction\Factory\OilChange\PostPerformedOilChangeActionFactory
         arguments: ['@form.factory', '@validator', '@doctrine.orm.entity_manager']
-    app.action.factory.get_performed_oil_change:
-        class: Rtaranto\Application\EndpointAction\Factory\OilChange\GetPerformedOilChangeActionFactory
-        arguments: ['@doctrine.orm.entity_manager']
-    app.action.factory.delete_performed_oil_change:
-        class: Rtaranto\Application\EndpointAction\Factory\OilChange\DeletePerformedOilChangeActionFactory
-        arguments: ['@doctrine.orm.entity_manager']
     #Performed Rear Tire Change
     app.action.factory.post_performed_rear_tire_change:
         class: Rtaranto\Application\EndpointAction\Factory\RearTireChange\PostPerformedRearTireChangeActionFactory
