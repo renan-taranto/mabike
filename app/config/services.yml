@@ -29,6 +29,9 @@ services:
     app.performed_rear_tire_change.post_action:
         class: Rtaranto\Application\EndpointAction\RearTireChange\PostPerformedRearTireChangeAction
         factory: ["@app.action.factory.post_performed_rear_tire_change", createPostAction]
+    app.performed_rear_tire_change.patch_action:
+        class: Rtaranto\Application\EndpointAction\RearTireChange\PatchPerformedRearTireChangeAction
+        factory: ["@app.action.factory.patch_performed_rear_tire_change", createPatchAction]
         
     ##Endpoint Action Factory
     app.action.cget_bikers_factory:
@@ -50,6 +53,9 @@ services:
     #Performed Rear Tire Change
     app.action.factory.post_performed_rear_tire_change:
         class: Rtaranto\Application\EndpointAction\Factory\RearTireChange\PostPerformedRearTireChangeActionFactory
+        arguments: ['@form.factory', '@validator', '@doctrine.orm.entity_manager']
+    app.action.factory.patch_performed_rear_tire_change:
+        class: Rtaranto\Application\EndpointAction\Factory\RearTireChange\PatchPerformedRearTireChangeActionFactory
         arguments: ['@form.factory', '@validator', '@doctrine.orm.entity_manager']
         
     #Validator

@@ -8,9 +8,9 @@ class GetSubResourceAction implements GetSubresourceActionInterface
 {
     private $subResourceRepositoryInterface;
     
-    public function __construct(SubResourceRepositoryInterface $subResourceRepositoryInterface)
+    public function __construct(SubResourceRepositoryInterface $subResourceRepository)
     {
-        $this->subResourceRepositoryInterface = $subResourceRepositoryInterface;
+        $this->subResourceRepositoryInterface = $subResourceRepository;
     }
     
     public function get($parentResourceId, $subResourceId)

@@ -47,26 +47,39 @@ class LoadPerformedRearTireChangeData extends AbstractFixture implements Fixture
     
     public function createPerformedRearTireChangesAsArray()
     {
-        $motorcycleId = $this->getReference('ducati')->getId();
+        $ducatiId = $this->getReference('ducati')->getId();
+        $xj6Id = $this->getReference('xj6')->getId();
         
         $performedRearTireChanges = array();
         array_push($performedRearTireChanges, array(
             'kmsDriven' => 0,
             'date'=> new DateTime('2016-01-10'),
-            'motorcycleId' => $motorcycleId,
+            'motorcycleId' => $ducatiId,
             'reference' => 'performed_rear_tire_change_1'
         ));
         array_push($performedRearTireChanges, array(
             'kmsDriven' => 900,
             'date'=> new DateTime('2016-02-09'),
-            'motorcycleId' => $motorcycleId,
+            'motorcycleId' => $ducatiId,
             'reference' => 'performed_rear_tire_change_2'
         ));
         array_push($performedRearTireChanges, array(
             'kmsDriven' => 1300,
             'date'=> new DateTime('2016-03-09'),
-            'motorcycleId' => $motorcycleId,
+            'motorcycleId' => $ducatiId,
             'reference' => 'performed_rear_tire_change_3'
+        ));
+        array_push($performedRearTireChanges, array(
+            'kmsDriven' => 18000,
+            'date'=> new DateTime('2016-04-09'),
+            'motorcycleId' => $xj6Id,
+            'reference' => 'performed_rear_tire_change_4'
+        ));
+        array_push($performedRearTireChanges, array(
+            'kmsDriven' => 13000,
+            'date'=> new DateTime('2016-01-09'),
+            'motorcycleId' => $xj6Id,
+            'reference' => 'performed_rear_tire_change_5'
         ));
         
         return $performedRearTireChanges;

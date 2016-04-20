@@ -30,9 +30,11 @@ class MotorcycleControllerTest extends WebTestCase
         
         $content = json_decode($response->getContent(), true);
         
-        $expectedMotorcycle = array('id' => 1, 'model' => 'Ducati Hypermotard 796', 'kms_driven' => 1560);
+        $expectedDucati = array('id' => 1, 'model' => 'Ducati Hypermotard 796', 'kms_driven' => 1560);
+        $expectedXj6 = array('id' => 2, 'model' => 'XJ6', 'kms_driven' => 32000);
 
-        $this->assertEquals(array($expectedMotorcycle), $content);        
+        $this->assertEquals($expectedDucati, $content[0]);
+        $this->assertEquals($expectedXj6, $content[1]);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
     
@@ -82,7 +84,7 @@ class MotorcycleControllerTest extends WebTestCase
         $this->assertEquals($kmsDriven, $content['kms_driven']);
         $this->assertStatusCode(Response::HTTP_CREATED, $client);
         $returnedLocationHeader = $response->headers->get('Location');
-        $expectedLocationHeader = $this->getUrl('api_v1_get_motorcycle', array('id' => 2));
+        $expectedLocationHeader = $this->getUrl('api_v1_get_motorcycle', array('id' => 3));
         $this->assertEquals($expectedLocationHeader, $returnedLocationHeader);
         
     }

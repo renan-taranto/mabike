@@ -22,11 +22,16 @@ class LoadMotorcycleTestingData extends AbstractFixture implements FixtureInterf
         $motorcycleRegistrationService = new MotorcycleRegistrationService($validator, $em);
         
         $biker = $this->getReference('biker1');
-        $model = 'Ducati Hypermotard 796';
-        $kmsDriven = 1560;
-        $motorcycle = $motorcycleRegistrationService->registerMotorcycle($biker, $model, $kmsDriven);
+        $ducatiModel = 'Ducati Hypermotard 796';
+        $ducatiKmsDriven = 1560;
+        $ducati = $motorcycleRegistrationService->registerMotorcycle($biker, $ducatiModel, $ducatiKmsDriven);
         
-        $this->addReference('ducati', $motorcycle);
+        $xj6Model = 'XJ6';
+        $xj6KmsDriven = 32000;
+        $xj6 = $motorcycleRegistrationService->registerMotorcycle($biker, $xj6Model, $xj6KmsDriven);
+        
+        $this->addReference('ducati', $ducati);
+        $this->addReference('xj6', $xj6);
     }
 
     public function getOrder()
