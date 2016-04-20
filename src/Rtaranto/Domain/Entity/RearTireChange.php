@@ -25,7 +25,7 @@ class RearTireChange extends Maintenance implements RearTireChangerInterface
      */
     public function changeRearTire($kmsDriven = null, DateTime $date = null)
     {
-        if (empty($kmsDriven)) {
+        if (is_null($kmsDriven)) {
             $kmsDriven = $this->motorcycle->getKmsDriven();
         }
         if (empty($date)) {

@@ -8,7 +8,8 @@ use Rtaranto\Application\EndpointAction\RequestParamsProcessor;
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
 use Rtaranto\Application\Service\Maintenance\TireChange\RearTireChangerService;
 use Rtaranto\Application\Service\Validator\Validator;
-use Rtaranto\Infrastructure\Repository\DoctrineRearTireChangeRepository;
+use Rtaranto\Domain\Entity\RearTireChange;
+use Rtaranto\Infrastructure\Repository\DoctrineSubResourceRepository;
 use Rtaranto\Presentation\Form\Maintenance\PerformedMaintenanceDTOType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -34,8 +35,8 @@ class PostPerformedRearTireChangeActionFactory implements PostActionFactoryInter
         $parametersBinder = new ParametersBinder($this->formFactory, PerformedMaintenanceDTOType::class);
         $validator = new Validator($this->sfValidator);
         $inputProcessor = new RequestParamsProcessor($parametersBinder, $validator);
-        $rearTireChangeRepository = new DoctrineRearTireChangeRepository($this->em);
-        $rearTireChangerService = new RearTireChangerService($rearTireChangeRepository, $validator);
+        $subResourceRepository = new DoctrineSubResourceRepository($this->em, 'motorcycle', RearTireChange::class);
+        $rearTireChangerService = new RearTireChangerService($subResourceRepository, $validator);
         return new PostPerformedRearTireChangeAction($inputProcessor, $rearTireChangerService);
     }
 }

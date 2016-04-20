@@ -37,7 +37,7 @@ class LoadPerformedOilChangeData extends AbstractFixture implements FixtureInter
     
     private function createPerformedOilChanges()
     {
-        $data = $this->createOilChangesAsArray();
+        $data = $this->createPerformedOilChangesAsArray();
         foreach($data as $d) {
             $performedMaintenanceDTO = new PerformedMaintenanceDTO($d['kmsDriven'], $d['date']);
             $performedOilChange = $this->oilChangerService->changeOil($d['motorcycleId'], $performedMaintenanceDTO);
@@ -45,7 +45,7 @@ class LoadPerformedOilChangeData extends AbstractFixture implements FixtureInter
         }
     }
     
-    public function createOilChangesAsArray()
+    public function createPerformedOilChangesAsArray()
     {
         $motorcycleId = $this->getReference('ducati')->getId();
         

@@ -21,7 +21,7 @@ class OilChange extends Maintenance implements OilChangerInterface
      */
     public function changeOil($kmsDriven = null, DateTime $date = null)
     {
-        if (empty($kmsDriven)) {
+        if (is_null($kmsDriven)) {
             $kmsDriven = $this->motorcycle->getKmsDriven();
         }
         if (empty($date)) {

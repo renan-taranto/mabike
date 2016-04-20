@@ -10,7 +10,7 @@ use Rtaranto\Application\EndpointAction\RearTireChange\PostPerformedRearTireChan
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Rtaranto\Domain\Entity\Motorcycle;
 use Rtaranto\Domain\Entity\PerformedRearTireChange;
-use Rtaranto\Infrastructure\Repository\DoctrinePerformedRearTireChangeRepository;
+use Rtaranto\Infrastructure\Repository\DoctrineSubResourceRepository;
 
 class PostPerformedRearTireChangeActionTest extends WebTestCase
 {
@@ -39,9 +39,9 @@ class PostPerformedRearTireChangeActionTest extends WebTestCase
         $this->assertInstanceOf(PerformedRearTireChange::class, $performedRearTireChange);
         
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $performedRearTireChangeRepository = new DoctrinePerformedRearTireChangeRepository($em);
-        $performedRearTireChangeFromRepository = $performedRearTireChangeRepository->
-            findOneByMotorcycleAndId($motorcyleId, $performedRearTireChange->getId());
+        $subResourceRepository = new DoctrineSubResourceRepository($em, 'motorcycle', PerformedRearTireChange::class);
+        $performedRearTireChangeFromRepository = $subResourceRepository->
+            findOneByParentResourceAndId($motorcyleId, $performedRearTireChange->getId());
         
         $this->assertInstanceOf(PerformedRearTireChange::class, $performedRearTireChangeFromRepository);
         $this->assertEquals($performedRearTireChangeFromRepository->getKmsDriven(), $kmsDriven);
@@ -62,9 +62,9 @@ class PostPerformedRearTireChangeActionTest extends WebTestCase
         $this->assertInstanceOf(PerformedRearTireChange::class, $performedRearTireChange);
         
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $performedRearTireChangeRepository = new DoctrinePerformedRearTireChangeRepository($em);
-        $performedRearTireChangeFromRepository = $performedRearTireChangeRepository->
-            findOneByMotorcycleAndId($motorcyleId, $performedRearTireChange->getId());
+        $subResourceRepository = new DoctrineSubResourceRepository($em, 'motorcycle', PerformedRearTireChange::class);
+        $performedRearTireChangeFromRepository = $subResourceRepository->
+            findOneByParentResourceAndId($motorcyleId, $performedRearTireChange->getId());
         
         $expectedKmsDriven = $motorcycle->getKmsDriven();
         $curDate = new DateTime('now');
