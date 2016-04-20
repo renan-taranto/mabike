@@ -34,3 +34,9 @@ api_rear_tire_changes:
     parent:   api_motorcycles
     resource: Rtaranto\Presentation\Controller\RearTireChangeController
     name_prefix:  api_v1_
+    
+api_front_tire_changes:
+    type:     rest
+    parent:   api_motorcycles
+    resource: Rtaranto\Presentation\Controller\FrontTireChangeController
+    name_prefix:  api_v1_

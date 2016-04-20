@@ -23,7 +23,16 @@ abstract class Maintenance
      */
     protected $motorcycle;
     
-    abstract public function getKmsForNextMaintenance();
+    /**
+     * @param Motorcycle $motorcycle
+     * @param int $kmsPerMaintenance
+     */
+    public function __construct(Motorcycle $motorcycle, $kmsPerMaintenance = null)
+    {
+        $this->performedMaintenances = new ArrayCollection();
+        $this->motorcycle = $motorcycle;    
+        $this->kmsPerMaintenance = $kmsPerMaintenance;
+    }
     
     /**
      * @param int $kms
@@ -36,6 +45,28 @@ abstract class Maintenance
         }
         
         $this->kmsPerMaintenance = $kms;
+    }
+    
+    /**
+     * @return int
+     * @throws Exception
+     */
+    public function getKmsForNextMaintenance()
+    {
+        if (empty($this->kmsPerMaintenance)) {
+            throw new Exception('Unable to calculate kms for next maintenance. '
+                . 'Property $kmsPerMaintenance must be set by calling setKmsPerMaintenance() method.'
+            );
+        }
+        
+        $kmsDrivenAtLastMaintenance = $this->getKmsDrivenAtLastMaintenance();
+        if (empty($kmsDrivenAtLastMaintenance)) {
+            throw new Exception('Unable to calculate kms for next maintenance '
+                . 'since no maintenance has been performed yet.'
+            );
+        }
+        
+        return $kmsDrivenAtLastMaintenance + $this->kmsPerMaintenance;
     }
     
     /**

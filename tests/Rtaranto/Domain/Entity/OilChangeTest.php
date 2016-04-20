@@ -7,7 +7,7 @@ use Rtaranto\Domain\Entity\Motorcycle;
 use Rtaranto\Domain\Entity\PerformedOilChange;
 use Rtaranto\Domain\Entity\OilChange;
 
-class OilChangeMaintenaneTest extends \PHPUnit_Framework_TestCase
+class OilChangeTest extends \PHPUnit_Framework_TestCase
 {
     public function testChangeOilReturnsOilChange()
     {

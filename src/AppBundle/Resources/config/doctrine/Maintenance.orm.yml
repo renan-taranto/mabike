@@ -7,6 +7,7 @@ Rtaranto\Domain\Entity\Maintenance:
     discriminatorMap:
         oilchange: Rtaranto\Domain\Entity\OilChange
         reartirechange: Rtaranto\Domain\Entity\RearTireChange
+        fronttirechange: Rtaranto\Domain\Entity\FrontTireChange
     
     id:
         id:

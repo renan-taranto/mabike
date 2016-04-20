@@ -5,6 +5,7 @@ Rtaranto\Domain\Entity\PerformedMaintenance:
         map:
             performedoilchange: Rtaranto\Domain\Entity\PerformedOilChange
             performedreartirechange: Rtaranto\Domain\Entity\PerformedRearTireChange
+            performedfronttirechange: Rtaranto\Domain\Entity\PerformedFrontTireChange
     properties:
         id:
             groups: [view]
