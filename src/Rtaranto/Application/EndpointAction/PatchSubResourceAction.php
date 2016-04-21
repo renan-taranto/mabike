@@ -3,9 +3,13 @@ namespace Rtaranto\Application\EndpointAction;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-abstract class GetSubResourceAction implements GetSubresourceActionInterface
+abstract class PatchSubResourceAction implements PatchSubresourceActionInterface
 {
-    public function get($parentResourceId, $subResourceId)
+    abstract public function patch($parentResourceId, $resourceId, array $requestBodyParameters);
+    
+    abstract protected function findSubResource($parentResourceId, $subResourceId);
+    
+    protected function findOrThrowNotFound($parentResourceId, $subResourceId)
     {
         $subResource = $this->findSubResource($parentResourceId, $subResourceId);
         
@@ -18,5 +22,4 @@ abstract class GetSubResourceAction implements GetSubresourceActionInterface
         return $subResource;
     }
     
-    abstract protected function findSubResource($parentResourceId, $subResourceId);
 }

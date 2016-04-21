@@ -3,43 +3,44 @@ namespace Rtaranto\Application\Service\Maintenance\TireChange;
 
 use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
+use Rtaranto\Domain\Entity\PerformedRearTireChange;
 use Rtaranto\Domain\Entity\RearTireChange;
-use Rtaranto\Domain\Entity\Repository\SubResourceRepositoryInterface;
+use Rtaranto\Domain\Entity\Repository\RearTireChangeRepositoryInterface;
 
 class RearTireChangerService implements RearTireChangerServiceInterface
 {
-    private $subResourceRepository;
+    private $rearTireChangeRepository;
     private $validator;
     
     /**
-     * @param SubResourceRepositoryInterface $subResourceRepository
+     * @param RearTireChangeRepositoryInterface $rearTireChangeRepository
      * @param ValidatorInterface $validator
      */
     public function __construct(
-        SubResourceRepositoryInterface $subResourceRepository,
+        RearTireChangeRepositoryInterface $rearTireChangeRepository,
         ValidatorInterface $validator
     ) {
-        $this->subResourceRepository = $subResourceRepository;
+        $this->rearTireChangeRepository = $rearTireChangeRepository;
         $this->validator = $validator;
     }
     
     /**
      * @param int $motorcycleId
      * @param PerformedMaintenanceDTO $performedMaintenanceDTO
-     * @return type
+     * @return PerformedRearTireChange
      */
     public function changeRearTire($motorcycleId, PerformedMaintenanceDTO $performedMaintenanceDTO)
     {
         /* @var $rearTireChange RearTireChange */
-        $rearTireChange = $this->subResourceRepository->findOneByParentResource($motorcycleId);
+        $rearTireChange = $this->rearTireChangeRepository->findOneByMotorcycle($motorcycleId);
 
-        $rearTireChangePerformed = $rearTireChange->changeRearTire(
+        $performedRearTireCHange = $rearTireChange->changeRearTire(
             $performedMaintenanceDTO->getKmsDriven(),
             $performedMaintenanceDTO->getDate()
         );
         $this->validator->throwValidationFailedIfNotValid($rearTireChange);
         
-        $this->subResourceRepository->update($rearTireChange);
-        return $rearTireChangePerformed;
+        $this->rearTireChangeRepository->update($rearTireChange);
+        return $performedRearTireCHange;
     }
 }

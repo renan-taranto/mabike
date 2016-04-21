@@ -10,7 +10,7 @@ use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
 use Rtaranto\Application\Service\Maintenance\TireChange\FrontTireChangerService;
 use Rtaranto\Application\Service\Validator\Validator;
 use Rtaranto\Domain\Entity\FrontTireChange;
-use Rtaranto\Infrastructure\Repository\DoctrineSubResourceRepository;
+use Rtaranto\Infrastructure\Repository\DoctrineFrontTireChangeRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -27,9 +27,9 @@ class LoadPerformedFrontTireChangeData extends AbstractFixture implements Fixtur
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $sfValidator = $this->container->get('validator');
-        $subResourceRepository = new DoctrineSubResourceRepository($em, 'motorcycle', FrontTireChange::class);
+        $frontTireChangeRepository = new DoctrineFrontTireChangeRepository($em, 'motorcycle', FrontTireChange::class);
         $validator = new Validator($sfValidator);
-        $this->frontTireChangerService = new FrontTireChangerService($subResourceRepository, $validator);
+        $this->frontTireChangerService = new FrontTireChangerService($frontTireChangeRepository, $validator);
         
         $this->createPerformedFrontTireChanges();
     }
@@ -87,7 +87,7 @@ class LoadPerformedFrontTireChangeData extends AbstractFixture implements Fixtur
     
     public function getOrder()
     {
-        return 3;
+        return 5;
     }
 
     public function setContainer(ContainerInterface $container = null)

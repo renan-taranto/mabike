@@ -1,28 +1,19 @@
 <?php
 namespace Rtaranto\Application\EndpointAction;
 
-use Rtaranto\Domain\Entity\Repository\SubResourceRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class DeleteSubResourceAction implements DeleteSubResourceActionInterface
+abstract class DeleteSubResourceAction implements DeleteSubResourceActionInterface
 {
-    private $subResourceRepository;
-
-    public function __construct(SubResourceRepositoryInterface $subResourceRepository)
-    {
-        $this->subResourceRepository = $subResourceRepository;
-    }
-    
     public function delete($parentResourceId, $subResourceId)
     {
         $subResource = $this->findOrThrowNotFound($parentResourceId, $subResourceId);
-        $this->subResourceRepository->delete($subResource);
+        $this->deleteSubResource($subResource);
     }
     
     public function findOrThrowNotFound($parentResourceId, $subResourceId)
     {
-        $subResource = $this->subResourceRepository
-            ->findOneByParentResourceAndId($parentResourceId, $subResourceId);
+        $subResource = $this->findSubResource($parentResourceId, $subResourceId);
         
         if (empty($subResource)) {
             throw new NotFoundHttpException(
@@ -32,4 +23,7 @@ class DeleteSubResourceAction implements DeleteSubResourceActionInterface
         
         return $subResource;
     }
+    
+    abstract protected function findSubResource($parentResourceId, $subResourceId);
+    abstract protected function deleteSubResource($subResource);
 }

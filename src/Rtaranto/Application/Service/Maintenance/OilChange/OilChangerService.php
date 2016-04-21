@@ -3,24 +3,24 @@ namespace Rtaranto\Application\Service\Maintenance\OilChange;
 
 use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
-use Rtaranto\Domain\Entity\Repository\SubResourceRepositoryInterface;
+use Rtaranto\Domain\Entity\Repository\OilChangeRepositoryInterface;
 
 class OilChangerService implements OilChangerServiceInterface
 {
     private $validator;
-    private $subResourceRepository;
+    private $oilChangeRepository;
     
     public function __construct(
         ValidatorInterface $validator,
-        SubResourceRepositoryInterface $subResourceRepository
+        OilChangeRepositoryInterface $oilChangeRepository
     ) {
         $this->validator = $validator;
-        $this->subResourceRepository = $subResourceRepository;
+        $this->oilChangeRepository = $oilChangeRepository;
     }
     
     public function changeOil($motorcycleId, PerformedMaintenanceDTO $performedMaintenanceDTO)
     {
-        $oilChange = $this->subResourceRepository->findOneByParentResource($motorcycleId);
+        $oilChange = $this->oilChangeRepository->findOneByMotorcycle($motorcycleId);
         
         $oilChangePerformed = $oilChange->changeOil(
             $performedMaintenanceDTO->getKmsDriven(),
@@ -28,7 +28,7 @@ class OilChangerService implements OilChangerServiceInterface
         );
         $this->validator->throwValidationFailedIfNotValid($oilChange);
 
-        $this->subResourceRepository->update($oilChange);
+        $this->oilChangeRepository->update($oilChange);
         
         return $oilChangePerformed;
     }    

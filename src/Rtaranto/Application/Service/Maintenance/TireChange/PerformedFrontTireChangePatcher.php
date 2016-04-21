@@ -4,18 +4,18 @@ namespace Rtaranto\Application\Service\Maintenance\TireChange;
 use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\PerformedFrontTireChange;
-use Rtaranto\Domain\Entity\Repository\SubResourceRepositoryInterface;
+use Rtaranto\Domain\Entity\Repository\PerformedFrontTireChangeRepositoryInterface;
 
 class PerformedFrontTireChangePatcher implements PerformedFrontTireChangePatcherInterface
 {
-    private $subResourceRepository;
+    private $performedFrontTireChangeRepository;
     private $validator;
     
     public function __construct(
-        SubResourceRepositoryInterface $subResourceRepository,
+        PerformedFrontTireChangeRepositoryInterface $performedFrontTireChangeRepository,
         ValidatorInterface $validator
     ) {
-        $this->subResourceRepository = $subResourceRepository;
+        $this->performedFrontTireChangeRepository = $performedFrontTireChangeRepository;
         $this->validator = $validator;
     }
     
@@ -28,6 +28,6 @@ class PerformedFrontTireChangePatcher implements PerformedFrontTireChangePatcher
         
         $this->validator->throwValidationFailedIfNotValid($performedFrontTireChange);
         
-        return $this->subResourceRepository->update($performedFrontTireChange);
+        return $this->performedFrontTireChangeRepository->update($performedFrontTireChange);
     }
 }

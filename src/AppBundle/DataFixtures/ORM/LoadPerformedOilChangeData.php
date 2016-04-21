@@ -10,8 +10,7 @@ use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
 use Rtaranto\Application\Service\Maintenance\OilChange\OilChangerService;
 use Rtaranto\Application\Service\Maintenance\OilChange\OilChangerServiceInterface;
 use Rtaranto\Application\Service\Validator\Validator;
-use Rtaranto\Domain\Entity\OilChange;
-use Rtaranto\Infrastructure\Repository\DoctrineSubResourceRepository;
+use Rtaranto\Infrastructure\Repository\DoctrineOilChangeRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -32,8 +31,8 @@ class LoadPerformedOilChangeData extends AbstractFixture implements FixtureInter
         $em = $this->container->get('doctrine.orm.entity_manager');
         $sfValidator = $this->container->get('validator');
         $validator = new Validator($sfValidator);
-        $subResourceRepository = new DoctrineSubResourceRepository($em, 'motorcycle', OilChange::class);
-        $this->oilChangerService = new OilChangerService($validator, $subResourceRepository);
+        $oilChangeRepository = new DoctrineOilChangeRepository($em);
+        $this->oilChangerService = new OilChangerService($validator, $oilChangeRepository);
         
         $this->createPerformedOilChanges();
     }
@@ -50,29 +49,42 @@ class LoadPerformedOilChangeData extends AbstractFixture implements FixtureInter
     
     public function createPerformedOilChangesAsArray()
     {
-        $motorcycleId = $this->getReference('ducati')->getId();
+        $ducatiId = $this->getReference('ducati')->getId();
+        $xj6Id = $this->getReference('xj6')->getId();
         
-        $oilChanges = array();
-        array_push($oilChanges, array(
+        $performedOilChanges = array();
+        array_push($performedOilChanges, array(
             'kmsDriven' => 0,
             'date'=> new DateTime('2016-01-09'),
-            'motorcycleId' => $motorcycleId,
+            'motorcycleId' => $ducatiId,
             'reference' => 'performed_oil_change_1'
         ));
-        array_push($oilChanges, array(
+        array_push($performedOilChanges, array(
             'kmsDriven' => 800,
             'date'=> new DateTime('2016-02-09'),
-            'motorcycleId' => $motorcycleId,
+            'motorcycleId' => $ducatiId,
             'reference' => 'performed_oil_change_2'
         ));
-        array_push($oilChanges, array(
+        array_push($performedOilChanges, array(
             'kmsDriven' => 1200,
             'date'=> new DateTime('2016-03-09'),
-            'motorcycleId' => $motorcycleId,
+            'motorcycleId' => $ducatiId,
             'reference' => 'performed_oil_change_3'
         ));
+        array_push($performedOilChanges, array(
+            'kmsDriven' => 20000,
+            'date'=> new DateTime('2016-04-09'),
+            'motorcycleId' => $xj6Id,
+            'reference' => 'performed_oil_change_4'
+        ));
+        array_push($performedOilChanges, array(
+            'kmsDriven' => 14000,
+            'date'=> new DateTime('2016-01-09'),
+            'motorcycleId' => $xj6Id,
+            'reference' => 'performed_oil_change_5'
+        ));
         
-        return $oilChanges;
+        return $performedOilChanges;
     }
     
     public function getOrder()

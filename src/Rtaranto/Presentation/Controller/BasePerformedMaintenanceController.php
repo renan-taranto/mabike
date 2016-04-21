@@ -2,16 +2,98 @@
 namespace Rtaranto\Presentation\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use JMS\Serializer\SerializationContext;
+use Rtaranto\Application\Exception\ValidationFailedException;
 use Rtaranto\Domain\Entity\User;
 use Rtaranto\Infrastructure\Repository\DoctrineBikerRepository;
 use Rtaranto\Infrastructure\Repository\DoctrineMotorcycleRepository;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 abstract class BasePerformedMaintenanceController extends FOSRestController implements ClassResourceInterface
 {    
+    abstract protected function createGetAction();
+    abstract protected function createCgetAction(ParamFetcher $paramFetcher);
+    abstract protected function createPostAction();
+    abstract protected function createPatchAction();
+    abstract protected function createDeleteAction();
+    abstract protected function getSerializationGroup();
+    abstract protected function getPathForGetAction();
+    abstract protected function getSubResourceIdParamNameForGetPath();
+    
+    public function getAction($motorcycleId, $performedMaintenanceId)
+    {
+        $this->throwExceptionIfNotBiker();
+        $this->throwNotFoundIfMotorcycleDoesntBelongsToBiker($motorcycleId);
+        
+        $getAction = $this->createGetAction();
+        $performedMaintenance = $getAction->get($motorcycleId, $performedMaintenanceId);
+        return $this->createViewWithSerializationContext($performedMaintenance);
+    }
+    
+    public function cgetAction(ParamFetcher $paramFetcher, $motorcycleId)
+    {
+        $this->throwExceptionIfNotBiker();
+        $this->throwNotFoundIfMotorcycleDoesntBelongsToBiker($motorcycleId);
+        
+        $cGetAction = $this->createCgetAction($paramFetcher);
+        
+        $performedMaintenances = $cGetAction->cGet($motorcycleId);
+        return $this->createViewWithSerializationContext($performedMaintenances);
+    }
+    
+    public function postAction($motorcycleId, Request $request)
+    {
+        $this->throwExceptionIfNotBiker();
+        $this->throwNotFoundIfMotorcycleDoesntBelongsToBiker($motorcycleId);
+        
+        $postAction = $this->createPostAction();
+        try {
+            $performedMaintenance = $postAction->post($motorcycleId, $request->request->all());
+        }
+        catch (ValidationFailedException $ex) {
+            $view = $this->view($ex->getErrors(), Response::HTTP_BAD_REQUEST);
+            return $view;
+        }
+        $location = $this->createLocationHeaderContent($motorcycleId, $performedMaintenance->getId(), $request);
+        return $this->createViewWithSerializationContext(
+            $performedMaintenance,
+            Response::HTTP_CREATED,
+            array('Location' => $location)
+        );
+    }
+    
+    public function patchAction($motorcycleId, $performedMaintenanceId, Request $request)
+    {
+        $this->throwExceptionIfNotBiker();
+        $this->throwNotFoundIfMotorcycleDoesntBelongsToBiker($motorcycleId);
+        
+        $patchAction = $this->createPatchAction();
+        try {
+            $performedMaintenance = $patchAction
+                ->patch($motorcycleId, $performedMaintenanceId, $request->request->all());
+        }
+        catch (ValidationFailedException $ex) {
+            $view = $this->view($ex->getErrors(), Response::HTTP_BAD_REQUEST);
+            return $view;
+        }
+        
+        return $this->createViewWithSerializationContext($performedMaintenance);
+    }
+    
+    public function deleteAction($motorcycleId, $performedMaintenanceId)
+    {
+        $this->throwExceptionIfNotBiker();
+        $this->throwNotFoundIfMotorcycleDoesntBelongsToBiker($motorcycleId);
+        
+        $deleteAction = $this->createDeleteAction();
+        $deleteAction->delete($motorcycleId, $performedMaintenanceId);
+    }
+    
     protected function throwExceptionIfNotBiker()
     {
         if (!$this->isGranted(User::ROLE_BIKER)) {
@@ -53,19 +135,13 @@ abstract class BasePerformedMaintenanceController extends FOSRestController impl
     
     protected function createLocationHeaderContent($motorycleId, $performedOilChangeId, $request)
     {
-        $motorcycleIdParam = $this->getMotorcycleIdParamNameForGetPath();
         $subResourceIdParam = $this->getSubResourceIdParamNameForGetPath();
         $routeParameters = array(
-            $motorcycleIdParam  => $motorycleId,
+            'motorcycleId'  => $motorycleId,
             $subResourceIdParam => $performedOilChangeId,
             '_format'           => $request->get('_format')
         );
         $path = $this->getPathForGetAction();
         return $this->generateUrl($path, $routeParameters);
     }
-    
-    abstract protected function getSerializationGroup();
-    abstract protected function getPathForGetAction();
-    abstract protected function getSubResourceIdParamNameForGetPath();
-    abstract protected function getMotorcycleIdParamNameForGetPath();
 }

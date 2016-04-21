@@ -1,6 +1,10 @@
 <?php
 namespace Tests\Rtaranto\Presentation\Controller;
 
+use AppBundle\DataFixtures\ORM\LoadMotorcycleTestingData;
+use AppBundle\DataFixtures\ORM\LoadPerformedFrontTireChangeData;
+use AppBundle\DataFixtures\ORM\LoadUserTestingData;
+
 class FrontTireChangeControllerTest extends BaseTestMaintenanceController
 {
     protected function getReferenceBaseName()
@@ -21,6 +25,15 @@ class FrontTireChangeControllerTest extends BaseTestMaintenanceController
     protected function getSubResourceIdParamNameForGetPath()
     {
         return 'performedFrontTireChangeId';
+    }
+
+    public function getFixtures()
+    {
+        return array(
+            LoadUserTestingData::class,
+            LoadMotorcycleTestingData::class,
+            LoadPerformedFrontTireChangeData::class
+        );
     }
 
 }

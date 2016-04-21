@@ -1,10 +1,6 @@
 <?php
 namespace Tests\Rtaranto\Presentation\Controller;
 
-use AppBundle\DataFixtures\ORM\LoadMotorcycleTestingData;
-use AppBundle\DataFixtures\ORM\LoadPerformedFrontTireChangeData;
-use AppBundle\DataFixtures\ORM\LoadPerformedRearTireChangeData;
-use AppBundle\DataFixtures\ORM\LoadUserTestingData;
 use DateTime;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,14 +13,12 @@ abstract class BaseTestMaintenanceController extends WebTestCase
 {
     private $fixtures;
     
+    abstract function getFixtures();
+    
     public function setUp()
     {
-        $this->fixtures = $this->loadFixtures(array(
-            LoadUserTestingData::class,
-            LoadMotorcycleTestingData::class,
-            LoadPerformedRearTireChangeData::class,
-            LoadPerformedFrontTireChangeData::class
-        ));
+        $fixtures = $this->getFixtures();
+        $this->fixtures = $this->loadFixtures($fixtures);
     }
     
     public function testPostReturnsCreatedResponseWithRepresentation()
@@ -104,7 +98,7 @@ abstract class BaseTestMaintenanceController extends WebTestCase
         
         $response = $getRequest->get($uri, $apiKey);
         $content = json_decode($response->getContent(), true);
-        
+
         $performedMaintenance2 = $this->getResourceFromReferenceRepository(2);
         
         $this->assertEquals($performedMaintenance2->getId(), $content['id']);

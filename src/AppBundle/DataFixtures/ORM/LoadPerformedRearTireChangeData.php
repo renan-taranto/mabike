@@ -9,8 +9,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
 use Rtaranto\Application\Service\Maintenance\TireChange\RearTireChangerService;
 use Rtaranto\Application\Service\Validator\Validator;
-use Rtaranto\Domain\Entity\RearTireChange;
-use Rtaranto\Infrastructure\Repository\DoctrineSubResourceRepository;
+use Rtaranto\Infrastructure\Repository\DoctrineRearTireChangeRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -27,9 +26,9 @@ class LoadPerformedRearTireChangeData extends AbstractFixture implements Fixture
         {
             $em = $this->container->get('doctrine.orm.entity_manager');
             $sfValidator = $this->container->get('validator');
-            $subResourceRepository = new DoctrineSubResourceRepository($em, 'motorcycle', RearTireChange::class);
+            $rearTireChangeRepository = new DoctrineRearTireChangeRepository($em);
             $validator = new Validator($sfValidator);
-            $this->rearTireChangerService = new RearTireChangerService($subResourceRepository, $validator);
+            $this->rearTireChangerService = new RearTireChangerService($rearTireChangeRepository, $validator);
 
             $this->createPerformedRearTireChanges();
         }
@@ -87,7 +86,7 @@ class LoadPerformedRearTireChangeData extends AbstractFixture implements Fixture
 
         public function getOrder()
         {
-            return 3;
+            return 4;
         }
 
         public function setContainer(ContainerInterface $container = null)

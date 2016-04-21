@@ -2,23 +2,23 @@
 namespace Rtaranto\Application\EndpointAction\OilChange;
 
 use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
-use Rtaranto\Application\EndpointAction\BasePatchSubResourceAction;
 use Rtaranto\Application\EndpointAction\InputProcessorInterface;
-use Rtaranto\Application\EndpointAction\PatchSubresourceActionInterface;
+use Rtaranto\Application\EndpointAction\PatchSubResourceAction;
 use Rtaranto\Application\Service\Maintenance\OilChange\PerformedOilChangePatcherInterface;
-use Rtaranto\Domain\Entity\Repository\SubResourceRepositoryInterface;
+use Rtaranto\Domain\Entity\Repository\PerformedOilChangeRepositoryInterface;
 
-class PatchPerformedOilChangeAction extends BasePatchSubResourceAction implements PatchSubresourceActionInterface
+class PatchPerformedOilChangeAction extends PatchSubResourceAction
 {
+    private $performedOilChangeRepository;
     private $inputProcessor;
     private $performedOilChangePatcher;
     
     public function __construct(
-        SubResourceRepositoryInterface $subResourceRepository,
+        PerformedOilChangeRepositoryInterface $performedOilChangeRepository,
         InputProcessorInterface $inputProcessor,
         PerformedOilChangePatcherInterface $performedOilChangePatcher
     ) {
-        parent::__construct($subResourceRepository);
+        $this->performedOilChangeRepository = $performedOilChangeRepository;
         $this->inputProcessor = $inputProcessor;
         $this->performedOilChangePatcher = $performedOilChangePatcher;
     }
@@ -42,4 +42,11 @@ class PatchPerformedOilChangeAction extends BasePatchSubResourceAction implement
         
         return $patchedPerformedOilChange;
     }
+
+    protected function findSubResource($parentResourceId, $subResourceId)
+    {
+        return $this->performedOilChangeRepository
+            ->findOneByMotorcycleAndId($parentResourceId, $subResourceId);
+    }
+
 }
