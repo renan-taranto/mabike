@@ -77,7 +77,7 @@ class FrontTireChangeController extends BasePerformedMaintenanceController
     
     protected function createPostAction()
     {
-        return $this->get('app.performed_oil_change.post_action');
+        return $this->get('app.performed_front_tire_change.post_action');
     }
     
     protected function createPatchAction()
