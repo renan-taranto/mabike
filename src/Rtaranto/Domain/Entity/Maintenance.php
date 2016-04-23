@@ -44,13 +44,13 @@ abstract class Maintenance
     public function addPerformedMaintenance(PerformedMaintenance $performedMaintenance)
     {
         $this->performedMaintenances->add($performedMaintenance);
-        $this->motorcycle->notifyMaintenanceWarningObservers();
+        $this->notifyMotorcyleMaintenanceWarningObservers();
     }
     
     public function removePerformedMaintenance(PerformedMaintenance $performedMaintenance)
     {
         $this->performedMaintenances->removeElement($performedMaintenance);
-        $this->motorcycle->notifyMaintenanceWarningObservers();
+        $this->notifyMotorcyleMaintenanceWarningObservers();
     }
     
     /**
@@ -66,7 +66,7 @@ abstract class Maintenance
             throw new Exception('KmsPerMaintenance must be an int value greater than 0.');
         }
         $this->kmsPerMaintenance = $kms;
-        $this->motorcycle->notifyMaintenanceWarningObservers();
+        $this->notifyMotorcyleMaintenanceWarningObservers();
     }
     
     /**
@@ -119,5 +119,10 @@ abstract class Maintenance
                 . 'kms driven. Update motorcycle kms driven if needed before'
                 . 'trying again.');
         }
+    }
+    
+    public function notifyMotorcyleMaintenanceWarningObservers()
+    {
+        $this->motorcycle->notifyMaintenanceWarningObservers();
     }
 }

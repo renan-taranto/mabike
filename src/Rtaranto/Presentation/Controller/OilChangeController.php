@@ -5,6 +5,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use Rtaranto\Application\EndpointAction\OilChange\CgetPerformedOilChangeAction;
 use Rtaranto\Application\EndpointAction\OilChange\DeletePerformedOilChangeAction;
 use Rtaranto\Application\EndpointAction\OilChange\GetPerformedOilChangeAction;
+use Rtaranto\Infrastructure\Repository\DoctrineOilChangeRepository;
 use Rtaranto\Infrastructure\Repository\DoctrinePerformedOilChangeRepository;
 use Rtaranto\Presentation\Controller\QueryParam\QueryParamsFetcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,27 +62,7 @@ class OilChangeController extends BasePerformedMaintenanceController
         parent::deleteAction($motorcycleId, $performedOilChangeId);
     }
     
-    protected function getSubResourceIdParamNameForGetPath()
-    {
-        return self::$PARAM_NAME_SUB_RESOURCE_ID;
-    }
-
-    protected function getPathForGetAction()
-    {
-        return self::$PATH_GET_ACTION;
-    }
-
-    protected function getSerializationGroup()
-    {
-        return self::$SERIALIZATION_GROUP;
-    }
-    
-    protected function getMotorcycleIdParamNameForGetPath()
-    {
-        return self::$PARAM_NAME_MOTORCYCLE_ID;
-    }
-
-    protected function createPostAction()
+        protected function createPostAction()
     {
         return $this->get('app.performed_oil_change.post_action');
     }
@@ -106,8 +87,9 @@ class OilChangeController extends BasePerformedMaintenanceController
 
     protected function createDeleteAction()
     {
+        $oilChangeRepository = $this->getOilChangeRepository();
         $performedOilChangeRepository = $this->getPerformedOilChangeRepository();
-        return new DeletePerformedOilChangeAction($performedOilChangeRepository);
+        return new DeletePerformedOilChangeAction($oilChangeRepository, $performedOilChangeRepository);
     }
 
     private function getPerformedOilChangeRepository()
@@ -116,4 +98,29 @@ class OilChangeController extends BasePerformedMaintenanceController
         return new DoctrinePerformedOilChangeRepository($em);
     }
     
+    private function getOilChangeRepository()
+    {
+        $em = $this->getDoctrine()->getManager();
+        return new DoctrineOilChangeRepository($em);
+    }
+    
+    protected function getSubResourceIdParamNameForGetPath()
+    {
+        return self::$PARAM_NAME_SUB_RESOURCE_ID;
+    }
+
+    protected function getPathForGetAction()
+    {
+        return self::$PATH_GET_ACTION;
+    }
+
+    protected function getSerializationGroup()
+    {
+        return self::$SERIALIZATION_GROUP;
+    }
+    
+    protected function getMotorcycleIdParamNameForGetPath()
+    {
+        return self::$PARAM_NAME_MOTORCYCLE_ID;
+    }   
 }

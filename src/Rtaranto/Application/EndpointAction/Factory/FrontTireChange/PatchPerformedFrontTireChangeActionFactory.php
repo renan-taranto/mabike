@@ -8,6 +8,7 @@ use Rtaranto\Application\EndpointAction\RequestParamsProcessor;
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
 use Rtaranto\Application\Service\Maintenance\TireChange\PerformedFrontTireChangePatcher;
 use Rtaranto\Application\Service\Validator\Validator;
+use Rtaranto\Infrastructure\Repository\DoctrineFrontTireChangeRepository;
 use Rtaranto\Infrastructure\Repository\DoctrinePerformedFrontTireChangeRepository;
 use Rtaranto\Presentation\Form\Maintenance\PerformedMaintenanceDTOType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -47,6 +48,11 @@ class PatchPerformedFrontTireChangeActionFactory implements PatchActionFactoryIn
         return new DoctrinePerformedFrontTireChangeRepository($this->em);
     }
     
+    private function createFrontTireChangeRepository()
+    {
+        return new DoctrineFrontTireChangeRepository($this->em);
+    }
+    
     private function createRequestParamsProcessor()
     {
         $parametersBinder = new ParametersBinder($this->formFactory, PerformedMaintenanceDTOType::class);
@@ -56,9 +62,11 @@ class PatchPerformedFrontTireChangeActionFactory implements PatchActionFactoryIn
     
     private function createPerformedFrontTireChangePatcher()
     {
+        $frontTireChangeRepository = $this->createFrontTireChangeRepository();
         $performedFrontTireChangeRepository = $this->createPerformedFrontTireChangeRepository();
         $validator = $this->createValidator();
         return new PerformedFrontTireChangePatcher(
+            $frontTireChangeRepository,
             $performedFrontTireChangeRepository,
             $validator
         );

@@ -4,7 +4,6 @@ namespace Rtaranto\Application\EndpointAction\RearTireChange;
 use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
 use Rtaranto\Application\EndpointAction\InputProcessorInterface;
 use Rtaranto\Application\EndpointAction\PatchSubResourceAction;
-use Rtaranto\Application\EndpointAction\PatchSubresourceActionInterface;
 use Rtaranto\Application\Service\Maintenance\TireChange\PerformedRearTireChangePatcherInterface;
 use Rtaranto\Domain\Entity\Repository\PerformedRearTireChangeRepositoryInterface;
 

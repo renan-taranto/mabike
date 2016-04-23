@@ -8,7 +8,7 @@ abstract class DeleteSubResourceAction implements DeleteSubResourceActionInterfa
     public function delete($parentResourceId, $subResourceId)
     {
         $subResource = $this->findOrThrowNotFound($parentResourceId, $subResourceId);
-        $this->deleteSubResource($subResource);
+        $this->deleteSubResource($parentResourceId, $subResource);
     }
     
     public function findOrThrowNotFound($parentResourceId, $subResourceId)
@@ -25,5 +25,5 @@ abstract class DeleteSubResourceAction implements DeleteSubResourceActionInterfa
     }
     
     abstract protected function findSubResource($parentResourceId, $subResourceId);
-    abstract protected function deleteSubResource($subResource);
+    abstract protected function deleteSubResource($parentResourceId, $subResource);
 }

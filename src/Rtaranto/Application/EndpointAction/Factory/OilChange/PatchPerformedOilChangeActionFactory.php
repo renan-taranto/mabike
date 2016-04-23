@@ -8,6 +8,7 @@ use Rtaranto\Application\EndpointAction\RequestParamsProcessor;
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
 use Rtaranto\Application\Service\Maintenance\OilChange\PerformedOilChangePatcher;
 use Rtaranto\Application\Service\Validator\Validator;
+use Rtaranto\Infrastructure\Repository\DoctrineOilChangeRepository;
 use Rtaranto\Infrastructure\Repository\DoctrinePerformedOilChangeRepository;
 use Rtaranto\Presentation\Form\Maintenance\PerformedMaintenanceDTOType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -34,8 +35,13 @@ class PatchPerformedOilChangeActionFactory implements PatchActionFactoryInterfac
         $parametersBinder = new ParametersBinder($this->formFactory, PerformedMaintenanceDTOType::class);
         $validator = new Validator($this->sfValidator);
         $inputProcessor = new RequestParamsProcessor($parametersBinder, $validator);
+        $oilChangeRepository = new DoctrineOilChangeRepository($this->em);
         $performedOilChangeRepository = new DoctrinePerformedOilChangeRepository($this->em);
-        $performedOilChangePatcher = new PerformedOilChangePatcher($performedOilChangeRepository, $validator);
+        $performedOilChangePatcher = new PerformedOilChangePatcher(
+            $oilChangeRepository,
+            $performedOilChangeRepository,
+            $validator
+        );
         return new PatchPerformedOilChangeAction($performedOilChangeRepository, $inputProcessor, $performedOilChangePatcher);
     }
 }

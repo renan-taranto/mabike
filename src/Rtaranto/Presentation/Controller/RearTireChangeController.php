@@ -6,6 +6,7 @@ use Rtaranto\Application\EndpointAction\RearTireChange\CgetPerformedRearTireChan
 use Rtaranto\Application\EndpointAction\RearTireChange\DeletePerformedRearTireChangeAction;
 use Rtaranto\Application\EndpointAction\RearTireChange\GetPerformedRearTireChangeAction;
 use Rtaranto\Infrastructure\Repository\DoctrinePerformedRearTireChangeRepository;
+use Rtaranto\Infrastructure\Repository\DoctrineRearTireChangeRepository;
 use Rtaranto\Presentation\Controller\QueryParam\QueryParamsFetcher;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Post;
@@ -60,32 +61,6 @@ class RearTireChangeController extends BasePerformedMaintenanceController
         return parent::patchAction($motorcycleId, $performedRearTireChangeId, $request);
     }
     
-    private function getPerformedRearTireChangeRepository()
-    {
-        $em = $this->getDoctrine()->getManager();
-        return new DoctrinePerformedRearTireChangeRepository($em);
-    }
-    
-    protected function getSubResourceIdParamNameForGetPath()
-    {
-        return self::$PARAM_NAME_SUB_RESOURCE_ID;
-    }
-
-    protected function getPathForGetAction()
-    {
-        return self::$PATH_GET_ACTION;
-    }
-
-    protected function getSerializationGroup()
-    {
-        return self::$SERIALIZATION_GROUP;
-    }
-    
-    protected function getMotorcycleIdParamNameForGetPath()
-    {
-        return self::$PARAM_NAME_MOTORCYCLE_ID;
-    }
-
     protected function createGetAction()
     {
         $performedRearTireChangeRepository = $this->getPerformedRearTireChangeRepository();
@@ -111,8 +86,43 @@ class RearTireChangeController extends BasePerformedMaintenanceController
 
     protected function createDeleteAction()
     {
+        $rearTireChangeRepository = $this->getRearTireChangeRepository();
         $performedRearTireChangeRepository = $this->getPerformedRearTireChangeRepository();
-        return new DeletePerformedRearTireChangeAction($performedRearTireChangeRepository);
+        return new DeletePerformedRearTireChangeAction(
+            $rearTireChangeRepository,
+            $performedRearTireChangeRepository
+        );
+    }
+    
+    private function getPerformedRearTireChangeRepository()
+    {
+        $em = $this->getDoctrine()->getManager();
+        return new DoctrinePerformedRearTireChangeRepository($em);
+    }
+    
+    private function getRearTireChangeRepository()
+    {
+        $em = $this->getDoctrine()->getManager();
+        return new DoctrineRearTireChangeRepository($em);
+    }
+    
+    protected function getSubResourceIdParamNameForGetPath()
+    {
+        return self::$PARAM_NAME_SUB_RESOURCE_ID;
     }
 
+    protected function getPathForGetAction()
+    {
+        return self::$PATH_GET_ACTION;
+    }
+
+    protected function getSerializationGroup()
+    {
+        return self::$SERIALIZATION_GROUP;
+    }
+    
+    protected function getMotorcycleIdParamNameForGetPath()
+    {
+        return self::$PARAM_NAME_MOTORCYCLE_ID;
+    }
 }

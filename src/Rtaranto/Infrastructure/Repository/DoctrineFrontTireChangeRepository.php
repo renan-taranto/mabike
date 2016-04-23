@@ -4,6 +4,7 @@ namespace Rtaranto\Infrastructure\Repository;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Rtaranto\Domain\Entity\FrontTireChange;
+use Rtaranto\Domain\Entity\PerformedFrontTireChange;
 use Rtaranto\Domain\Entity\Repository\FrontTireChangeRepositoryInterface;
 
 class DoctrineFrontTireChangeRepository implements FrontTireChangeRepositoryInterface
@@ -24,6 +25,17 @@ class DoctrineFrontTireChangeRepository implements FrontTireChangeRepositoryInte
         return $doctrineObjectRepository->findOneBy(
             array('motorcycle' => $motorcycle)
         );
+    }
+    
+    public function findOneByPerformedMaintenance(PerformedFrontTireChange $performedMaintenance)
+    {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('ftc')
+            ->from(FrontTireChange::class, 'ftc')
+            ->join('ftc.performedMaintenances', 'pm')
+            ->where('pm.id = :pmId')
+            ->setParameter('pmId', $performedMaintenance->getId());
+        return $qb->getQuery()->getSingleResult();
     }
 
     public function update(FrontTireChange $frontTireChange)

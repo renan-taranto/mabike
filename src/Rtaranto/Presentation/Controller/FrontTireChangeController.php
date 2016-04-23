@@ -5,11 +5,12 @@ use FOS\RestBundle\Request\ParamFetcher;
 use Rtaranto\Application\EndpointAction\FrontTireChange\CgetPerformedFrontTireChangeAction;
 use Rtaranto\Application\EndpointAction\FrontTireChange\DeletePerformedFrontTireChangeAction;
 use Rtaranto\Application\EndpointAction\FrontTireChange\GetPerformedFrontTireChangeAction;
+use Rtaranto\Infrastructure\Repository\DoctrineFrontTireChangeRepository;
 use Rtaranto\Infrastructure\Repository\DoctrinePerformedFrontTireChangeRepository;
 use Rtaranto\Presentation\Controller\QueryParam\QueryParamsFetcher;
 use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Patch;
 use FOS\RestBundle\Controller\Annotations\Delete;
 
@@ -87,8 +88,12 @@ class FrontTireChangeController extends BasePerformedMaintenanceController
 
     protected function createDeleteAction()
     {
+        $frontTireChangeRepository = $this->getFrontTireChangeRepository();
         $performedFrontTireChangeRepository = $this->getPerformedFrontTireChangeRepository();
-        return new DeletePerformedFrontTireChangeAction($performedFrontTireChangeRepository);
+        return new DeletePerformedFrontTireChangeAction(
+            $frontTireChangeRepository,
+            $performedFrontTireChangeRepository
+        );
     }
     
     protected function getSubResourceIdParamNameForGetPath()
@@ -110,5 +115,11 @@ class FrontTireChangeController extends BasePerformedMaintenanceController
     {
         $em = $this->getDoctrine()->getManager();
         return new DoctrinePerformedFrontTireChangeRepository($em);
+    }
+    
+    private function getFrontTireChangeRepository()
+    {
+        $em = $this->getDoctrine()->getManager();
+        return new DoctrineFrontTireChangeRepository($em);
     }
 }

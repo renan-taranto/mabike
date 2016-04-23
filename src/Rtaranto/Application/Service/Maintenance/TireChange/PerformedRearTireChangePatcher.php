@@ -6,16 +6,20 @@ use Rtaranto\Application\Service\Maintenance\TireChange\PerformedRearTireChangeP
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\PerformedRearTireChange;
 use Rtaranto\Domain\Entity\Repository\PerformedRearTireChangeRepositoryInterface;
+use Rtaranto\Domain\Entity\Repository\RearTireChangeRepositoryInterface;
 
 class PerformedRearTireChangePatcher implements PerformedRearTireChangePatcherInterface
 {
+    private $rearTireChangeRepository;
     private $performedRearTireChangeRepository;
     private $validator;
     
     public function __construct(
+        RearTireChangeRepositoryInterface $rearTireChangeRepository,
         PerformedRearTireChangeRepositoryInterface $performedRearTireChangeRepository,
         ValidatorInterface $validator
     ) {
+        $this->rearTireChangeRepository = $rearTireChangeRepository;
         $this->performedRearTireChangeRepository = $performedRearTireChangeRepository;
         $this->validator = $validator;
     }
@@ -28,7 +32,15 @@ class PerformedRearTireChangePatcher implements PerformedRearTireChangePatcherIn
         $performedRearTireChange->setDate($performedMaintenanceDTO->getDate());
         
         $this->validator->throwValidationFailedIfNotValid($performedRearTireChange);
-        
+        $this->notifyWarningObserver($performedRearTireChange);
         return $this->performedRearTireChangeRepository->update($performedRearTireChange);
     }
+    
+    private function notifyWarningObserver(PerformedRearTireChange $performedRearTireChange)
+    {
+        /* @var $rearTireChange RearTireChange */
+        $rearTireChange = $this->rearTireChangeRepository->findOneByPerformedMaintenance($performedRearTireChange);
+        $rearTireChange->notifyMotorcyleMaintenanceWarningObservers();
+    }
 }
+
