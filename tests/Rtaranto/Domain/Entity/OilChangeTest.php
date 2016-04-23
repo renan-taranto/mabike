@@ -27,7 +27,7 @@ class OilChangeTest extends \PHPUnit_Framework_TestCase
         $oilChangeMaintenance->changeOil(2565, new DateTime('2016-04-19'));
         $oilChangeMaintenance->changeOil(1234, new DateTime('2016-03-19'));
         
-        $kmsForNextOilChange = $oilChangeMaintenance->getKmsForNextMaintenance();
+        $kmsForNextOilChange = $oilChangeMaintenance->getKmsForNextMaintenancePerforming();
         $expectedKmsForNextOilChange = 6060;
         
         $this->assertEquals($expectedKmsForNextOilChange, $kmsForNextOilChange);
@@ -38,7 +38,7 @@ class OilChangeTest extends \PHPUnit_Framework_TestCase
         $motorcycle = $this->prophesize(Motorcycle::class)->reveal();
         $oilChangeMaintenance = new OilChange($motorcycle, 1500);
         $this->setExpectedException(Exception::class);
-        $oilChangeMaintenance->getKmsForNextMaintenance();
+        $oilChangeMaintenance->getKmsForNextMaintenancePerforming();
     }
     
     public function testGetKmsForNextOilChangeWithoutSettingKmsPerOilChangeThrowsException()
@@ -46,6 +46,6 @@ class OilChangeTest extends \PHPUnit_Framework_TestCase
         $motorcycle = $this->prophesize(Motorcycle::class)->reveal();
         $oilChangeMaintenance = new OilChange($motorcycle);
         $this->setExpectedException(Exception::class);
-        $oilChangeMaintenance->getKmsForNextMaintenance();
+        $oilChangeMaintenance->getKmsForNextMaintenancePerforming();
     }
 }

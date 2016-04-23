@@ -1,0 +1,17 @@
+Rtaranto\Domain\Entity\MaintenanceWarning:
+    type: entity
+    table: null
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        description:
+            type: string
+            length: 100
+        atKms:
+            type: integer
+            options:
+                unsigned: true

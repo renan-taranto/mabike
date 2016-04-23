@@ -1,0 +1,48 @@
+Rtaranto\Domain\Entity\MaintenanceWarningObserver:
+    type: entity
+    inheritanceType: SINGLE_TABLE
+    discriminatorColumn:
+        name: discr
+        type: string
+    discriminatorMap:
+        oil_change_warning_observer: Rtaranto\Domain\Entity\OilChangeWarningObserver
+        rear_tire_change_warning_observer: Rtaranto\Domain\Entity\RearTireChangeWarningObserver
+        front_tire_change_warning_observer: Rtaranto\Domain\Entity\FrontTireChangeWarningObserver
+        
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        kmsBeforeNextMaintenance:
+            type: integer
+            options:
+                unsigned: true
+        isActive:
+            type: boolean
+            
+    oneToOne:
+        maintenance:
+            targetEntity: Maintenance
+            joinColumn:
+                name: maintenance_id
+                referencedColumnName: id
+                onDelete: CASCADE
+        maintenanceWarning:
+            targetEntity: MaintenanceWarning
+            joinColumn:
+                name: motorcycle_id
+                referencedColumnName: id
+            cascade: ["persist", "remove"]
+            orphanRemoval: true
+            
+    manyToOne:
+        motorcycle:
+            targetEntity: Motorcycle
+            inversedBy: maintenanceWarningObservers
+            joinColumn:
+                name: motorcycle_id
+                referencedColumnName: id
+                onDelete: CASCADE

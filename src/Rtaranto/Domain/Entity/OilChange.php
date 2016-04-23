@@ -23,11 +23,11 @@ class OilChange extends Maintenance implements OilChangerInterface
         if (empty($date)) {
             $date = new DateTime('now');
         }
+        $this->throwExceptionIfMaintenanceKmsExceedsMotorcycleKms($kmsDriven);
         
         $performedOilChange = new PerformedOilChange($this->motorcycle, $kmsDriven, $date);
-        
         $this->addPerformedMaintenance($performedOilChange);
-        
         return $performedOilChange;
     }
 }
+

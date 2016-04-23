@@ -22,5 +22,11 @@ Rtaranto\Domain\Entity\Motorcycle:
             joinColumn:
                 name: biker_id
                 referencedColumnName: id
-                
+    oneToMany:
+        maintenanceWarningObservers:
+            targetEntity: MaintenanceWarningObserver
+            mappedBy: motorcycle
+            cascade: ["persist", "remove"]
+            orphanRemoval: true
+            
     lifecycleCallbacks: {  }

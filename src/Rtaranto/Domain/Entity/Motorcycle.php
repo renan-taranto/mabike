@@ -1,6 +1,8 @@
 <?php
 namespace Rtaranto\Domain\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Motorcycle
  */
@@ -26,6 +28,8 @@ class Motorcycle
      */
     private $biker;
 
+    private $maintenanceWarningObservers;
+    
     /**
      * @param int $model
      * @param int $kmsDriven
@@ -33,11 +37,8 @@ class Motorcycle
     public function __construct($model, $kmsDriven = 0)
     {
         $this->model = $model;
-        
-        if (empty($kmsDriven)) {
-            $kmsDriven = 0;
-        }
-        $this->kmsDriven = $kmsDriven;
+        $this->setKmsDriven($kmsDriven);
+        $this->maintenanceWarningObservers = new ArrayCollection();
     }
     
     /**
@@ -54,6 +55,7 @@ class Motorcycle
     public function updateKmsDriven($kmsDriven)
     {
         $this->kmsDriven = $kmsDriven;
+        $this->notifyMaintenanceWarningObservers();
     }
     
     /**
@@ -62,6 +64,14 @@ class Motorcycle
     public function getKmsDriven()
     {
         return $this->kmsDriven;
+    }
+    
+    private function setKmsDriven($kmsDriven)
+    {
+        if (empty($kmsDriven)) {
+            $kmsDriven = 0;
+        }
+        $this->kmsDriven = $kmsDriven;
     }
     
     /**
@@ -86,5 +96,40 @@ class Motorcycle
     public function setBiker(Biker $biker)
     {
         $this->biker = $biker;
+    }
+    
+    public function attachMaintenanceWarningObserver(MaintenanceWarningObserver $maintenanceObserver)
+    {
+        $this->maintenanceWarningObservers->add($maintenanceObserver);
+    }
+    
+    public function dettachMaintenanceWarningObserver(MaintenanceWarningObserver $maintenanceObserver)
+    {
+        $this->maintenanceWarningObservers->removeElement($maintenanceObserver);
+    }
+    
+    public function notifyMaintenanceWarningObservers()
+    {
+        if ($this->maintenanceWarningObservers->isEmpty()) {
+            return;
+        }
+        
+        /* @var $maintenanceWarningObserver MaintenanceWarningObserver */
+        foreach ($this->maintenanceWarningObservers as $maintenanceWarningObserver) {
+            $maintenanceWarningObserver->notify();
+        }
+    }
+    
+    public function getWarnings()
+    {
+        if ($this->maintenanceWarningObservers->isEmpty()) {
+            return;
+        }
+        $warnings = array();
+        /* @var $maintenanceWarningObserver MaintenanceWarningObserver */
+        foreach ($this->maintenanceWarningObservers as $maintenanceWarningObserver) {
+            array_push($warnings, $maintenanceWarningObserver->getWarning());
+        }
+        return $warnings;
     }
 }

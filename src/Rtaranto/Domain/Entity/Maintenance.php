@@ -2,7 +2,7 @@
 namespace Rtaranto\Domain\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Config\Definition\Exception\Exception;
+use Exception;
 
 abstract class Maintenance
 {
@@ -10,14 +10,17 @@ abstract class Maintenance
      * @var int
      */
     protected $id;
+    
     /**
      * @var ArrayCollection
      */
     protected $performedMaintenances;
+    
     /**
      * @var int
      */
     protected $kmsPerMaintenance;
+    
     /**
      * @var Motorcycle
      */
@@ -31,7 +34,23 @@ abstract class Maintenance
     {
         $this->performedMaintenances = new ArrayCollection();
         $this->motorcycle = $motorcycle;    
-        $this->kmsPerMaintenance = $kmsPerMaintenance;
+        $this->setKmsPerMaintenance($kmsPerMaintenance);
+    }
+    
+        
+    /**
+     * @param PerformedMaintenance $performedMaintenance
+     */
+    public function addPerformedMaintenance(PerformedMaintenance $performedMaintenance)
+    {
+        $this->performedMaintenances->add($performedMaintenance);
+        $this->motorcycle->notifyMaintenanceWarningObservers();
+    }
+    
+    public function removePerformedMaintenance(PerformedMaintenance $performedMaintenance)
+    {
+        $this->performedMaintenances->removeElement($performedMaintenance);
+        $this->motorcycle->notifyMaintenanceWarningObservers();
     }
     
     /**
@@ -40,18 +59,21 @@ abstract class Maintenance
      */
     public function setKmsPerMaintenance($kms)
     {
+        if (is_null($kms)) {
+            return;
+        }
         if ((int)$kms != $kms or (int)$kms < 1) {
             throw new Exception('KmsPerMaintenance must be an int value greater than 0.');
         }
-        
         $this->kmsPerMaintenance = $kms;
+        $this->motorcycle->notifyMaintenanceWarningObservers();
     }
     
     /**
      * @return int
      * @throws Exception
      */
-    public function getKmsForNextMaintenance()
+    public function getKmsForNextMaintenancePerforming()
     {
         if (empty($this->kmsPerMaintenance)) {
             throw new Exception('Unable to calculate kms for next maintenance. '
@@ -60,7 +82,7 @@ abstract class Maintenance
         }
         
         $kmsDrivenAtLastMaintenance = $this->getKmsDrivenAtLastMaintenance();
-        if (empty($kmsDrivenAtLastMaintenance)) {
+        if (is_null($kmsDrivenAtLastMaintenance)) {
             throw new Exception('Unable to calculate kms for next maintenance '
                 . 'since no maintenance has been performed yet.'
             );
@@ -90,11 +112,12 @@ abstract class Maintenance
         return $lastMaintenancePerformed->getKmsDriven();
     }
     
-    /**
-     * @param PerformedMaintenance $performedMaintenance
-     */
-    protected function addPerformedMaintenance(PerformedMaintenance $performedMaintenance)
+    protected function throwExceptionIfMaintenanceKmsExceedsMotorcycleKms($maintenanceKms)
     {
-        $this->performedMaintenances->add($performedMaintenance);
+        if ($maintenanceKms > $this->motorcycle->getKmsDriven()) {
+            throw new \Exception('Maintenance kms exceeds current motorcycle '
+                . 'kms driven. Update motorcycle kms driven if needed before'
+                . 'trying again.');
+        }
     }
 }

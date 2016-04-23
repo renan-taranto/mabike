@@ -18,6 +18,7 @@ class FrontTireChange extends Maintenance implements FrontTireChangerInterface
         if (empty($date)) {
             $date = new DateTime('now');
         }
+        $this->throwExceptionIfMaintenanceKmsExceedsMotorcycleKms($kmsDriven);
         
         $performedFrontTireChange = new PerformedFrontTireChange($this->motorcycle, $kmsDriven, $date);
         

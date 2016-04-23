@@ -2,7 +2,6 @@
 namespace Rtaranto\Domain\Entity;
 
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class RearTireChange extends Maintenance implements RearTireChangerInterface
 {
@@ -24,6 +23,7 @@ class RearTireChange extends Maintenance implements RearTireChangerInterface
         if (empty($date)) {
             $date = new DateTime('now');
         }
+        $this->throwExceptionIfMaintenanceKmsExceedsMotorcycleKms($kmsDriven);
         
         $performedRearTireChange = new PerformedRearTireChange($this->motorcycle, $kmsDriven, $date);
         

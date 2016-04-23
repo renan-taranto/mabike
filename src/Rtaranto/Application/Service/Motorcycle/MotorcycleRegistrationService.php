@@ -5,9 +5,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\Biker;
 use Rtaranto\Domain\Entity\FrontTireChange;
+use Rtaranto\Domain\Entity\FrontTireChangeWarningObserver;
 use Rtaranto\Domain\Entity\Motorcycle;
 use Rtaranto\Domain\Entity\OilChange;
+use Rtaranto\Domain\Entity\OilChangeWarningObserver;
 use Rtaranto\Domain\Entity\RearTireChange;
+use Rtaranto\Domain\Entity\RearTireChangeWarningObserver;
 
 class MotorcycleRegistrationService implements MotorcycleRegistrationServiceInterface
 {
@@ -26,19 +29,26 @@ class MotorcycleRegistrationService implements MotorcycleRegistrationServiceInte
     {
         $motorcycle = new Motorcycle($model, $kmsDriven);
         $motorcycle->setBiker($biker);
-        $this->validator->throwValidationFailedIfNotValid($motorcycle);
         
         $biker->addMotorcycle($motorcycle);
         $this->validator->throwValidationFailedIfNotValid($biker);
         
         $oilChange = new OilChange($motorcycle);
         $this->validator->throwValidationFailedIfNotValid($oilChange);
+        $oilChangeWarningObserver = new OilChangeWarningObserver($motorcycle, $oilChange);
+        $motorcycle->attachMaintenanceWarningObserver($oilChangeWarningObserver);
         
         $rearTireChange = new RearTireChange($motorcycle);
         $this->validator->throwValidationFailedIfNotValid($rearTireChange);
+        $rearTireChangeWarningObserver = new RearTireChangeWarningObserver($motorcycle, $rearTireChange);
+        $motorcycle->attachMaintenanceWarningObserver($rearTireChangeWarningObserver);
         
         $frontTireChange = new FrontTireChange($motorcycle);
         $this->validator->throwValidationFailedIfNotValid($frontTireChange);
+        $frontTireChangeWarningObserver = new FrontTireChangeWarningObserver($motorcycle, $frontTireChange);
+        $motorcycle->attachMaintenanceWarningObserver($frontTireChangeWarningObserver);
+        
+        $this->validator->throwValidationFailedIfNotValid($motorcycle);
         
         $this->em->persist($motorcycle);
         $this->em->persist($biker);
