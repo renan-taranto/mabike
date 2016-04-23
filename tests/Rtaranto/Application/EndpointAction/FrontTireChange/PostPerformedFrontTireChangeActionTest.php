@@ -27,7 +27,7 @@ class PostPerformedFrontTireChangeActionTest extends WebTestCase
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $motorcyleId = 1;
-        $kmsDriven = 12000;
+        $kmsDriven = 1000;
         $date = '2016-01-10';
         $data = array('kmsDriven' => $kmsDriven, 'date' => $date);
         

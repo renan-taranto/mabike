@@ -29,7 +29,7 @@ abstract class BaseTestMaintenanceController extends WebTestCase
         $uri = $this->getResourceCollectionUri(array('motorcycleId' => $motorcycleId));
         $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
         
-        $kmsDriven = 321412;
+        $kmsDriven = 500;
         $date = new DateTime('2016-04-15');
         $date = $date->format('Y-m-d');
         $data = array('kms_driven' => $kmsDriven, 'date' => $date);

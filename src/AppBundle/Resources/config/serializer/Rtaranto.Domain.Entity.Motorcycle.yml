@@ -2,3 +2,5 @@ Rtaranto\Domain\Entity\Motorcycle:
     properties:
         biker:
             exclude: true
+        maintenanceWarningObservers:
+            exclude: true

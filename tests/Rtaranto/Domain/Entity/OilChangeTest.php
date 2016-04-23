@@ -11,16 +11,20 @@ class OilChangeTest extends \PHPUnit_Framework_TestCase
 {
     public function testChangeOilReturnsOilChange()
     {
-        $motorcycle = $this->prophesize(Motorcycle::class)->reveal();
-        $oilChangeMaintenance = new OilChange($motorcycle, 1500);
+        $motorcycle = $this->prophesize(Motorcycle::class);
+        $motorcycle->notifyMaintenanceWarningObservers()->shouldBeCalled();
+        $motorcycle->getKmsDriven()->willReturn(2340);
+        $oilChangeMaintenance = new OilChange($motorcycle->reveal(), 1500);
         $oilChange = $oilChangeMaintenance->changeOil(1234, new DateTime('2016-01-19'));
         $this->assertInstanceOf(PerformedOilChange::class, $oilChange);
     }
     
     public function testGetKmsForNextOilChangeReturnsKms()
     {
-        $motorcycle = $this->prophesize(Motorcycle::class)->reveal();
-        $oilChangeMaintenance = new OilChange($motorcycle);
+        $motorcycle = $this->prophesize(Motorcycle::class);
+        $motorcycle->notifyMaintenanceWarningObservers()->shouldBeCalled();
+        $motorcycle->getKmsDriven()->willReturn(12340);
+        $oilChangeMaintenance = new OilChange($motorcycle->reveal());
         $oilChangeMaintenance->setKmsPerMaintenance(1500);
         $oilChangeMaintenance->changeOil(4560, new DateTime('2016-05-19'));
         $oilChangeMaintenance->changeOil(0, new DateTime('2016-01-19'));

@@ -31,7 +31,7 @@ class PostPerformedRearTireChangeActionTest extends WebTestCase
         $postPerformedRearTireChangeAction = $this->getContainer()->get('app.performed_rear_tire_change.post_action');
         
         $motorcyleId = 1;
-        $kmsDriven = 8000;
+        $kmsDriven = 1000;
         $date = '2016-01-10';
         $data = array('kmsDriven' => $kmsDriven, 'date' => $date);
         $performedRearTireChange = $postPerformedRearTireChangeAction->post($motorcyleId, $data);

@@ -10,7 +10,7 @@ class FrontTireChangeTest extends \PHPUnit_Framework_TestCase
 {
     public function testChangeFrontTireReturnsPerformedFrontTireChange()
     {
-        $motorcycle = new Motorcycle('model');
+        $motorcycle = new Motorcycle('model', 20000);
         $frontTireChange = new FrontTireChange($motorcycle);
         $kmsDriven = 2000;
         $date = new DateTime('2016-01-13');
