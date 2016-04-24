@@ -27,7 +27,7 @@ class BikerControllerTest extends WebTestCase
         $apiKey = $this->getApiKeyForUserWithDevRole();
         $response = $getRequest->get($this->getBikersEndpointUri() . '/1', $apiKey);
         
-        $content = json_decode($response->getContent(), true);
+        $content = json_decode($response->getContent(), true);        
         $expected = array('id' => 1, 'name' => 'Test Biker', 'email' => 'testbiker@email.com');
         $this->assertEquals($expected, $content);
         

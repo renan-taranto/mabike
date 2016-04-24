@@ -35,26 +35,26 @@ class MotorcycleRegistrationService implements MotorcycleRegistrationServiceInte
         
         $oilChange = new OilChange($motorcycle);
         $this->validator->throwValidationFailedIfNotValid($oilChange);
-//        $oilChangeWarningObserver = new OilChangeWarningObserver($motorcycle, $oilChange);
-//        $motorcycle->attachMaintenanceWarningObserver($oilChangeWarningObserver);
+        $oilChangeWarningObserver = new OilChangeWarningObserver($motorcycle, $oilChange);
+        $motorcycle->attachMaintenanceWarningObserver($oilChangeWarningObserver);
         
         $rearTireChange = new RearTireChange($motorcycle);
         $this->validator->throwValidationFailedIfNotValid($rearTireChange);
-//        $rearTireChangeWarningObserver = new RearTireChangeWarningObserver($motorcycle, $rearTireChange);
-//        $motorcycle->attachMaintenanceWarningObserver($rearTireChangeWarningObserver);
+        $rearTireChangeWarningObserver = new RearTireChangeWarningObserver($motorcycle, $rearTireChange);
+        $motorcycle->attachMaintenanceWarningObserver($rearTireChangeWarningObserver);
         
         $frontTireChange = new FrontTireChange($motorcycle);
         $this->validator->throwValidationFailedIfNotValid($frontTireChange);
-//        $frontTireChangeWarningObserver = new FrontTireChangeWarningObserver($motorcycle, $frontTireChange);
-//        $motorcycle->attachMaintenanceWarningObserver($frontTireChangeWarningObserver);
+        $frontTireChangeWarningObserver = new FrontTireChangeWarningObserver($motorcycle, $frontTireChange);
+        $motorcycle->attachMaintenanceWarningObserver($frontTireChangeWarningObserver);
         
         $this->validator->throwValidationFailedIfNotValid($motorcycle);
         
-        $this->em->persist($motorcycle);
         $this->em->persist($biker);
         $this->em->persist($oilChange);
         $this->em->persist($rearTireChange);
         $this->em->persist($frontTireChange);
+        $this->em->persist($motorcycle);
         $this->em->flush();
         
         return $motorcycle;

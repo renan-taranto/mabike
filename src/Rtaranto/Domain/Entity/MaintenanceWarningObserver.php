@@ -10,7 +10,7 @@ abstract class MaintenanceWarningObserver
      * @var int Number of kms to activate the warning before the next maintenance
      * to be performed
      */
-    protected $kmsBeforeNextMaintenance;
+    protected $kmsInAdvance;
     
     /**
      * @var Motorcycle
@@ -36,7 +36,7 @@ abstract class MaintenanceWarningObserver
     {
         $this->motorcycle = $motorcycle;
         $this->maintenance = $maintenance;
-        $this->kmsBeforeNextMaintenance = $kmsBeforeNextMaintenance;
+        $this->kmsInAdvance = $kmsBeforeNextMaintenance;
         $this->isActive = false;
         $this->notify();
     }
@@ -50,6 +50,11 @@ abstract class MaintenanceWarningObserver
     public function deactivate()
     {
         $this->isActive = false;
+    }
+    
+    public function isActive()
+    {
+        return $this->isActive;
     }
     
     public function notify()
@@ -104,19 +109,26 @@ abstract class MaintenanceWarningObserver
         } catch (Exception $ex) {
             throw $ex;
         }
-        return $kmsForNextMaintenance - $this->kmsBeforeNextMaintenance;
+        return $kmsForNextMaintenance - $this->kmsInAdvance;
     }
     
     public function getWarning()
     {
-        return $this->maintenanceWarning;
+        if ($this->isActive) {
+            return $this->maintenanceWarning;
+        }
     }
     
-    public function updateKmsBeforeNextMaintenance($kmsToTriggerBeforeActivation)
+    public function setKmsInAdvance($kmsInAdvance)
     {
-        $this->kmsBeforeNextMaintenance = $kmsToTriggerBeforeActivation;
+        $this->kmsInAdvance = $kmsInAdvance;
         $this->notify();
     }
     
+    public function getKmsInAdvance()
+    {
+        return $this->kmsInAdvance;
+    }
+
     abstract protected function getWarningDescription();
 }

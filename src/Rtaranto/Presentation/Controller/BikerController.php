@@ -9,7 +9,6 @@ use Rtaranto\Application\Exception\ValidationFailedException;
 use Rtaranto\Application\Service\Endpoint\Action\Biker\DeleteActionInterface;
 use Rtaranto\Application\Service\Endpoint\Action\Biker\GetActionInterface;
 use Rtaranto\Application\Service\Endpoint\Action\Biker\PatchActionInterface;
-use Rtaranto\Application\Service\Endpoint\Action\Biker\PostActionInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

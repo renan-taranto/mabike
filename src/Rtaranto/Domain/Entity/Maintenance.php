@@ -69,6 +69,11 @@ abstract class Maintenance
         $this->notifyMotorcyleMaintenanceWarningObservers();
     }
     
+    public function getKmsPerMaintenance()
+    {
+        return $this->kmsPerMaintenance;
+    }
+
     /**
      * @return int
      * @throws Exception

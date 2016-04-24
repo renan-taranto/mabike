@@ -43,6 +43,7 @@ Rtaranto\Domain\Entity\Maintenance:
                 inverseJoinColumns:
                     performedmaintenance_id:
                         referencedColumnName: id
+                        onDelete: CASCADE
                         unique: true
             cascade: ["persist", "remove"]
             orphanRemoval: true

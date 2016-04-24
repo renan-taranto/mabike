@@ -78,9 +78,8 @@ swiftmailer:
 fos_rest:
     view:
         view_response_listener: force
-# Enables "null" values serialization
-#    serializer:
-#        serialize_null: true
+    serializer:
+        serialize_null: true
     body_listener:
         array_normalizer: fos_rest.normalizer.camel_keys
     param_fetcher_listener: true
@@ -95,6 +94,7 @@ fos_rest:
             prefer_extension: true
 
     exception:
+        exception_controller: 'Rtaranto\Application\Exception\CustomExceptionController::showAction'
         enabled: true
         codes:
             'Symfony\Component\Routing\Exception\ResourceNotFoundException': 404
@@ -102,7 +102,7 @@ fos_rest:
         messages:
             'Symfony\Component\Routing\Exception\ResourceNotFoundException': true
             'Symfony\Component\HttpKernel\Exception\BadRequestHttpException': true
-        
+
 #NelmioCors Configuration
 nelmio_cors:
     defaults:

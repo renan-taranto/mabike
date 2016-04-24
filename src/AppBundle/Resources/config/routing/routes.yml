@@ -40,3 +40,9 @@ api_front_tire_changes:
     parent:   api_motorcycles
     resource: Rtaranto\Presentation\Controller\FrontTireChangeController
     name_prefix:  api_v1_
+    
+api_oil_change_warnings:
+    type:     rest
+    parent:   api_motorcycles
+    resource: Rtaranto\Presentation\Controller\OilChangeWarningsConfigurationController
+    name_prefix:  api_v1_

@@ -16,7 +16,7 @@ Rtaranto\Domain\Entity\MaintenanceWarningObserver:
             generator:
                 strategy: AUTO
     fields:
-        kmsBeforeNextMaintenance:
+        kmsInAdvance:
             type: integer
             options:
                 unsigned: true
