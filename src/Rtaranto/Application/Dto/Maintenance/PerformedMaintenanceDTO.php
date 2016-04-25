@@ -6,6 +6,10 @@ class PerformedMaintenanceDTO
     /**
      * @var int
      */
+    private $motorcycleId;
+    /**
+     * @var int
+     */
     private $kmsDriven;
 
     /**
@@ -17,12 +21,23 @@ class PerformedMaintenanceDTO
      * @param int $kmsDriven
      * @param string $date
      */
-    public function __construct($kmsDriven = null, $date = null)
+    public function __construct($motorcycleId, $kmsDriven = null, $date = null)
     {
+        $this->motorcycleId = $motorcycleId;
         $this->kmsDriven = $kmsDriven;
         $this->date = $this->convertDateToStringIfNeeded($date);
     }
     
+    public function getMotorcycleId()
+    {
+        return $this->motorcycleId;
+    }
+
+    public function setMotorcycleId($motorcycleId)
+    {
+        $this->motorcycleId = $motorcycleId;
+    }
+
     /**
      * @return int
      */
@@ -39,6 +54,11 @@ class PerformedMaintenanceDTO
         return new \DateTime($this->date);
     }
 
+    public function getDateAsString()
+    {
+        return $this->convertDateToStringIfNeeded($this->date);
+    }
+    
     /**
      * @param int $kmsDriven
      */

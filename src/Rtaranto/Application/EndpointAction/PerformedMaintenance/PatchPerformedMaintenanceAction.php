@@ -27,6 +27,7 @@ class PatchPerformedMaintenanceAction extends PatchSubResourceAction
     {
         $performedMaintenance = $this->findOrThrowNotFound($parentResourceId, $resourceId);
         $performedMaintenanceDTO = new PerformedMaintenanceDTO(
+            $parentResourceId,
             $performedMaintenance->getKmsDriven(),
             $performedMaintenance->getDate()
         );

@@ -38,7 +38,7 @@ class LoadPerformedFrontTireChangeData extends AbstractFixture implements Fixtur
     {
         $data = $this->createPerformedFrontTireChangesAsArray();
         foreach($data as $d) {
-            $performedMaintenanceDTO = new PerformedMaintenanceDTO($d['kmsDriven'], $d['date']);
+            $performedMaintenanceDTO = new PerformedMaintenanceDTO($d['motorcycleId'], $d['kmsDriven'], $d['date']);
             $performedFrontTireChange = $this->
                 frontTireChangerService->changeFrontTire($d['motorcycleId'], $performedMaintenanceDTO);
             $this->addReference($d['reference'], $performedFrontTireChange);

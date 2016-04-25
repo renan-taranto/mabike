@@ -43,7 +43,7 @@ class LoadPerformedOilChangeData extends AbstractFixture implements FixtureInter
     {
         $data = $this->createPerformedOilChangesAsArray();
         foreach($data as $d) {
-            $performedMaintenanceDTO = new PerformedMaintenanceDTO($d['kmsDriven'], $d['date']);
+            $performedMaintenanceDTO = new PerformedMaintenanceDTO($d['motorcycleId'], $d['kmsDriven'], $d['date']);
             $performedOilChange = $this->oilChangerService->changeOil($d['motorcycleId'], $performedMaintenanceDTO);
             $this->addReference($d['reference'], $performedOilChange);
         }

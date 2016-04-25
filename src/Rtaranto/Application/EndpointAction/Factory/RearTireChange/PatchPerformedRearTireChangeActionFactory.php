@@ -7,6 +7,7 @@ use Rtaranto\Application\EndpointAction\PerformedMaintenance\PatchPerformedMaint
 use Rtaranto\Application\EndpointAction\RequestParamsProcessor;
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
 use Rtaranto\Application\Service\PerformedMaintenance\PerformedMaintenancePatcher;
+use Rtaranto\Application\Service\Validator\PerformedMaintenanceDTOValidator;
 use Rtaranto\Application\Service\Validator\Validator;
 use Rtaranto\Domain\Entity\PerformedRearTireChange;
 use Rtaranto\Domain\Entity\RearTireChange;
@@ -35,8 +36,8 @@ class PatchPerformedRearTireChangeActionFactory implements PatchActionFactoryInt
     public function createPatchAction()
     {
         $parametersBinder = new ParametersBinder($this->formFactory, PerformedMaintenanceDTOType::class);
-        $validator = new Validator($this->sfValidator);
-        $inputProcessor = new RequestParamsProcessor($parametersBinder, $validator);
+        $performedMaintenanceDtoValidator = new PerformedMaintenanceDTOValidator($this->sfValidator);
+        $inputProcessor = new RequestParamsProcessor($parametersBinder, $performedMaintenanceDtoValidator);
         
         $rearTireChangeRepository = new DoctrineMaintenanceRepository($this->em, RearTireChange::class);
         $performedRearTireChangeRepository = new DoctrinePerformedMaintenanceRepository(
@@ -44,6 +45,7 @@ class PatchPerformedRearTireChangeActionFactory implements PatchActionFactoryInt
             PerformedRearTireChange::class
         );
         
+        $validator = new Validator($this->sfValidator);
         $performedMaintenancePatcher = new PerformedMaintenancePatcher(
             $rearTireChangeRepository,
             $performedRearTireChangeRepository,

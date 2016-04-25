@@ -38,7 +38,7 @@ class LoadPerformedRearTireChangeData extends AbstractFixture implements Fixture
         {
             $data = $this->createPerformedRearTireChangesAsArray();
             foreach($data as $d) {
-                $performedMaintenanceDTO = new PerformedMaintenanceDTO($d['kmsDriven'], $d['date']);
+                $performedMaintenanceDTO = new PerformedMaintenanceDTO($d['motorcycleId'], $d['kmsDriven'], $d['date']);
                 $performedRearTireChange = $this->rearTireChangerService
                     ->changeRearTire($d['motorcycleId'], $performedMaintenanceDTO);
                 $this->addReference($d['reference'], $performedRearTireChange);

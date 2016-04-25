@@ -7,6 +7,7 @@ use Rtaranto\Application\EndpointAction\PerformedMaintenance\PostPerformedRearTi
 use Rtaranto\Application\EndpointAction\RequestParamsProcessor;
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
 use Rtaranto\Application\Service\Maintenance\RearTireChangerService;
+use Rtaranto\Application\Service\Validator\PerformedMaintenanceDTOValidator;
 use Rtaranto\Application\Service\Validator\Validator;
 use Rtaranto\Domain\Entity\RearTireChange;
 use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
@@ -33,10 +34,11 @@ class PostPerformedRearTireChangeActionFactory implements PostActionFactoryInter
     public function createPostAction()
     {
         $parametersBinder = new ParametersBinder($this->formFactory, PerformedMaintenanceDTOType::class);
-        $validator = new Validator($this->sfValidator);
-        $inputProcessor = new RequestParamsProcessor($parametersBinder, $validator);
+        $performedMaintenanceDTOValidator = new PerformedMaintenanceDTOValidator($this->sfValidator);
+        $inputProcessor = new RequestParamsProcessor($parametersBinder, $performedMaintenanceDTOValidator);
         
         $rearTireChangeRepository = new DoctrineMaintenanceRepository($this->em, RearTireChange::class);
+        $validator = new Validator($this->sfValidator);
         $rearTireChangerService = new RearTireChangerService($rearTireChangeRepository, $validator);
         return new PostPerformedRearTireChangeAction($inputProcessor, $rearTireChangerService);
     }

@@ -7,6 +7,7 @@ use Rtaranto\Application\EndpointAction\PerformedMaintenance\PatchPerformedMaint
 use Rtaranto\Application\EndpointAction\RequestParamsProcessor;
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
 use Rtaranto\Application\Service\PerformedMaintenance\PerformedMaintenancePatcher;
+use Rtaranto\Application\Service\Validator\PerformedMaintenanceDTOValidator;
 use Rtaranto\Application\Service\Validator\Validator;
 use Rtaranto\Domain\Entity\FrontTireChange;
 use Rtaranto\Domain\Entity\PerformedFrontTireChange;
@@ -58,7 +59,7 @@ class PatchPerformedFrontTireChangeActionFactory implements PatchActionFactoryIn
     private function createRequestParamsProcessor()
     {
         $parametersBinder = new ParametersBinder($this->formFactory, PerformedMaintenanceDTOType::class);
-        $validator = $this->createValidator();
+        $validator = $this->createPerformedMaintenanceDTOValidator();
         return new RequestParamsProcessor($parametersBinder, $validator);
     }
     
@@ -78,6 +79,11 @@ class PatchPerformedFrontTireChangeActionFactory implements PatchActionFactoryIn
     private function createValidator()
     {
         return new Validator($this->sfValidator);
+    }
+    
+    private function createPerformedMaintenanceDTOValidator()
+    {
+        return new PerformedMaintenanceDTOValidator($this->sfValidator);
     }
 }
 

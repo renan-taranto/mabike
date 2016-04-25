@@ -7,6 +7,7 @@ use Rtaranto\Application\EndpointAction\PerformedMaintenance\PostPerformedOilCha
 use Rtaranto\Application\EndpointAction\RequestParamsProcessor;
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
 use Rtaranto\Application\Service\Maintenance\OilChangerService;
+use Rtaranto\Application\Service\Validator\PerformedMaintenanceDTOValidator;
 use Rtaranto\Application\Service\Validator\Validator;
 use Rtaranto\Domain\Entity\OilChange;
 use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
@@ -33,10 +34,11 @@ class PostPerformedOilChangeActionFactory implements PostActionFactoryInterface
     public function createPostAction()
     {
         $parametersBinder = new ParametersBinder($this->formFactory, PerformedMaintenanceDTOType::class);
-        $validator = new Validator($this->sfValidator);
-        $inputProcessor = new RequestParamsProcessor($parametersBinder, $validator);
+        $performedMaintenanceDTOValidator = new PerformedMaintenanceDTOValidator($this->sfValidator);
+        $inputProcessor = new RequestParamsProcessor($parametersBinder, $performedMaintenanceDTOValidator);
         
         $oilChangeRepository = new DoctrineMaintenanceRepository($this->em, OilChange::class);
+        $validator = new Validator($this->sfValidator);
         $oilChangerService = new OilChangerService($oilChangeRepository, $validator);
         
         return new PostPerformedOilChangeAction($inputProcessor, $oilChangerService);

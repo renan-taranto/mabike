@@ -18,11 +18,9 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
                 
         $validator = $this->getMock(ValidatorInterface::class);
         $validator->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(false));
-        $validator->expects($this->once())
-            ->method('getErrors')
-            ->will($this->returnValue(array()));
+            ->method('throwValidationFailedIfNotValid')
+            ->will($this->throwException(new ValidationFailedException(array())));
+        
         $registerUserService = new UserRegistrationService($userFactory, $userRepository, $validator);
         
         $this->setExpectedException(ValidationFailedException::class);
@@ -46,10 +44,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($user));
         
         $validator = $this->getMock(ValidatorInterface::class);
-        $validator->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(true));
-        
+                
         $registerUserService = new UserRegistrationService($userFactory, $userRepository, $validator);
         $registeredUser = $registerUserService->registerUser('user', 'email', 'pass', array(User::ROLE_USER));
         

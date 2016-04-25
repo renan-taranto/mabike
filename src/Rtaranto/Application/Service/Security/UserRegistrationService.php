@@ -6,7 +6,6 @@ use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\Factory\UserFactoryInterface;
 use Rtaranto\Domain\Entity\Repository\UserRepositoryInterface;
 use Rtaranto\Domain\Entity\User;
-use Exception;
 
 class UserRegistrationService implements UserRegistrationInterface
 {
@@ -29,15 +28,13 @@ class UserRegistrationService implements UserRegistrationInterface
      * @param string $email
      * @param string $password
      * @return User
-     * @throws Exception
+     * @throws ValidationFailedException
      */
     public function registerUser($username, $email, $password, array $roles)
     {
         $user = $this->userFactory->createUser($username, $email, $password, $roles);
         
-        if (!$this->validator->isValid($user)) {
-            throw new ValidationFailedException($this->validator->getErrors($user));
-        }
+        $this->validator->throwValidationFailedIfNotValid($user);
         
         return $this->userRepository->addUser($user);
     }

@@ -13,7 +13,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface as SymfonyValidator
  */
 class Validator implements ValidatorInterface
 {
-    private $symfonyValidator;
+    /**
+     * @var SymfonyValidatorInterface
+     */
+    protected $symfonyValidator;
     
     public function __construct(SymfonyValidatorInterface $sfValidator)
     {
@@ -32,9 +35,9 @@ class Validator implements ValidatorInterface
         }    
     }
     
-    public function isValid($object)
+    protected function isValid($object)
     {
-        $errors = $this->symfonyValidator->validate($object);
+        $errors = $this->validate($object);
         
         if(count($errors) > 0) {
             return false;
@@ -42,19 +45,20 @@ class Validator implements ValidatorInterface
         return true;
     }
     
-    public function getErrors($object)
+    protected function validate($object)
     {
-        if ($this->isValid($object)) {
-            return;
-        }
-        
-        $constraintViolationList = $this->symfonyValidator->validate($object);
+        return $this->symfonyValidator->validate($object);
+    }
+    
+    protected function getErrors($object)
+    {        
+        $constraintViolationList = $this->validate($object);
         $errorMessagesByFields = $this->getErrorMessagesByFields($constraintViolationList);
         
         return array_merge(array('code' => Response::HTTP_BAD_REQUEST,'message' => 'Validation Failed'), array('errors' => $errorMessagesByFields));
     }
     
-    private function getErrorMessagesByFields(ConstraintViolationListInterface $constraintViolationList)
+    protected function getErrorMessagesByFields(ConstraintViolationListInterface $constraintViolationList)
     {
         $errorMessagesByFields = array();
         $fields = array();
@@ -77,7 +81,7 @@ class Validator implements ValidatorInterface
         return $errorMessagesByFields;
     }
     
-    private function normalizeToCamelCase($string)
+    protected function normalizeToCamelCase($string)
     {
         return ltrim(strtolower(preg_replace('/[A-Z]/', '_$0', $string)), '_');
     }
