@@ -7,10 +7,11 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
-use Rtaranto\Application\Service\Maintenance\TireChange\FrontTireChangerService;
+use Rtaranto\Application\Service\PerformedMaintenance\FrontTireChangerService;
 use Rtaranto\Application\Service\Validator\Validator;
 use Rtaranto\Domain\Entity\FrontTireChange;
-use Rtaranto\Infrastructure\Repository\DoctrineFrontTireChangeRepository;
+use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
+use Rtaranto\Infrastructure\Repository\DoctrineMotorcycleRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -27,9 +28,15 @@ class LoadPerformedFrontTireChangeData extends AbstractFixture implements Fixtur
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $sfValidator = $this->container->get('validator');
-        $frontTireChangeRepository = new DoctrineFrontTireChangeRepository($em, 'motorcycle', FrontTireChange::class);
+        
+        $frontTireChangeRepository = new DoctrineMaintenanceRepository($em, FrontTireChange::class);
         $validator = new Validator($sfValidator);
-        $this->frontTireChangerService = new FrontTireChangerService($frontTireChangeRepository, $validator);
+        $motorcycleRepository = new DoctrineMotorcycleRepository($em);
+        $this->frontTireChangerService = new FrontTireChangerService(
+            $frontTireChangeRepository,
+            $validator,
+            $motorcycleRepository
+        );
         
         $this->createPerformedFrontTireChanges();
     }
@@ -39,8 +46,8 @@ class LoadPerformedFrontTireChangeData extends AbstractFixture implements Fixtur
         $data = $this->createPerformedFrontTireChangesAsArray();
         foreach($data as $d) {
             $performedMaintenanceDTO = new PerformedMaintenanceDTO($d['kmsDriven'], $d['date']);
-            $performedFrontTireChange = $this->
-                frontTireChangerService->changeFrontTire($d['motorcycleId'], $performedMaintenanceDTO);
+            $performedFrontTireChange = $this->frontTireChangerService->
+                performMaintenance($d['motorcycleId'], $performedMaintenanceDTO);
             $this->addReference($d['reference'], $performedFrontTireChange);
         }
     }

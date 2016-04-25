@@ -98,7 +98,7 @@ abstract class BaseTestMaintenanceController extends WebTestCase
         
         $response = $getRequest->get($uri, $apiKey);
         $content = json_decode($response->getContent(), true);
-
+        
         $performedMaintenance2 = $this->getResourceFromReferenceRepository(2);
         
         $this->assertEquals($performedMaintenance2->getId(), $content['id']);
@@ -165,7 +165,7 @@ abstract class BaseTestMaintenanceController extends WebTestCase
         
         $response = $getRequest->get($uri, $apiKey);
         $content = json_decode($response->getContent(), true);
-        
+
         $performedMaintenance4 = $this->getResourceFromReferenceRepository(4);
         $performedMaintenance5 = $this->getResourceFromReferenceRepository(5);
         

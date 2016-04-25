@@ -16,13 +16,13 @@ class JsonPatchRequest implements PatchRequest
     /**
      * @param string $uri
      * @param array $headers
-     * @param string $data
+     * @param array $bodyData
      * @return Response
      */
-    public function patch($uri, array $data = null, $apiKey = null, array $headers = null)
+    public function patch($uri, array $bodyData = null, $apiKey = null, array $headers = null)
     {
         $headers = JsonHeadersFactory::createHeaders($headers, $apiKey);
-        $this->client->request('PATCH', $uri, array(), array(), $headers, json_encode($data));
+        $this->client->request('PATCH', $uri, array(), array(), $headers, json_encode($bodyData));
         $response = $this->client->getResponse();
         $this->client->restart();
         return $response;

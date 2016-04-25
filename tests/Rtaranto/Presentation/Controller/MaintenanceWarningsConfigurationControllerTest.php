@@ -6,6 +6,7 @@ use AppBundle\DataFixtures\ORM\LoadUserTestingData;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\JsonGetRequest;
+use Tests\JsonPatchRequest;
 
 class MaintenanceWarningsConfigurationControllerTest extends WebTestCase
 {
@@ -34,6 +35,28 @@ class MaintenanceWarningsConfigurationControllerTest extends WebTestCase
         );
         
         $this->assertEquals($expectedRepresentation, $content);
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+    
+    public function testPatchWillReturnPachedResource()
+    {
+        $client = static::createClient();
+        $getRequest = new JsonPatchRequest($client);
+        $uri = $this->getEndpointUri();
+        
+        $apiKey = $this->fixtures->getReferenceRepository()->getReference('biker_user_1')->getApiKey();
+        
+        $bodyData = array(
+            'is_active' => true,
+            'kms_per_oil_change' => 1500,
+            'kms_in_advance' => 100
+        );
+        
+        $response = $getRequest->patch($uri, $bodyData, $apiKey);
+        
+        $content = json_decode($response->getContent(), true);
+        
+        $this->assertEquals($bodyData, $content);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
     

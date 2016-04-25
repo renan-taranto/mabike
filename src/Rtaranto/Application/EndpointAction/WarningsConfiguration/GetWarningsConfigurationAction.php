@@ -2,33 +2,33 @@
 namespace Rtaranto\Application\EndpointAction\WarningsConfiguration;
 
 use Rtaranto\Application\EndpointAction\GetActionInterface;
-use Rtaranto\Domain\Entity\OilChangeWarningObserver;
+use Rtaranto\Domain\Entity\MaintenanceWarningObserver;
+use Rtaranto\Domain\Entity\Repository\MaintenanceRepositoryInterface;
 use Rtaranto\Domain\Entity\Repository\MaintenanceWarningObserverRepositoryInterface;
-use Rtaranto\Domain\Entity\Repository\OilChangeRepositoryInterface;
 
 class GetWarningsConfigurationAction implements GetActionInterface
 {
     private $maintenanceWarningObserverRepository;
-    private $oilChangeRepository;
+    private $maintenanceRepository;
     
     public function __construct(
         MaintenanceWarningObserverRepositoryInterface $maintenanceWarningObserverRepository,
-        OilChangeRepositoryInterface $oilChangeRepository
+        MaintenanceRepositoryInterface $maintenanceRepository
     ) {
         $this->maintenanceWarningObserverRepository = $maintenanceWarningObserverRepository;
-        $this->oilChangeRepository = $oilChangeRepository;
+        $this->maintenanceRepository = $maintenanceRepository;
     }
     
     public function get($id)
     {
-        /* @var $oilChangeWarningObserver OilChangeWarningObserver */
-        $oilChangeWarningObserver = $this->maintenanceWarningObserverRepository->
+        /* @var $maintenanceWarningObserver MaintenanceWarningObserver */
+        $maintenanceWarningObserver = $this->maintenanceWarningObserverRepository->
             findOneByMotorcycle($id);
-        $isActive = $oilChangeWarningObserver->isActive();
-        $kmsInAdvance = $oilChangeWarningObserver->getKmsInAdvance();
+        $isActive = $maintenanceWarningObserver->isActive();
+        $kmsInAdvance = $maintenanceWarningObserver->getKmsInAdvance();
         
-        $oilChange = $this->oilChangeRepository->findOneByMotorcycle($id);
-        $kmsPerMaintenance = $oilChange->getKmsPerMaintenance();
+        $mainetnance = $this->maintenanceRepository->findOneByMotorcycle($id);
+        $kmsPerMaintenance = $mainetnance->getKmsPerMaintenance();
         
         return array(
             'is_active' => $isActive,

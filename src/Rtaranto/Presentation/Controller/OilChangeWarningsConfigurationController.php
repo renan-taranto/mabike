@@ -1,10 +1,11 @@
 <?php
 namespace Rtaranto\Presentation\Controller;
 
-use Rtaranto\Application\EndpointAction\Factory\WarningsConfiguration\GetWarningsConfigurationActionFactory;
-use Rtaranto\Application\EndpointAction\WarningsConfiguration\GetWarningsConfigurationAction;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Patch;
+use Rtaranto\Application\EndpointAction\Factory\WarningsConfiguration\GetWarningsConfigurationActionFactory;
+use Rtaranto\Application\EndpointAction\WarningsConfiguration\GetWarningsConfigurationAction;
+use Symfony\Component\HttpFoundation\Request;
 
 class OilChangeWarningsConfigurationController extends BikerSubResourceController
 {
@@ -20,6 +21,18 @@ class OilChangeWarningsConfigurationController extends BikerSubResourceControlle
         return $getAction->get($motorcycleId);
     }
     
+    /**
+     * @Patch("/motorcycles/{motorcycleId}/warnings-configuration/oil-change")
+     */
+    public function patchAction($motorcycleId, Request $request)
+    {
+        return array(
+            'is_active' => true,
+            'kms_per_oil_change' => 1500,
+            'kms_in_advance' => 100
+        );
+    }
+
     /**
      * @return GetWarningsConfigurationAction
      */

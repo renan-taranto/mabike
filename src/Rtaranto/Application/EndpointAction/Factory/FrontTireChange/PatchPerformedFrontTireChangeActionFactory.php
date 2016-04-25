@@ -3,13 +3,15 @@ namespace Rtaranto\Application\EndpointAction\Factory\FrontTireChange;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Rtaranto\Application\EndpointAction\Factory\PatchActionFactoryInterface;
-use Rtaranto\Application\EndpointAction\FrontTireChange\PatchPerformedFrontTireChangeAction;
+use Rtaranto\Application\EndpointAction\PerformedMaintenance\PatchPerformedMaintenanceAction;
 use Rtaranto\Application\EndpointAction\RequestParamsProcessor;
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
-use Rtaranto\Application\Service\Maintenance\TireChange\PerformedFrontTireChangePatcher;
+use Rtaranto\Application\Service\PerformedMaintenance\PerformedMaintenancePatcher;
 use Rtaranto\Application\Service\Validator\Validator;
-use Rtaranto\Infrastructure\Repository\DoctrineFrontTireChangeRepository;
-use Rtaranto\Infrastructure\Repository\DoctrinePerformedFrontTireChangeRepository;
+use Rtaranto\Domain\Entity\FrontTireChange;
+use Rtaranto\Domain\Entity\PerformedFrontTireChange;
+use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
+use Rtaranto\Infrastructure\Repository\DoctrinePerformedMaintenanceRepository;
 use Rtaranto\Presentation\Form\Maintenance\PerformedMaintenanceDTOType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -36,7 +38,7 @@ class PatchPerformedFrontTireChangeActionFactory implements PatchActionFactoryIn
         $requestParamsProcessor = $this->createRequestParamsProcessor();
         $performedFrontTireChangePatcher = $this->createPerformedFrontTireChangePatcher();
         
-        return new PatchPerformedFrontTireChangeAction(
+        return new PatchPerformedMaintenanceAction(
             $performedFrontTireChangeRepository,
             $requestParamsProcessor,
             $performedFrontTireChangePatcher
@@ -45,12 +47,12 @@ class PatchPerformedFrontTireChangeActionFactory implements PatchActionFactoryIn
     
     private function createPerformedFrontTireChangeRepository()
     {
-        return new DoctrinePerformedFrontTireChangeRepository($this->em);
+        return new DoctrinePerformedMaintenanceRepository($this->em, PerformedFrontTireChange::class);
     }
     
     private function createFrontTireChangeRepository()
     {
-        return new DoctrineFrontTireChangeRepository($this->em);
+        return new DoctrineMaintenanceRepository($this->em, FrontTireChange::class);
     }
     
     private function createRequestParamsProcessor()
@@ -65,7 +67,8 @@ class PatchPerformedFrontTireChangeActionFactory implements PatchActionFactoryIn
         $frontTireChangeRepository = $this->createFrontTireChangeRepository();
         $performedFrontTireChangeRepository = $this->createPerformedFrontTireChangeRepository();
         $validator = $this->createValidator();
-        return new PerformedFrontTireChangePatcher(
+        
+        return new PerformedMaintenancePatcher(
             $frontTireChangeRepository,
             $performedFrontTireChangeRepository,
             $validator

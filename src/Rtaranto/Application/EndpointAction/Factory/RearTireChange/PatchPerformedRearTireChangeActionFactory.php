@@ -3,13 +3,15 @@ namespace Rtaranto\Application\EndpointAction\Factory\RearTireChange;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Rtaranto\Application\EndpointAction\Factory\PatchActionFactoryInterface;
-use Rtaranto\Application\EndpointAction\RearTireChange\PatchPerfomedRearTireChangeAction;
+use Rtaranto\Application\EndpointAction\PerformedMaintenance\PatchPerformedMaintenanceAction;
 use Rtaranto\Application\EndpointAction\RequestParamsProcessor;
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
-use Rtaranto\Application\Service\Maintenance\TireChange\PerformedRearTireChangePatcher;
+use Rtaranto\Application\Service\PerformedMaintenance\PerformedMaintenancePatcher;
 use Rtaranto\Application\Service\Validator\Validator;
-use Rtaranto\Infrastructure\Repository\DoctrinePerformedRearTireChangeRepository;
-use Rtaranto\Infrastructure\Repository\DoctrineRearTireChangeRepository;
+use Rtaranto\Domain\Entity\PerformedRearTireChange;
+use Rtaranto\Domain\Entity\RearTireChange;
+use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
+use Rtaranto\Infrastructure\Repository\DoctrinePerformedMaintenanceRepository;
 use Rtaranto\Presentation\Form\Maintenance\PerformedMaintenanceDTOType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -35,16 +37,23 @@ class PatchPerformedRearTireChangeActionFactory implements PatchActionFactoryInt
         $parametersBinder = new ParametersBinder($this->formFactory, PerformedMaintenanceDTOType::class);
         $validator = new Validator($this->sfValidator);
         $inputProcessor = new RequestParamsProcessor($parametersBinder, $validator);
-        $rearTireChangeRepository = new DoctrineRearTireChangeRepository($this->em);
-        $performedRearTireChangeRepository = new DoctrinePerformedRearTireChangeRepository($this->em);
-        $performedRearTireChangePatcher = new PerformedRearTireChangePatcher(
+        
+        $rearTireChangeRepository = new DoctrineMaintenanceRepository($this->em, RearTireChange::class);
+        $performedRearTireChangeRepository = new DoctrinePerformedMaintenanceRepository(
+            $this->em,
+            PerformedRearTireChange::class
+        );
+        
+        $performedMaintenancePatcher = new PerformedMaintenancePatcher(
             $rearTireChangeRepository,
             $performedRearTireChangeRepository,
             $validator
         );
-        return new PatchPerfomedRearTireChangeAction(
+        
+        return new PatchPerformedMaintenanceAction(
             $performedRearTireChangeRepository,
             $inputProcessor,
-            $performedRearTireChangePatcher);
+            $performedMaintenancePatcher
+        );
     }
 }

@@ -7,7 +7,7 @@ abstract class GetSubResourceAction implements GetSubresourceActionInterface
 {
     public function get($parentResourceId, $subResourceId)
     {
-        $subResource = $this->findSubResource($parentResourceId, $subResourceId);
+        $subResource = $this->findSubResourceByParentResource($parentResourceId, $subResourceId);
         
         if (empty($subResource)) {
             throw new NotFoundHttpException(
@@ -18,5 +18,5 @@ abstract class GetSubResourceAction implements GetSubresourceActionInterface
         return $subResource;
     }
     
-    abstract protected function findSubResource($parentResourceId, $subResourceId);
+    abstract protected function findSubResourceByParentResource($parentResource, $subResourceId);
 }

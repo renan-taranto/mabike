@@ -1,18 +1,16 @@
 <?php
 namespace Rtaranto\Presentation\Controller;
 
-use FOS\RestBundle\Request\ParamFetcher;
-use Rtaranto\Application\EndpointAction\OilChange\CgetPerformedOilChangeAction;
-use Rtaranto\Application\EndpointAction\OilChange\DeletePerformedOilChangeAction;
-use Rtaranto\Application\EndpointAction\OilChange\GetPerformedOilChangeAction;
-use Rtaranto\Infrastructure\Repository\DoctrineOilChangeRepository;
-use Rtaranto\Infrastructure\Repository\DoctrinePerformedOilChangeRepository;
-use Rtaranto\Presentation\Controller\QueryParam\QueryParamsFetcher;
-use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Patch;
 use FOS\RestBundle\Controller\Annotations\Delete;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Patch;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Request\ParamFetcher;
+use Rtaranto\Domain\Entity\OilChange;
+use Rtaranto\Domain\Entity\PerformedOilChange;
+use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
+use Rtaranto\Infrastructure\Repository\DoctrinePerformedMaintenanceRepository;
+use Symfony\Component\HttpFoundation\Request;
 
 
 class OilChangeController extends BasePerformedMaintenanceController
@@ -62,7 +60,7 @@ class OilChangeController extends BasePerformedMaintenanceController
         parent::deleteAction($motorcycleId, $performedOilChangeId);
     }
     
-        protected function createPostAction()
+    protected function createPostAction()
     {
         return $this->get('app.performed_oil_change.post_action');
     }
@@ -72,38 +70,7 @@ class OilChangeController extends BasePerformedMaintenanceController
         return $this->get('app.performed_oil_change.patch_action');
     }
 
-    protected function createGetAction()
-    {
-        $performedOilChangeRepository = $this->getPerformedOilChangeRepository();
-        return new GetPerformedOilChangeAction($performedOilChangeRepository);
-    }
-
-    protected function createCgetAction(ParamFetcher $paramFetcher)
-    {
-        $performedOilChangeRepository = $this->getPerformedOilChangeRepository();
-        $queryParamsFetcher = new QueryParamsFetcher($paramFetcher);
-        return new CgetPerformedOilChangeAction($performedOilChangeRepository, $queryParamsFetcher);
-    }
-
-    protected function createDeleteAction()
-    {
-        $oilChangeRepository = $this->getOilChangeRepository();
-        $performedOilChangeRepository = $this->getPerformedOilChangeRepository();
-        return new DeletePerformedOilChangeAction($oilChangeRepository, $performedOilChangeRepository);
-    }
-
-    private function getPerformedOilChangeRepository()
-    {
-        $em = $this->getDoctrine()->getManager();
-        return new DoctrinePerformedOilChangeRepository($em);
-    }
-    
-    private function getOilChangeRepository()
-    {
-        $em = $this->getDoctrine()->getManager();
-        return new DoctrineOilChangeRepository($em);
-    }
-    
+   
     protected function getSubResourceIdParamNameForGetPath()
     {
         return self::$PARAM_NAME_SUB_RESOURCE_ID;
@@ -122,5 +89,18 @@ class OilChangeController extends BasePerformedMaintenanceController
     protected function getMotorcycleIdParamNameForGetPath()
     {
         return self::$PARAM_NAME_MOTORCYCLE_ID;
-    }   
+    }
+
+    protected function getMaintenanceRepository()
+    {
+        $em = $this->getDoctrine()->getManager();
+        return new DoctrineMaintenanceRepository($em, OilChange::class);
+    }
+
+    protected function getPerformedMaintenanceRepository()
+    {
+        $em = $this->getDoctrine()->getManager();
+        return new DoctrinePerformedMaintenanceRepository($em, PerformedOilChange::class);
+    }
+
 }

@@ -1,18 +1,16 @@
 <?php
 namespace Rtaranto\Presentation\Controller;
 
-use FOS\RestBundle\Request\ParamFetcher;
-use Rtaranto\Application\EndpointAction\RearTireChange\CgetPerformedRearTireChangeAction;
-use Rtaranto\Application\EndpointAction\RearTireChange\DeletePerformedRearTireChangeAction;
-use Rtaranto\Application\EndpointAction\RearTireChange\GetPerformedRearTireChangeAction;
-use Rtaranto\Infrastructure\Repository\DoctrinePerformedRearTireChangeRepository;
-use Rtaranto\Infrastructure\Repository\DoctrineRearTireChangeRepository;
-use Rtaranto\Presentation\Controller\QueryParam\QueryParamsFetcher;
-use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Patch;
-use FOS\RestBundle\Controller\Annotations\Delete;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Request\ParamFetcher;
+use Rtaranto\Domain\Entity\PerformedRearTireChange;
+use Rtaranto\Domain\Entity\RearTireChange;
+use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
+use Rtaranto\Infrastructure\Repository\DoctrinePerformedMaintenanceRepository;
+use Symfony\Component\HttpFoundation\Request;
 
 class RearTireChangeController extends BasePerformedMaintenanceController
 {
@@ -61,19 +59,6 @@ class RearTireChangeController extends BasePerformedMaintenanceController
         return parent::patchAction($motorcycleId, $performedRearTireChangeId, $request);
     }
     
-    protected function createGetAction()
-    {
-        $performedRearTireChangeRepository = $this->getPerformedRearTireChangeRepository();
-        return new GetPerformedRearTireChangeAction($performedRearTireChangeRepository);
-    }
-
-    protected function createCgetAction(ParamFetcher $paramFetcher)
-    {
-        $performedRearTireChangeRepository = $this->getPerformedRearTireChangeRepository();
-        $queryParamsFetcher = new QueryParamsFetcher($paramFetcher);
-        return new CgetPerformedRearTireChangeAction($performedRearTireChangeRepository, $queryParamsFetcher);
-    }
-
     protected function createPostAction()
     {
         return $this->get('app.performed_rear_tire_change.post_action');
@@ -84,26 +69,16 @@ class RearTireChangeController extends BasePerformedMaintenanceController
         return $this->get('app.performed_rear_tire_change.patch_action');
     }
 
-    protected function createDeleteAction()
-    {
-        $rearTireChangeRepository = $this->getRearTireChangeRepository();
-        $performedRearTireChangeRepository = $this->getPerformedRearTireChangeRepository();
-        return new DeletePerformedRearTireChangeAction(
-            $rearTireChangeRepository,
-            $performedRearTireChangeRepository
-        );
-    }
-    
-    private function getPerformedRearTireChangeRepository()
+    protected function getPerformedMaintenanceRepository()
     {
         $em = $this->getDoctrine()->getManager();
-        return new DoctrinePerformedRearTireChangeRepository($em);
+        return new DoctrinePerformedMaintenanceRepository($em, PerformedRearTireChange::class);
     }
     
-    private function getRearTireChangeRepository()
+    protected function getMaintenanceRepository()
     {
         $em = $this->getDoctrine()->getManager();
-        return new DoctrineRearTireChangeRepository($em);
+        return new DoctrineMaintenanceRepository($em, RearTireChange::class);
     }
     
     protected function getSubResourceIdParamNameForGetPath()

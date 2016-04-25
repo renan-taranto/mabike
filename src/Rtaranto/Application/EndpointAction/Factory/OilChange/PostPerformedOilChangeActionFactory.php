@@ -3,12 +3,14 @@ namespace Rtaranto\Application\EndpointAction\Factory\OilChange;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Rtaranto\Application\EndpointAction\Factory\PostActionFactoryInterface;
-use Rtaranto\Application\EndpointAction\OilChange\PostPerformedOilChangeAction;
+use Rtaranto\Application\EndpointAction\PerformedMaintenance\PostPerformedMaintenanceAction;
 use Rtaranto\Application\EndpointAction\RequestParamsProcessor;
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
-use Rtaranto\Application\Service\Maintenance\OilChange\OilChangerService;
+use Rtaranto\Application\Service\PerformedMaintenance\OilChangerService;
 use Rtaranto\Application\Service\Validator\Validator;
-use Rtaranto\Infrastructure\Repository\DoctrineOilChangeRepository;
+use Rtaranto\Domain\Entity\OilChange;
+use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
+use Rtaranto\Infrastructure\Repository\DoctrineMotorcycleRepository;
 use Rtaranto\Presentation\Form\Maintenance\PerformedMaintenanceDTOType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -35,9 +37,14 @@ class PostPerformedOilChangeActionFactory implements PostActionFactoryInterface
         $validator = new Validator($this->sfValidator);
         $inputProcessor = new RequestParamsProcessor($parametersBinder, $validator);
         
-        $oilChangeRepository = new DoctrineOilChangeRepository($this->em);
-        $oilChangerService = new OilChangerService($validator, $oilChangeRepository);
-        return new PostPerformedOilChangeAction($inputProcessor, $oilChangerService);
+        $oilChangeRepository = new DoctrineMaintenanceRepository($this->em, OilChange::class);
+        $motorcycleRepository = new DoctrineMotorcycleRepository($this->em);
+        $oilChangePerformerService = new OilChangerService(
+            $oilChangeRepository,
+            $validator,
+            $motorcycleRepository
+        );
+        return new PostPerformedMaintenanceAction($inputProcessor, $oilChangePerformerService);
     }
 
 }

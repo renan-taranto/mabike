@@ -7,10 +7,11 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
-use Rtaranto\Application\Service\Maintenance\OilChange\OilChangerService;
-use Rtaranto\Application\Service\Maintenance\OilChange\OilChangerServiceInterface;
+use Rtaranto\Application\Service\PerformedMaintenance\OilChangerService;
 use Rtaranto\Application\Service\Validator\Validator;
-use Rtaranto\Infrastructure\Repository\DoctrineOilChangeRepository;
+use Rtaranto\Domain\Entity\OilChange;
+use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
+use Rtaranto\Infrastructure\Repository\DoctrineMotorcycleRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -22,7 +23,7 @@ class LoadPerformedOilChangeData extends AbstractFixture implements FixtureInter
     private $container;
     
     /**
-     * @var OilChangerServiceInterface
+     * @var OilChangerService
      */
     private $oilChangerService;
     
@@ -30,9 +31,15 @@ class LoadPerformedOilChangeData extends AbstractFixture implements FixtureInter
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $sfValidator = $this->container->get('validator');
+        
+        $oilChangeRepository = new DoctrineMaintenanceRepository($em, OilChange::class);
         $validator = new Validator($sfValidator);
-        $oilChangeRepository = new DoctrineOilChangeRepository($em);
-        $this->oilChangerService = new OilChangerService($validator, $oilChangeRepository);
+        $motorcycleRepository = new DoctrineMotorcycleRepository($em);
+        $this->oilChangerService = new OilChangerService(
+            $oilChangeRepository,
+            $validator,
+            $motorcycleRepository
+        );
         
         $this->createPerformedOilChanges();
     }
@@ -42,7 +49,8 @@ class LoadPerformedOilChangeData extends AbstractFixture implements FixtureInter
         $data = $this->createPerformedOilChangesAsArray();
         foreach($data as $d) {
             $performedMaintenanceDTO = new PerformedMaintenanceDTO($d['kmsDriven'], $d['date']);
-            $performedOilChange = $this->oilChangerService->changeOil($d['motorcycleId'], $performedMaintenanceDTO);
+            $performedOilChange = $this->oilChangerService->
+                performMaintenance($d['motorcycleId'], $performedMaintenanceDTO);
             $this->addReference($d['reference'], $performedOilChange);
         }
     }

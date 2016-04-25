@@ -5,10 +5,14 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use JMS\Serializer\SerializationContext;
+use Rtaranto\Application\EndpointAction\PerformedMaintenance\CgetPerformedMaintenanceAction;
+use Rtaranto\Application\EndpointAction\PerformedMaintenance\DeletePerformedMaintenanceAction;
+use Rtaranto\Application\EndpointAction\PerformedMaintenance\GetPerformedMaintenanceAction;
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Rtaranto\Domain\Entity\User;
 use Rtaranto\Infrastructure\Repository\DoctrineBikerRepository;
 use Rtaranto\Infrastructure\Repository\DoctrineMotorcycleRepository;
+use Rtaranto\Presentation\Controller\QueryParam\QueryParamsFetcher;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,14 +20,33 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 abstract class BasePerformedMaintenanceController extends FOSRestController implements ClassResourceInterface
 {    
-    abstract protected function createGetAction();
-    abstract protected function createCgetAction(ParamFetcher $paramFetcher);
     abstract protected function createPostAction();
     abstract protected function createPatchAction();
-    abstract protected function createDeleteAction();
     abstract protected function getSerializationGroup();
     abstract protected function getPathForGetAction();
     abstract protected function getSubResourceIdParamNameForGetPath();
+    abstract protected function getPerformedMaintenanceRepository();
+    abstract protected function getMaintenanceRepository();
+    
+    protected function createGetAction()
+    {
+        $performedMaintenanceRepository = $this->getPerformedMaintenanceRepository();
+        return new GetPerformedMaintenanceAction($performedMaintenanceRepository);
+    }
+    
+    protected function createCgetAction(ParamFetcher $paramFetcher)
+    {
+        $performedMaintenanceRepository = $this->getPerformedMaintenanceRepository();
+        $queryParamsFetcher = new QueryParamsFetcher($paramFetcher);
+        return new CgetPerformedMaintenanceAction($queryParamsFetcher, $performedMaintenanceRepository);
+    }
+    
+    protected function createDeleteAction()
+    {
+        $maintenanceRepository = $this->getMaintenanceRepository();
+        $performedMaintenancRepository = $this->getPerformedMaintenanceRepository();
+        return new DeletePerformedMaintenanceAction($maintenanceRepository, $performedMaintenancRepository);
+    }
     
     public function getAction($motorcycleId, $performedMaintenanceId)
     {
