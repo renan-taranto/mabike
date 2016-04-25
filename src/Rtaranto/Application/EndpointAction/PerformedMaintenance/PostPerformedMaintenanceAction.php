@@ -4,19 +4,14 @@ namespace Rtaranto\Application\EndpointAction\PerformedMaintenance;
 use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
 use Rtaranto\Application\EndpointAction\InputProcessorInterface;
 use Rtaranto\Application\EndpointAction\PostSubresourceActionInterface;
-use Rtaranto\Application\Service\PerformedMaintenance\MaintenancePerformerServiceInterface;
 
-class PostPerformedMaintenanceAction implements PostSubresourceActionInterface
+abstract class PostPerformedMaintenanceAction implements PostSubresourceActionInterface
 {
-    private $inputProcessor;
-    private $maintenancePerformerService;
+    protected $inputProcessor;
     
-    public function __construct(
-        InputProcessorInterface $inputProcessor,
-        MaintenancePerformerServiceInterface $maintenancePerformerService
-    ) {
+    public function __construct(InputProcessorInterface $inputProcessor)
+    {
         $this->inputProcessor = $inputProcessor;
-        $this->maintenancePerformerService = $maintenancePerformerService;
     }
     
     public function post($parentResourceId, array $requestBodyParameters)
@@ -25,7 +20,12 @@ class PostPerformedMaintenanceAction implements PostSubresourceActionInterface
             $requestBodyParameters,
             new PerformedMaintenanceDTO()
         );
-        
-        return $this->maintenancePerformerService->performMaintenance($parentResourceId, $performedMaintenanceDTO);
+
+        return $this->createPerformedMaintenance($parentResourceId, $performedMaintenanceDTO);
     }
+    
+    abstract protected function createPerformedMaintenance(
+        $motorcycleId,
+        PerformedMaintenanceDTO $performedMaintenanceDTO
+    );
 }

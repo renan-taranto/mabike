@@ -37,11 +37,10 @@ abstract class Maintenance
         $this->setKmsPerMaintenance($kmsPerMaintenance);
     }
     
-        
     /**
      * @param PerformedMaintenance $performedMaintenance
      */
-    public function addPerformedMaintenance(PerformedMaintenance $performedMaintenance)
+    protected function addPerformedMaintenance(PerformedMaintenance $performedMaintenance)
     {
         $this->performedMaintenances->add($performedMaintenance);
         $this->notifyMotorcyleMaintenanceWarningObservers();
