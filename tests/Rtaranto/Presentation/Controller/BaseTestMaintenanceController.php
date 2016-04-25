@@ -89,6 +89,29 @@ abstract class BaseTestMaintenanceController extends WebTestCase
         $this->assertStatusCode(Response::HTTP_BAD_REQUEST, $client);
     }
     
+//    public function testPostKmsGreatherThanCurKmsDrivenReturnsBadRequest()
+//    {
+//        $client = static::createClient();
+//        $postRequest = new JsonPostRequest($client);
+//        $motorcycleId = 1;
+//        $uri = $this->getResourceCollectionUri(array('motorcycleId' => $motorcycleId));
+//        $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
+//        
+//        $ducati = $this->fixtures->getReferenceRepository()->getReference('ducati');
+//        $kmsDriven = $ducati->getKmsDriven() + 1;
+//        $date = '2016-02-03';
+//        $bodyParameters = array('kms_driven' => $kmsDriven, 'date' => $date);
+//        
+//        $response = $postRequest->post($uri, $bodyParameters, $apiKey);
+//        $content = json_decode($response->getContent(), true);
+//        
+//        $this->assertEquals('Kms exceeds current motorcycle '
+//                . 'kms driven. Update motorcycle kms driven if needed before'
+//                . 'trying again.',
+//            $content['errors']['kms_driven'][0]);
+//        $this->assertStatusCode(Response::HTTP_BAD_REQUEST, $client);
+//    }
+    
     public function testGetReturnsPerformedMaintenanceRepresentation()
     {
         $client = static::createClient();

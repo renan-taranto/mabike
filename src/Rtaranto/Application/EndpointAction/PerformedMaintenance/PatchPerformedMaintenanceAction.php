@@ -31,10 +31,9 @@ class PatchPerformedMaintenanceAction extends PatchSubResourceAction
             $performedMaintenance->getDate()
         );
         
-        $patchedPerformedPerformedDTO = $this->inputProcessor->processInput(
+        $patchedPerformedPerformedDTO = $this->inputProcessor->processInputIgnoringMissingFields(
             $requestBodyParameters,
-            $performedMaintenanceDTO,
-            true
+            $performedMaintenanceDTO
         );
         
         $patchedPerformedMaintenance = $this->performedMaintenancePatcher

@@ -35,7 +35,7 @@ class PatchMotorcycleAction implements PatchActionInterface
         $motorcycle = $this->findOrThrowNotFound($id);
         
         $motorcycleDTO = new MotorcycleDTO($motorcycle->getModel(), $motorcycle->getKmsDriven());
-        $patchedMotorcycleDTO = $this->inputProcessor->processInput($requestBodyParameters, $motorcycleDTO, true);
+        $patchedMotorcycleDTO = $this->inputProcessor->processInputIgnoringMissingFields($requestBodyParameters, $motorcycleDTO);
         
         return $this->motorcyclePatcher->patchMotorcycle($motorcycle, $patchedMotorcycleDTO);
     }

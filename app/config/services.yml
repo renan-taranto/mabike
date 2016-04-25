@@ -76,6 +76,11 @@ services:
     app.validator:
         class: Rtaranto\Application\Service\Validator\Validator
         arguments: ['@validator']
+    app.kms:
+        class: AppBundle\Validator\Constraints\KmsDoNotExceedCurKmsDrivenValidator
+        arguments: ['@doctrine.orm.entity_manager']
+        tags:
+            - { name: validator.constraint_validator, alias: kms_do_not_exceeds_cur_kms_driven }
     #Security
     app.biker_registration:
         class: Rtaranto\Application\Service\Security\BikerRegistrationService

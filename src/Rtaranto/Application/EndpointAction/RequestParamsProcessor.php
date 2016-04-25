@@ -17,21 +17,17 @@ class RequestParamsProcessor implements InputProcessorInterface
         $this->validator = $validator;
     }
     
-    public function processInput($data, $targetDTO, $ignoreMissingFields = false)
+    public function processInput($data, $targetDTO)
     {
-        $dtoWithBindedData = $this->bindParamsToDTO($data, $targetDTO, $ignoreMissingFields);
+        $dtoWithBindedData = $this->parametersBinder->bind($data, $targetDTO);
         $this->validator->throwValidationFailedIfNotValid($dtoWithBindedData);
         return $dtoWithBindedData;
     }
     
-    private function bindParamsToDTO($data, $targetDTO, $ignoreMissingFields)
+    public function processInputIgnoringMissingFields($data, $targetDTO)
     {
-        if ($ignoreMissingFields) {
-            $dtoWithBindedData = $this->parametersBinder->bindIgnoringMissingFields($data, $targetDTO);
-            return $dtoWithBindedData;
-        }
-        
-        $dtoWithBindedData = $this->parametersBinder->bind($data, $targetDTO);
+        $dtoWithBindedData = $this->parametersBinder->bindIgnoringMissingFields($data, $targetDTO);
+        $this->validator->throwValidationFailedIfNotValid($dtoWithBindedData);
         return $dtoWithBindedData;
     }
 }

@@ -120,7 +120,7 @@ abstract class Maintenance
     {
         if ($maintenanceKms > $this->motorcycle->getKmsDriven()) {
             throw new \Exception('Maintenance kms exceeds current motorcycle '
-                . 'kms driven. Update motorcycle kms driven if needed before'
+                . 'kms driven. Update motorcycle kms driven if needed before '
                 . 'trying again.');
         }
     }

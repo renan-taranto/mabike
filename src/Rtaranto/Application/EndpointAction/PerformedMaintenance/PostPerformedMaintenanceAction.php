@@ -18,7 +18,7 @@ abstract class PostPerformedMaintenanceAction implements PostSubresourceActionIn
     {
         $performedMaintenanceDTO = $this->inputProcessor->processInput(
             $requestBodyParameters,
-            new PerformedMaintenanceDTO()
+            new PerformedMaintenanceDTO($parentResourceId)
         );
 
         return $this->createPerformedMaintenance($parentResourceId, $performedMaintenanceDTO);

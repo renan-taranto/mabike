@@ -27,7 +27,7 @@ class PatchMotorcycleActionTest extends \PHPUnit_Framework_TestCase
         
         $motorcycleDTO = new MotorcycleDTO($currentModel);
         $inputProcessor = $this->prophesize(InputProcessorInterface::class);
-        $inputProcessor->processInput($params, $motorcycleDTO, true)
+        $inputProcessor->processInputIgnoringMissingFields($params, $motorcycleDTO)
             ->willReturn($motorcycleDTO);
         
         $motorcyclePatcher = $this->prophesize(MotorcyclePatcherInterface::class);
@@ -58,7 +58,8 @@ class PatchMotorcycleActionTest extends \PHPUnit_Framework_TestCase
         $motorcycleRepository->get($id)->willReturn($motorcycle->reveal());
         
         $inputProcessor = $this->prophesize(InputProcessorInterface::class);
-        $inputProcessor->processInput($params, new MotorcycleDTO(), true)->willThrow(ValidationFailedException::class);
+        $inputProcessor->processInputIgnoringMissingFields($params, new MotorcycleDTO())
+            ->willThrow(ValidationFailedException::class);
         
         $motorcyclePatcher = $this->prophesize(MotorcyclePatcherInterface::class);
         
@@ -84,7 +85,7 @@ class PatchMotorcycleActionTest extends \PHPUnit_Framework_TestCase
         $motorcycleRepository->get($id)->willReturn($motorcycle->reveal());
         
         $inputProcessor = $this->prophesize(InputProcessorInterface::class);
-        $inputProcessor->processInput($params, new MotorcycleDTO(), true)->willReturn(new MotorcycleDTO());
+        $inputProcessor->processInputIgnoringMissingFields($params, new MotorcycleDTO())->willReturn(new MotorcycleDTO());
         
         $motorcyclePatcher = $this->prophesize(MotorcyclePatcherInterface::class);
         $motorcyclePatcher->patchMotorcycle($motorcycle, new MotorcycleDTO())

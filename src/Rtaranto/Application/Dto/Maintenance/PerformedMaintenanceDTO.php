@@ -7,7 +7,6 @@ class PerformedMaintenanceDTO
      * @var int
      */
     private $kmsDriven;
-    
 
     /**
      * @var string
