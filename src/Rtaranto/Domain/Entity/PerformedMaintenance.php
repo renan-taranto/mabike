@@ -58,6 +58,7 @@ abstract class PerformedMaintenance
     public function setKmsDriven($kmsDriven)
     {
         $this->kmsDriven = $kmsDriven;
+        $this->motorcycle->notifyMaintenanceWarningObservers();
     }
     
     /**

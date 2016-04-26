@@ -10,7 +10,6 @@ use Rtaranto\Application\Service\PerformedMaintenance\PerformedMaintenancePatche
 use Rtaranto\Application\Service\Validator\PerformedMaintenanceDTOValidator;
 use Rtaranto\Application\Service\Validator\Validator;
 use Rtaranto\Domain\Entity\PerformedOilChange;
-use Rtaranto\Infrastructure\Repository\DoctrineMotorcycleRepository;
 use Rtaranto\Infrastructure\Repository\DoctrinePerformedMaintenanceRepository;
 use Rtaranto\Presentation\Form\Maintenance\PerformedMaintenanceDTOType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -37,15 +36,10 @@ class PatchPerformedOilChangeActionFactory implements PatchActionFactoryInterfac
         $parametersBinder = new ParametersBinder($this->formFactory, PerformedMaintenanceDTOType::class);
         $performedMaintenanceDTOValidator = new PerformedMaintenanceDTOValidator($this->sfValidator);
         $inputProcessor = new RequestParamsProcessor($parametersBinder, $performedMaintenanceDTOValidator);
-        $motorcycleRepository = new DoctrineMotorcycleRepository($this->em);
         $performedOilChangeRepository = new DoctrinePerformedMaintenanceRepository($this->em, PerformedOilChange::class);
         
         $validator = new Validator($this->sfValidator);
-        $performedOilChangePatcher = new PerformedMaintenancePatcher(
-            $motorcycleRepository,
-            $performedOilChangeRepository,
-            $validator
-        );
+        $performedOilChangePatcher = new PerformedMaintenancePatcher($performedOilChangeRepository, $validator);
             
         return new PatchPerformedMaintenanceAction(
             $performedOilChangeRepository,

@@ -33,7 +33,8 @@ class DoctrineMaintenanceWarninObserverRepository implements MaintenanceWarningO
 
     public function update(MaintenanceWarningObserver $maintenanceWarningObserver)
     {
-        $this->em->flush($maintenanceWarningObserver);
+        $this->em->persist($maintenanceWarningObserver);
+        $this->em->flush();
         return $maintenanceWarningObserver;
     }
 

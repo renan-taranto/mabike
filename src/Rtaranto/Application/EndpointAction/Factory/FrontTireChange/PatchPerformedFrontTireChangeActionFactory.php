@@ -66,15 +66,10 @@ class PatchPerformedFrontTireChangeActionFactory implements PatchActionFactoryIn
     
     private function createPerformedFrontTireChangePatcher()
     {
-        $motorcycleRepository = new DoctrineMotorcycleRepository($this->em);
         $performedFrontTireChangeRepository = $this->createPerformedFrontTireChangeRepository();
         $validator = $this->createValidator();
         
-        return new PerformedMaintenancePatcher(
-            $motorcycleRepository,
-            $performedFrontTireChangeRepository,
-            $validator
-        );
+        return new PerformedMaintenancePatcher($performedFrontTireChangeRepository, $validator);
     }
     
     private function createValidator()

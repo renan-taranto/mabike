@@ -11,7 +11,6 @@ use Rtaranto\Application\Service\Validator\PerformedMaintenanceDTOValidator;
 use Rtaranto\Application\Service\Validator\Validator;
 use Rtaranto\Domain\Entity\OilChange;
 use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
-use Rtaranto\Infrastructure\Repository\DoctrineMotorcycleRepository;
 use Rtaranto\Presentation\Form\Maintenance\PerformedMaintenanceDTOType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -38,10 +37,9 @@ class PostPerformedOilChangeActionFactory implements PostActionFactoryInterface
         $performedMaintenanceDTOValidator = new PerformedMaintenanceDTOValidator($this->sfValidator);
         $inputProcessor = new RequestParamsProcessor($parametersBinder, $performedMaintenanceDTOValidator);
         
-        $motorcycleRepository = new DoctrineMotorcycleRepository($this->em);
         $oilChangeRepository = new DoctrineMaintenanceRepository($this->em, OilChange::class);
         $validator = new Validator($this->sfValidator);
-        $oilChangerService = new OilChangerService($motorcycleRepository, $oilChangeRepository, $validator);
+        $oilChangerService = new OilChangerService($oilChangeRepository, $validator);
         
         return new PostPerformedOilChangeAction($inputProcessor, $oilChangerService);
     }

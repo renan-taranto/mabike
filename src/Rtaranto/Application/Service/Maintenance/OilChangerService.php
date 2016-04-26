@@ -7,20 +7,16 @@ use Rtaranto\Domain\Entity\Motorcycle;
 use Rtaranto\Domain\Entity\OilChange;
 use Rtaranto\Domain\Entity\PerformedOilChange;
 use Rtaranto\Domain\Entity\Repository\MaintenanceRepositoryInterface;
-use Rtaranto\Domain\Entity\Repository\MotorcycleRepositoryInterface;
 
 class OilChangerService implements OilChangerServiceInterface
 {
-    private $motorcycleRepository;
     private $maintenanceRepository;
     private $validator;
     
     public function __construct(
-        MotorcycleRepositoryInterface $motorcycleRepository,
         MaintenanceRepositoryInterface $maintenanceRepository,
         ValidatorInterface $validator
     ) {
-        $this->motorcycleRepository = $motorcycleRepository;
         $this->maintenanceRepository = $maintenanceRepository;
         $this->validator = $validator;
     }
@@ -40,15 +36,6 @@ class OilChangerService implements OilChangerServiceInterface
         $performedOilChange = $oilChange->changeOil($kmsDriven, $date);
         $this->validator->throwValidationFailedIfNotValid($performedOilChange);
         $this->maintenanceRepository->update($oilChange);
-        $this->notifyWarningsObservers($motorcycle);
         return $performedOilChange;
-    }
-    
-    private function notifyWarningsObservers($motorcycle)
-    {
-        /* @var $motorcycleFromRepository Motorcycle */
-        $motorcycleFromRepository = $this->motorcycleRepository->get($motorcycle);
-        $motorcycleFromRepository->notifyMaintenanceWarningObservers();
-        $this->motorcycleRepository->update($motorcycleFromRepository);
     }
 }

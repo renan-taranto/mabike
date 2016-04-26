@@ -18,21 +18,21 @@ class DoctrineUserRepository implements UserRepositoryInterface
     public function addUser(User $user)
     {
         $this->em->persist($user);
-        $this->em->flush($user);
+        $this->em->flush();
         return $user;
     }
 
     public function updateUser(User $user)
     {
         $this->em->persist($user);
-        $this->em->flush($user);
+        $this->em->flush();
         return $user;
     }
 
     public function removeUser(User $user)
     {
         $this->em->remove($user);
-        $this->em->flush($user);
+        $this->em->flush();
     }
 
     public function query(array $valuesByFields)

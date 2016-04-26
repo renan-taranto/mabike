@@ -43,14 +43,11 @@ abstract class BasePerformedMaintenanceController extends FOSRestController impl
     
     protected function createDeleteAction()
     {
-        $em = $this->getDoctrine()->getManager();
-        $motorcycleRepository = new DoctrineMotorcycleRepository($em);
         $maintenanceRepository = $this->getMaintenanceRepository();
-        $performedMaintenancRepository = $this->getPerformedMaintenanceRepository();
+        $performedMaintenanceRepository = $this->getPerformedMaintenanceRepository();
         return new DeletePerformedMaintenanceAction(
-            $motorcycleRepository,
             $maintenanceRepository,
-            $performedMaintenancRepository
+            $performedMaintenanceRepository
         );
     }
     

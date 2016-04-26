@@ -34,9 +34,8 @@ class LoadPerformedOilChangeData extends AbstractFixture implements FixtureInter
         $sfValidator = $this->container->get('validator');
         $validator = new Validator($sfValidator);
         
-        $motorcycleRepository = new DoctrineMotorcycleRepository($em);
         $oilChangeRepository = new DoctrineMaintenanceRepository($em, OilChange::class);
-        $this->oilChangerService = new OilChangerService($motorcycleRepository, $oilChangeRepository, $validator);
+        $this->oilChangerService = new OilChangerService($oilChangeRepository, $validator);
         
         $this->createPerformedOilChanges();
     }
