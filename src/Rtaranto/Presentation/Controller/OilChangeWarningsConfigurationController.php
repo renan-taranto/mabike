@@ -6,7 +6,9 @@ use FOS\RestBundle\Controller\Annotations\Patch;
 use Rtaranto\Application\EndpointAction\Factory\WarningsConfiguration\GetWarningsConfigurationActionFactory;
 use Rtaranto\Application\EndpointAction\Factory\WarningsConfiguration\PatchWarningConfigurationActionFactory;
 use Rtaranto\Application\EndpointAction\WarningsConfiguration\GetWarningsConfigurationAction;
+use Rtaranto\Application\Exception\ValidationFailedException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class OilChangeWarningsConfigurationController extends BikerSubResourceController
 {
@@ -32,7 +34,16 @@ class OilChangeWarningsConfigurationController extends BikerSubResourceControlle
         $sfValidator = $this->get('validator');
         $actionFactory = new PatchWarningConfigurationActionFactory($formFactory, $sfValidator, $em);
         $action = $actionFactory->createPatchAction();
-        return $action->patch($motorcycleId, $request->request->all());
+        
+        try {
+            $maintenanceWarnignConfigurationDTO = $action->patch($motorcycleId, $request->request->all());
+        }
+        catch (ValidationFailedException $ex) {
+            $view = $this->view($ex->getErrors(), Response::HTTP_BAD_REQUEST);
+            return $view;
+        }
+        
+        return $maintenanceWarnignConfigurationDTO;
     }
 
     /**
