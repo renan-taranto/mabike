@@ -13,7 +13,7 @@ use Rtaranto\Infrastructure\Repository\DoctrinePerformedMaintenanceRepository;
 use Symfony\Component\HttpFoundation\Request;
 
 
-class OilChangeController extends BasePerformedMaintenanceController
+class OilChangeController extends PerformedMaintenanceController
 {
     private static $PATH_GET_ACTION = 'api_v1_get_motorcycle_oil_change';
     private static $SERIALIZATION_GROUP = 'view';

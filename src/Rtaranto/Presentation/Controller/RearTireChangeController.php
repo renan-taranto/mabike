@@ -12,7 +12,7 @@ use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
 use Rtaranto\Infrastructure\Repository\DoctrinePerformedMaintenanceRepository;
 use Symfony\Component\HttpFoundation\Request;
 
-class RearTireChangeController extends BasePerformedMaintenanceController
+class RearTireChangeController extends PerformedMaintenanceController
 {
     private static $PATH_GET_ACTION = 'api_v1_get_motorcycle_reartire_change';
     private static $SERIALIZATION_GROUP = 'view';

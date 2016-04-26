@@ -2,14 +2,11 @@
 namespace Rtaranto\Application\EndpointAction\Factory\WarningsConfiguration;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Rtaranto\Application\EndpointAction\Factory\GetActionFactoryInterface;
 use Rtaranto\Application\EndpointAction\WarningsConfiguration\GetWarningsConfigurationAction;
-use Rtaranto\Domain\Entity\OilChange;
-use Rtaranto\Domain\Entity\OilChangeWarningObserver;
 use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
 use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceWarninObserverRepository;
 
-class GetWarningsConfigurationActionFactory implements GetActionFactoryInterface
+class GetWarningsConfigurationActionFactory implements GetWarningsConfigurationActionFactoryInterface
 {
     private $em;
     
@@ -18,13 +15,13 @@ class GetWarningsConfigurationActionFactory implements GetActionFactoryInterface
         $this->em = $em;
     }
     
-    public function createGetAction()
+    public function createGetAction($maintenanceClassName, $maintenanceWarningObserverClassName)
     {
         $oilChangeWarningObserverRepository = new DoctrineMaintenanceWarninObserverRepository(
             $this->em,
-            OilChangeWarningObserver::class
+            $maintenanceWarningObserverClassName
         );
-        $oilChangeRepository = new DoctrineMaintenanceRepository($this->em, OilChange::class);
+        $oilChangeRepository = new DoctrineMaintenanceRepository($this->em, $maintenanceClassName);
         return new GetWarningsConfigurationAction($oilChangeWarningObserverRepository, $oilChangeRepository);
     }
 }

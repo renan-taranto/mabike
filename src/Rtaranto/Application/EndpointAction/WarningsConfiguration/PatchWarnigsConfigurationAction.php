@@ -4,7 +4,7 @@ namespace Rtaranto\Application\EndpointAction\WarningsConfiguration;
 use Rtaranto\Application\Dto\WarningsConfiguration\MaintenanceWarningConfigurationDTO;
 use Rtaranto\Application\EndpointAction\InputProcessorInterface;
 use Rtaranto\Application\EndpointAction\PatchActionInterface;
-use Rtaranto\Application\Service\Maintenance\WarningsConfiguration\OilChangeWarningsConfigurationPatcherInterface;
+use Rtaranto\Application\Service\Maintenance\WarningsConfiguration\MaintenanceWarningConfigurationPatcherInterface;
 use Rtaranto\Domain\Entity\OilChangeWarningObserver;
 use Rtaranto\Domain\Entity\Repository\MaintenanceRepositoryInterface;
 use Rtaranto\Domain\Entity\Repository\MaintenanceWarningObserverRepositoryInterface;
@@ -19,7 +19,7 @@ class PatchWarnigsConfigurationAction implements PatchActionInterface
     public function __construct(
         MaintenanceWarningObserverRepositoryInterface $maintenanceWarningObserverRepository,
         MaintenanceRepositoryInterface $maintenanceRepository,
-        OilChangeWarningsConfigurationPatcherInterface $oilChangeWarningPatcher,
+        MaintenanceWarningConfigurationPatcherInterface $oilChangeWarningPatcher,
         InputProcessorInterface $inputProcessor
     ) {
         $this->maintenanceWarningObserverRepository = $maintenanceWarningObserverRepository;
@@ -46,7 +46,7 @@ class PatchWarnigsConfigurationAction implements PatchActionInterface
         );
         
         $patchedPerformedMaintenance = $this->oilChangeWarningPatcher
-            ->patchOilChangeWarningsConfiguration($id, $patchedOilChangeWarningsConfigurationDTO);
+            ->patchMaintenanceWarningConfiguration($id, $patchedOilChangeWarningsConfigurationDTO);
         
         return $patchedPerformedMaintenance;
     }

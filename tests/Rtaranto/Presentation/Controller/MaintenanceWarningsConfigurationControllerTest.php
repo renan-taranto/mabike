@@ -55,7 +55,7 @@ class MaintenanceWarningsConfigurationControllerTest extends WebTestCase
         $response = $getRequest->patch($uri, $bodyData, $apiKey);
         
         $content = json_decode($response->getContent(), true);
-
+        
         $this->assertEquals($bodyData, $content);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }

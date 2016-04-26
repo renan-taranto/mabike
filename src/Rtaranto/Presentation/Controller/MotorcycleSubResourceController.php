@@ -10,7 +10,7 @@ use Rtaranto\Infrastructure\Repository\DoctrineMotorcycleRepository;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-abstract class BikerSubResourceController extends FOSRestController implements ClassResourceInterface
+abstract class MotorcycleSubResourceController extends FOSRestController implements ClassResourceInterface
 {
     protected function throwExceptionIfNotBiker()
     {
