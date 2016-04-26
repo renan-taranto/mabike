@@ -3,18 +3,21 @@ namespace Rtaranto\Presentation\Controller\QueryParam;
 
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Request\ParamFetcher;
+use Rtaranto\Application\EndpointAction\FiltersNormalizerInterface;
 
 class QueryParamsFetcher implements QueryParamsFetcherInterface
 {
     private $paramFetcher;
+    private $filtersNormalizer;
     private static $PARAM_FILTERS = 'filters';
     private static $PARAM_ORDER_BY = 'orderBy';
     private static $PARAM_LIMIT = 'limit';
     private static $PARAM_OFFSET = 'offset';
     
-    public function __construct(ParamFetcher $paramFetcher)
+    public function __construct(ParamFetcher $paramFetcher, FiltersNormalizerInterface $filtersNormalizer)
     {
         $this->paramFetcher = $paramFetcher;
+        $this->filtersNormalizer = $filtersNormalizer;
     }
     
     public function getCustomParam($name, $isArray = false, $requirements = null)
@@ -30,7 +33,8 @@ class QueryParamsFetcher implements QueryParamsFetcherInterface
     
     public function getFiltersParam()
     {
-        return $this->getCustomParam(self::$PARAM_FILTERS, true);
+        $filtersParam = $this->getCustomParam(self::$PARAM_FILTERS, true);
+        return $this->filtersNormalizer->normalizeFilters($filtersParam);
     }
     
     public function getOrderByParam()
@@ -40,7 +44,8 @@ class QueryParamsFetcher implements QueryParamsFetcherInterface
     
     public function getLimitParam()
     {
-        return $this->getCustomParam(self::$PARAM_LIMIT);
+        $limitParam = $this->getCustomParam(self::$PARAM_LIMIT);
+        return empty($limitParam) ? 5 : $limitParam;
     }
     
     public function getOffsetParam()

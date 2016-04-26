@@ -5,6 +5,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use JMS\Serializer\SerializationContext;
+use Rtaranto\Application\EndpointAction\FiltersNormalizer;
 use Rtaranto\Application\EndpointAction\PerformedMaintenance\CgetPerformedMaintenanceAction;
 use Rtaranto\Application\EndpointAction\PerformedMaintenance\DeletePerformedMaintenanceAction;
 use Rtaranto\Application\EndpointAction\PerformedMaintenance\GetPerformedMaintenanceAction;
@@ -37,7 +38,8 @@ abstract class BasePerformedMaintenanceController extends FOSRestController impl
     protected function createCgetAction(ParamFetcher $paramFetcher)
     {
         $performedMaintenanceRepository = $this->getPerformedMaintenanceRepository();
-        $queryParamsFetcher = new QueryParamsFetcher($paramFetcher);
+        $filtersNormalizer = new FiltersNormalizer();
+        $queryParamsFetcher = new QueryParamsFetcher($paramFetcher, $filtersNormalizer);
         return new CgetPerformedMaintenanceAction($queryParamsFetcher, $performedMaintenanceRepository);
     }
     
