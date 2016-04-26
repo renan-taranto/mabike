@@ -13,6 +13,7 @@ class DoctrinePerformedMaintenanceRepository extends DoctrineRepository implemen
     
     public function update($performedMaintenance)
     {
+        $this->em->persist($performedMaintenance);
         $this->em->flush($performedMaintenance);
         return $performedMaintenance;
     }

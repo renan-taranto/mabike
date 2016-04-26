@@ -37,6 +37,7 @@ class DoctrineBikerRepository implements BikerRepositoryInterface
 
     public function update(Biker $biker)
     {
+        $this->em->persist($biker);
         $this->em->flush($biker);
         return $biker;
     }

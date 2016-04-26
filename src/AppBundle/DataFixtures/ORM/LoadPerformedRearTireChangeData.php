@@ -11,6 +11,7 @@ use Rtaranto\Application\Service\Maintenance\RearTireChangerService;
 use Rtaranto\Application\Service\Validator\Validator;
 use Rtaranto\Domain\Entity\RearTireChange;
 use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
+use Rtaranto\Infrastructure\Repository\DoctrineMotorcycleRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -27,9 +28,14 @@ class LoadPerformedRearTireChangeData extends AbstractFixture implements Fixture
         {
             $em = $this->container->get('doctrine.orm.entity_manager');
             $sfValidator = $this->container->get('validator');
+            $motorcycleRepository = new DoctrineMotorcycleRepository($em);
             $rearTireChangeRepository = new DoctrineMaintenanceRepository($em, RearTireChange::class);
             $validator = new Validator($sfValidator);
-            $this->rearTireChangerService = new RearTireChangerService($rearTireChangeRepository, $validator);
+            $this->rearTireChangerService = new RearTireChangerService(
+                $motorcycleRepository,
+                $rearTireChangeRepository,
+                $validator
+            );
 
             $this->createPerformedRearTireChanges();
         }

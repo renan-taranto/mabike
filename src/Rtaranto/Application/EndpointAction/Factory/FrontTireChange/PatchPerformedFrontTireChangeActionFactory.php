@@ -12,6 +12,7 @@ use Rtaranto\Application\Service\Validator\Validator;
 use Rtaranto\Domain\Entity\FrontTireChange;
 use Rtaranto\Domain\Entity\PerformedFrontTireChange;
 use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
+use Rtaranto\Infrastructure\Repository\DoctrineMotorcycleRepository;
 use Rtaranto\Infrastructure\Repository\DoctrinePerformedMaintenanceRepository;
 use Rtaranto\Presentation\Form\Maintenance\PerformedMaintenanceDTOType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -65,12 +66,12 @@ class PatchPerformedFrontTireChangeActionFactory implements PatchActionFactoryIn
     
     private function createPerformedFrontTireChangePatcher()
     {
-        $frontTireChangeRepository = $this->createFrontTireChangeRepository();
+        $motorcycleRepository = new DoctrineMotorcycleRepository($this->em);
         $performedFrontTireChangeRepository = $this->createPerformedFrontTireChangeRepository();
         $validator = $this->createValidator();
         
         return new PerformedMaintenancePatcher(
-            $frontTireChangeRepository,
+            $motorcycleRepository,
             $performedFrontTireChangeRepository,
             $validator
         );

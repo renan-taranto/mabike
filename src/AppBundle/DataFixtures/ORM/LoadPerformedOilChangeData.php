@@ -12,6 +12,7 @@ use Rtaranto\Application\Service\Maintenance\OilChangerServiceInterface;
 use Rtaranto\Application\Service\Validator\Validator;
 use Rtaranto\Domain\Entity\OilChange;
 use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
+use Rtaranto\Infrastructure\Repository\DoctrineMotorcycleRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -33,8 +34,9 @@ class LoadPerformedOilChangeData extends AbstractFixture implements FixtureInter
         $sfValidator = $this->container->get('validator');
         $validator = new Validator($sfValidator);
         
+        $motorcycleRepository = new DoctrineMotorcycleRepository($em);
         $oilChangeRepository = new DoctrineMaintenanceRepository($em, OilChange::class);
-        $this->oilChangerService = new OilChangerService($oilChangeRepository, $validator);
+        $this->oilChangerService = new OilChangerService($motorcycleRepository, $oilChangeRepository, $validator);
         
         $this->createPerformedOilChanges();
     }

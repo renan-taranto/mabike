@@ -1,12 +1,12 @@
 <?php
 namespace Rtaranto\Application\Service\Maintenance\WarningsConfiguration;
 
-use Rtaranto\Application\Dto\WarningsConfiguration\OilChangeWarningsConfigurationDTO;
+use Rtaranto\Application\Dto\WarningsConfiguration\MaintenanceWarningConfigurationDTO;
 
 interface OilChangeWarningsConfigurationPatcherInterface
 {
     public function patchOilChangeWarningsConfiguration(
         $motorcycleId,
-        OilChangeWarningsConfigurationDTO $oilChangeWarningsConfigurationDTO
+        MaintenanceWarningConfigurationDTO $oilChangeWarningsConfigurationDTO
     );
 }

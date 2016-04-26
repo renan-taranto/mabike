@@ -7,16 +7,20 @@ use Rtaranto\Domain\Entity\FrontTireChange;
 use Rtaranto\Domain\Entity\Motorcycle;
 use Rtaranto\Domain\Entity\PerformedFrontTireChange;
 use Rtaranto\Domain\Entity\Repository\MaintenanceRepositoryInterface;
+use Rtaranto\Domain\Entity\Repository\MotorcycleRepositoryInterface;
 
 class FrontTireChangerService implements FrontTireChangerServiceInterface
 {
+    private $motorcycleRepository;
     private $maintenanceRepository;
     private $validator;
     
     public function __construct(
+        MotorcycleRepositoryInterface $motorcycleRepository,
         MaintenanceRepositoryInterface $maintenanceRepository,
         ValidatorInterface $validator
     ) {
+        $this->motorcycleRepository = $motorcycleRepository;
         $this->maintenanceRepository = $maintenanceRepository;
         $this->validator = $validator;
     }
@@ -36,6 +40,15 @@ class FrontTireChangerService implements FrontTireChangerServiceInterface
         $performedFrontTireChange = $frontTireChange->changeFrontTire($kmsDriven, $date);
         $this->validator->throwValidationFailedIfNotValid($performedFrontTireChange);
         $this->maintenanceRepository->update($frontTireChange);
+        $this->notifyWarningsObservers($motorcycle);
         return $performedFrontTireChange;
+    }
+    
+        private function notifyWarningsObservers($motorcycle)
+    {
+        /* @var $motorcycleFromRepository Motorcycle */
+        $motorcycleFromRepository = $this->motorcycleRepository->get($motorcycle);
+        $motorcycleFromRepository->notifyMaintenanceWarningObservers();
+        $this->motorcycleRepository->update($motorcycleFromRepository);
     }
 }

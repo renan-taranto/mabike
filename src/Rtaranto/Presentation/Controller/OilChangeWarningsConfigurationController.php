@@ -4,6 +4,7 @@ namespace Rtaranto\Presentation\Controller;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Patch;
 use Rtaranto\Application\EndpointAction\Factory\WarningsConfiguration\GetWarningsConfigurationActionFactory;
+use Rtaranto\Application\EndpointAction\Factory\WarningsConfiguration\PatchWarningConfigurationActionFactory;
 use Rtaranto\Application\EndpointAction\WarningsConfiguration\GetWarningsConfigurationAction;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -26,11 +27,12 @@ class OilChangeWarningsConfigurationController extends BikerSubResourceControlle
      */
     public function patchAction($motorcycleId, Request $request)
     {
-        return array(
-            'is_active' => true,
-            'kms_per_oil_change' => 1500,
-            'kms_in_advance' => 100
-        );
+        $em = $this->getDoctrine()->getManager();
+        $formFactory = $this->get('form.factory');
+        $sfValidator = $this->get('validator');
+        $actionFactory = new PatchWarningConfigurationActionFactory($formFactory, $sfValidator, $em);
+        $action = $actionFactory->createPatchAction();
+        return $action->patch($motorcycleId, $request->request->all());
     }
 
     /**

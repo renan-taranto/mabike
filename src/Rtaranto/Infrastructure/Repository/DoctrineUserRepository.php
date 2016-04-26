@@ -24,6 +24,7 @@ class DoctrineUserRepository implements UserRepositoryInterface
 
     public function updateUser(User $user)
     {
+        $this->em->persist($user);
         $this->em->flush($user);
         return $user;
     }

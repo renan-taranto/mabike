@@ -22,14 +22,10 @@ class MotorcyclePatcher implements MotorcyclePatcherInterface
     public function patchMotorcycle(Motorcycle $motorcycle, MotorcycleDTO $motorcycleDTO)
     {
         $kmsDriven = $motorcycleDTO->getKmsDriven();
-        if (!empty($kmsDriven)) {
-            $motorcycle->updateKmsDriven($kmsDriven);
-        }
+        $motorcycle->updateKmsDriven($kmsDriven);
         
         $model = $motorcycleDTO->getModel();
-        if (!empty($model)) {
-            $motorcycle->setModel($model);
-        }
+        $motorcycle->setModel($model);
         
         $this->validator->throwValidationFailedIfNotValid($motorcycle);
         return $this->motorcycleRepository->update($motorcycle);

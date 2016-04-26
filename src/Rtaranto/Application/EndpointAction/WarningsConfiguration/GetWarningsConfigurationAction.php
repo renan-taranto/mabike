@@ -1,6 +1,7 @@
 <?php
 namespace Rtaranto\Application\EndpointAction\WarningsConfiguration;
 
+use Rtaranto\Application\Dto\WarningsConfiguration\MaintenanceWarningConfigurationDTO;
 use Rtaranto\Application\EndpointAction\GetActionInterface;
 use Rtaranto\Domain\Entity\MaintenanceWarningObserver;
 use Rtaranto\Domain\Entity\Repository\MaintenanceRepositoryInterface;
@@ -24,16 +25,13 @@ class GetWarningsConfigurationAction implements GetActionInterface
         /* @var $maintenanceWarningObserver MaintenanceWarningObserver */
         $maintenanceWarningObserver = $this->maintenanceWarningObserverRepository->
             findOneByMotorcycle($id);
+        
         $isActive = $maintenanceWarningObserver->isActive();
         $kmsInAdvance = $maintenanceWarningObserver->getKmsInAdvance();
         
         $mainetnance = $this->maintenanceRepository->findOneByMotorcycle($id);
         $kmsPerMaintenance = $mainetnance->getKmsPerMaintenance();
         
-        return array(
-            'is_active' => $isActive,
-            'kms_per_oil_change' => $kmsPerMaintenance,
-            'kms_in_advance' => $kmsInAdvance
-        );
+        return new MaintenanceWarningConfigurationDTO($isActive, $kmsPerMaintenance, $kmsInAdvance);
     }
 }

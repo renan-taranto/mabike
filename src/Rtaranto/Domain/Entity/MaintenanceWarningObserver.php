@@ -59,6 +59,7 @@ abstract class MaintenanceWarningObserver
     
     public function notify()
     {
+
         if (!$this->isActive) {
             return;
         }

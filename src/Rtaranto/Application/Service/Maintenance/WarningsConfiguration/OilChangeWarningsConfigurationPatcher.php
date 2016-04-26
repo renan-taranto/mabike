@@ -1,56 +1,71 @@
 <?php
 namespace Rtaranto\Application\Service\Maintenance\WarningsConfiguration;
 
-use Rtaranto\Application\Dto\WarningsConfiguration\OilChangeWarningsConfigurationDTO;
+use Rtaranto\Application\Dto\WarningsConfiguration\MaintenanceWarningConfigurationDTO;
+use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\OilChange;
 use Rtaranto\Domain\Entity\OilChangeWarningObserver;
+use Rtaranto\Domain\Entity\Repository\MaintenanceRepositoryInterface;
 use Rtaranto\Domain\Entity\Repository\MaintenanceWarningObserverRepositoryInterface;
-use Rtaranto\Domain\Entity\Repository\OilChangeRepositoryInterface;
 
 class OilChangeWarningsConfigurationPatcher implements OilChangeWarningsConfigurationPatcherInterface
 {
     private $maintenanceWarningObserverRepository;
-    private $oilChangeRepository;
+    private $maintenanceRepository;
+    private $validator;
     
     public function __construct(
         MaintenanceWarningObserverRepositoryInterface $maintenanceWarningObserverRepository,
-        OilChangeRepositoryInterface $oilChangeRepository
+        MaintenanceRepositoryInterface $maintenanceRepository,
+        ValidatorInterface $validator
     ) {
         $this->maintenanceWarningObserverRepository = $maintenanceWarningObserverRepository;
-        $this->oilChangeRepository = $oilChangeRepository;
+        $this->maintenanceRepository = $maintenanceRepository;
+        $this->validator = $validator;
     }
     
     public function patchOilChangeWarningsConfiguration(
         $motorcycleId,
-        OilChangeWarningsConfigurationDTO $oilChangeWarningsConfigurationDTO
+        MaintenanceWarningConfigurationDTO $oilChangeWarningsConfigurationDTO
     ) {
         /* @var $oilChangeWarningObserver OilChangeWarningObserver */
         $oilChangeWarningObserver = $this->maintenanceWarningObserverRepository->
             findOneByMotorcycle($motorcycleId);
-        $this->patchObserver($oilChangeWarningObserver, $oilChangeWarningsConfigurationDTO);
+        $patchedWarningObserver = $this->patchObserver($oilChangeWarningObserver, $oilChangeWarningsConfigurationDTO);
+        $oilChange = $this->maintenanceRepository->findOneByMotorcycle($motorcycleId);
+        $patchedOilChange = $this->patchOilChange($oilChange, $oilChangeWarningsConfigurationDTO);
         
-        $oilChange = $this->oilChangeRepository->findOneByMotorcycle($motorcycleId);
-        $this->patchOilChange($oilChange, $oilChangeWarningsConfigurationDTO);
+        $isActive = $patchedWarningObserver->isActive();
+        $kmsPerOilChange = $patchedOilChange->getKmsPerMaintenance();
+        $kmsInAdvance = $patchedWarningObserver->getKmsInAdvance();
+        $dto = new MaintenanceWarningConfigurationDTO($isActive, $kmsPerOilChange, $kmsInAdvance);
+        $this->validator->throwValidationFailedIfNotValid($dto);
         
+        $this->maintenanceRepository->update($patchedOilChange);
+        $this->maintenanceWarningObserverRepository->update($patchedWarningObserver);
         
+        return $dto;
     }
     
     private function patchObserver(
         OilChangeWarningObserver $observer,
-        OilChangeWarningsConfigurationDTO $oilChangeWarningsConfigurationDTO
+        MaintenanceWarningConfigurationDTO $oilChangeWarningsConfigurationDTO
     ) {
         $observer->setKmsInAdvance($oilChangeWarningsConfigurationDTO->getKmsInAdvance());
         if ($oilChangeWarningsConfigurationDTO->getIsActive()) {
             $observer->activate();
-            return;
+            return $observer;
         }
+        
         $observer->deactivate();
+        return $observer;
     }
     
     private function patchOilChange(
         OilChange $oilChange,
-        OilChangeWarningsConfigurationDTO $oilChangeWarningsConfigurationDTO
+        MaintenanceWarningConfigurationDTO $oilChangeWarningsConfigurationDTO
     ) {
-        $oilChange->setKmsPerMaintenance($oilChangeWarningsConfigurationDTO->getKmsPerOilChange());
+        $oilChange->setKmsPerMaintenance($oilChangeWarningsConfigurationDTO->getKmsPerMaintenance());
+        return $oilChange;
     }
 }

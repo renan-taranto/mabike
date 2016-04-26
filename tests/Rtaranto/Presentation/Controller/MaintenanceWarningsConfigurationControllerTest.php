@@ -30,7 +30,7 @@ class MaintenanceWarningsConfigurationControllerTest extends WebTestCase
         
         $expectedRepresentation = array(
             'is_active' => false,
-            'kms_per_oil_change' => null,
+            'kms_per_maintenance' => null,
             'kms_in_advance' => 0
         );
         
@@ -48,14 +48,14 @@ class MaintenanceWarningsConfigurationControllerTest extends WebTestCase
         
         $bodyData = array(
             'is_active' => true,
-            'kms_per_oil_change' => 1500,
+            'kms_per_maintenance' => 1500,
             'kms_in_advance' => 100
         );
         
         $response = $getRequest->patch($uri, $bodyData, $apiKey);
         
         $content = json_decode($response->getContent(), true);
-        
+
         $this->assertEquals($bodyData, $content);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }

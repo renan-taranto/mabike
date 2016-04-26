@@ -1,16 +1,16 @@
 <?php
 namespace Rtaranto\Application\Dto\WarningsConfiguration;
 
-class OilChangeWarningsConfigurationDTO
+class MaintenanceWarningConfigurationDTO
 {
     private $isActive;
-    private $kmsPerOilChange;
+    private $kmsPerMaintenance;
     private $kmsInAdvance;
     
-    public function __construct($isActive, $kmsPerOilChange, $kmsInAdvance)
+    public function __construct($isActive, $kmsPerMaintenance, $kmsInAdvance)
     {
         $this->isActive = $isActive;
-        $this->kmsPerOilChange = $kmsPerOilChange;
+        $this->kmsPerMaintenance = $kmsPerMaintenance;
         $this->kmsInAdvance = $kmsInAdvance;
     }
     
@@ -19,9 +19,9 @@ class OilChangeWarningsConfigurationDTO
         return $this->isActive;
     }
 
-    public function getKmsPerOilChange()
+    public function getKmsPerMaintenance()
     {
-        return $this->kmsPerOilChange;
+        return $this->kmsPerMaintenance;
     }
 
     public function getKmsInAdvance()
@@ -34,9 +34,9 @@ class OilChangeWarningsConfigurationDTO
         $this->isActive = $isActive;
     }
 
-    public function setKmsPerOilChange($kmsPerOilChange)
+    public function setKmsPerMaintenance($kmsPerMaintenance)
     {
-        $this->kmsPerOilChange = $kmsPerOilChange;
+        $this->kmsPerMaintenance = $kmsPerMaintenance;
     }
 
     public function setKmsInAdvance($kmsInAdvance)

@@ -3,6 +3,7 @@ namespace Rtaranto\Infrastructure\Repository;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Rtaranto\Domain\Entity\MaintenanceWarningObserver;
 use Rtaranto\Domain\Entity\Repository\MaintenanceWarningObserverRepositoryInterface;
 
 class DoctrineMaintenanceWarninObserverRepository implements MaintenanceWarningObserverRepositoryInterface
@@ -29,4 +30,11 @@ class DoctrineMaintenanceWarninObserverRepository implements MaintenanceWarningO
     {
         return $this->em->getRepository($this->subClassName);
     }
+
+    public function update(MaintenanceWarningObserver $maintenanceWarningObserver)
+    {
+        $this->em->flush($maintenanceWarningObserver);
+        return $maintenanceWarningObserver;
+    }
+
 }

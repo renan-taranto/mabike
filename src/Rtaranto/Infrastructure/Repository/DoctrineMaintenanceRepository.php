@@ -15,6 +15,7 @@ class DoctrineMaintenanceRepository extends DoctrineRepository implements Mainte
 
     public function update(Maintenance $maintenance)
     {
+        $this->em->persist($maintenance);
         $this->em->flush($maintenance);
         return $maintenance;
     }

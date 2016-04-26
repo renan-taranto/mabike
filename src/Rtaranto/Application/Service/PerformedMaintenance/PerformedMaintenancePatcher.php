@@ -3,22 +3,23 @@ namespace Rtaranto\Application\Service\PerformedMaintenance;
 
 use Rtaranto\Application\Dto\Maintenance\PerformedMaintenanceDTO;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
+use Rtaranto\Domain\Entity\Motorcycle;
 use Rtaranto\Domain\Entity\PerformedMaintenance;
-use Rtaranto\Domain\Entity\Repository\MaintenanceRepositoryInterface;
+use Rtaranto\Domain\Entity\Repository\MotorcycleRepositoryInterface;
 use Rtaranto\Domain\Entity\Repository\PerformedMaintenanceRepositoryInterface;
 
 class PerformedMaintenancePatcher implements PerformedMaintenancePatcherInterface
 {
-    private $maintenanceRepository;
+    private $motorcycleRepository;
     private $performedMaintenanceRepository;
     private $validator;
     
     public function __construct(
-        MaintenanceRepositoryInterface $maintenanceRepository,
+        MotorcycleRepositoryInterface $motorcycleRepository,
         PerformedMaintenanceRepositoryInterface $performedMaintenanceRepository,
         ValidatorInterface $validator
     ) {
-        $this->maintenanceRepository = $maintenanceRepository;
+        $this->motorcycleRepository = $motorcycleRepository;
         $this->performedMaintenanceRepository = $performedMaintenanceRepository;
         $this->validator = $validator;
     }
@@ -31,15 +32,16 @@ class PerformedMaintenancePatcher implements PerformedMaintenancePatcherInterfac
         $performedMaintenance->setDate($performedMaintenanceDTO->getDate());
         
         $this->validator->throwValidationFailedIfNotValid($performedMaintenance);
-        $this->notifyWarningObserver($performedMaintenance);
+        $this->notifyWarningObserver($performedMaintenanceDTO->getMotorcycleId());
         return $this->performedMaintenanceRepository->update($performedMaintenance);
     }
     
-    private function notifyWarningObserver(PerformedMaintenance $performedMaintenance)
+    private function notifyWarningObserver($motorcycleId)
     {
-        /* @var $maintenance Maintenance */
-        $maintenance = $this->maintenanceRepository->findOneByPerformedMaintenance($performedMaintenance);
-        $maintenance->notifyMotorcyleMaintenanceWarningObservers();
+        /* @var $motorcycle Motorcycle */
+        $motorcycle = $this->motorcycleRepository->get($motorcycleId);
+        $motorcycle->notifyMaintenanceWarningObservers();
+        $this->motorcycleRepository->update($motorcycle);
     }
 
 }
