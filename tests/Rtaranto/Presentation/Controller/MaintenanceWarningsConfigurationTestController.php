@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Tests\JsonGetRequest;
 use Tests\JsonPatchRequest;
 
-class MaintenanceWarningsConfigurationControllerTest extends WebTestCase
+abstract class MaintenanceWarningsConfigurationTestController extends WebTestCase
 {
     private $fixtures;
     
@@ -147,11 +147,5 @@ class MaintenanceWarningsConfigurationControllerTest extends WebTestCase
         $this->assertStatusCode(Response::HTTP_BAD_REQUEST, $client);
     }
     
-    private function getEndpointUri()
-    {
-        return $this->getUrl(
-            'api_v1_get_motorcycle_oilchangewarnings_configuration',
-            array('motorcycleId' => 1)
-        );
-    }
+    abstract protected function getEndpointUri();
 }
