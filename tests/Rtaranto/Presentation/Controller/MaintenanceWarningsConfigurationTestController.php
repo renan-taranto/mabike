@@ -41,7 +41,7 @@ abstract class MaintenanceWarningsConfigurationTestController extends WebTestCas
     public function testPatchWillReturnPachedResource()
     {
         $client = static::createClient();
-        $getRequest = new JsonPatchRequest($client);
+        $patchRequest = new JsonPatchRequest($client);
         $uri = $this->getEndpointUri();
         
         $apiKey = $this->fixtures->getReferenceRepository()->getReference('biker_user_1')->getApiKey();
@@ -52,7 +52,7 @@ abstract class MaintenanceWarningsConfigurationTestController extends WebTestCas
             'kms_in_advance' => 100
         );
         
-        $response = $getRequest->patch($uri, $bodyData, $apiKey);
+        $response = $patchRequest->patch($uri, $bodyData, $apiKey);
         
         $content = json_decode($response->getContent(), true);
         
@@ -63,7 +63,7 @@ abstract class MaintenanceWarningsConfigurationTestController extends WebTestCas
     public function testPatchPartialUpdateWillReturnPachedResource()
     {
         $client = static::createClient();
-        $getRequest = new JsonPatchRequest($client);
+        $patchRequest = new JsonPatchRequest($client);
         $uri = $this->getEndpointUri();
         
         $apiKey = $this->fixtures->getReferenceRepository()->getReference('biker_user_1')->getApiKey();
@@ -73,7 +73,7 @@ abstract class MaintenanceWarningsConfigurationTestController extends WebTestCas
             'kms_in_advance' => 10
         );
         
-        $response = $getRequest->patch($uri, $bodyData, $apiKey);
+        $response = $patchRequest->patch($uri, $bodyData, $apiKey);
         
         $content = json_decode($response->getContent(), true);
         
@@ -90,7 +90,7 @@ abstract class MaintenanceWarningsConfigurationTestController extends WebTestCas
     public function testPatchInvalidKmsPerMaintenanceReturnsBadRequest()
     {
         $client = static::createClient();
-        $getRequest = new JsonPatchRequest($client);
+        $patchRequest = new JsonPatchRequest($client);
         $uri = $this->getEndpointUri();
         
         $apiKey = $this->fixtures->getReferenceRepository()->getReference('biker_user_1')->getApiKey();
@@ -99,7 +99,7 @@ abstract class MaintenanceWarningsConfigurationTestController extends WebTestCas
             'kms_per_maintenance' => -1
         );
         
-        $response = $getRequest->patch($uri, $bodyData, $apiKey);
+        $response = $patchRequest->patch($uri, $bodyData, $apiKey);
         $content = json_decode($response->getContent(), true);
 
         $this->assertEquals('This value should be 1 or more.', $content['errors']['kms_per_maintenance'][0]);
@@ -110,7 +110,7 @@ abstract class MaintenanceWarningsConfigurationTestController extends WebTestCas
     public function testPatchInvalidKmsInAdvanceReturnsBadRequest()
     {
         $client = static::createClient();
-        $getRequest = new JsonPatchRequest($client);
+        $patchRequest = new JsonPatchRequest($client);
         $uri = $this->getEndpointUri();
         
         $apiKey = $this->fixtures->getReferenceRepository()->getReference('biker_user_1')->getApiKey();
@@ -119,7 +119,7 @@ abstract class MaintenanceWarningsConfigurationTestController extends WebTestCas
             'kms_in_advance' => -1
         );
         
-        $response = $getRequest->patch($uri, $bodyData, $apiKey);
+        $response = $patchRequest->patch($uri, $bodyData, $apiKey);
         $content = json_decode($response->getContent(), true);
 
         $this->assertEquals('This value should be 0 or more.', $content['errors']['kms_in_advance'][0]);
@@ -129,7 +129,7 @@ abstract class MaintenanceWarningsConfigurationTestController extends WebTestCas
     public function testPatchInvalidKmsInAdvanceAndKmsPerMaintenanceReturnsBadRequest()
     {
         $client = static::createClient();
-        $getRequest = new JsonPatchRequest($client);
+        $patchRequest = new JsonPatchRequest($client);
         $uri = $this->getEndpointUri();
         
         $apiKey = $this->fixtures->getReferenceRepository()->getReference('biker_user_1')->getApiKey();
@@ -139,7 +139,7 @@ abstract class MaintenanceWarningsConfigurationTestController extends WebTestCas
             'kms_in_advance' => -1
         );
         
-        $response = $getRequest->patch($uri, $bodyData, $apiKey);
+        $response = $patchRequest->patch($uri, $bodyData, $apiKey);
         $content = json_decode($response->getContent(), true);
 
         $this->assertEquals('This value should be 1 or more.', $content['errors']['kms_per_maintenance'][0]);

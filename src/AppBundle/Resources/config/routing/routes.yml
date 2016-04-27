@@ -58,3 +58,9 @@ api_front_tire_change_warnings:
     parent:   api_motorcycles
     resource: Rtaranto\Presentation\Controller\FrontTireChangeWarningsConfigurationController
     name_prefix:  api_v1_
+    
+api_motorcycle_warnings:
+    type:     rest
+    parent:   api_motorcycles
+    resource: Rtaranto\Presentation\Controller\WarningsController
+    name_prefix:  api_v1_

@@ -12,7 +12,6 @@ use Rtaranto\Application\Service\Maintenance\OilChangerServiceInterface;
 use Rtaranto\Application\Service\Validator\Validator;
 use Rtaranto\Domain\Entity\OilChange;
 use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
-use Rtaranto\Infrastructure\Repository\DoctrineMotorcycleRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

@@ -1,0 +1,5 @@
+Rtaranto\Domain\Entity\MaintenanceWarning:
+    properties:
+        id:
+            exclude: true
+        

@@ -3,7 +3,7 @@ namespace Rtaranto\Domain\Entity;
 
 class FrontTireChangeWarningObserver extends MaintenanceWarningObserver
 {
-    private static $WARNING_DESCRIPTION = 'Rear Tire Change';
+    private static $WARNING_DESCRIPTION = 'Front Tire Change';
     
     public function __construct(
         Motorcycle $motorcycle,

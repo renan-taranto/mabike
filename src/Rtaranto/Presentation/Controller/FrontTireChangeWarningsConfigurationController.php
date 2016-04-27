@@ -3,8 +3,8 @@ namespace Rtaranto\Presentation\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Patch;
-use Rtaranto\Domain\Entity\RearTireChange;
-use Rtaranto\Domain\Entity\RearTireChangeWarningObserver;
+use Rtaranto\Domain\Entity\FrontTireChange;
+use Rtaranto\Domain\Entity\FrontTireChangeWarningObserver;
 use Symfony\Component\HttpFoundation\Request;
 
 class FrontTireChangeWarningsConfigurationController extends MaintenanceWarningConfigurationController
@@ -27,10 +27,10 @@ class FrontTireChangeWarningsConfigurationController extends MaintenanceWarningC
     
     protected function getMaintenanceClassName()
     {
-        return RearTireChange::class;
+        return FrontTireChange::class;
     }
     protected function getMaintenanceWarningObserverClassName()
     {
-        return RearTireChangeWarningObserver::class;
+        return FrontTireChangeWarningObserver::class;
     }
 }
