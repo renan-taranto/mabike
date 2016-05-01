@@ -2,6 +2,8 @@
 namespace Rtaranto\Presentation\Controller;
 
 use FOS\RestBundle\Request\ParamFetcher;
+use Hateoas\Representation\CollectionRepresentation;
+use Hateoas\Representation\OffsetRepresentation;
 use JMS\Serializer\SerializationContext;
 use Rtaranto\Application\EndpointAction\FiltersNormalizer;
 use Rtaranto\Application\EndpointAction\PerformedMaintenance\CgetPerformedMaintenanceAction;
@@ -16,8 +18,9 @@ abstract class PerformedMaintenanceController extends MotorcycleSubResourceContr
 {    
     abstract protected function createPostAction();
     abstract protected function createPatchAction();
-    abstract protected function getSerializationGroup();
     abstract protected function getPathForGetAction();
+    abstract protected function getPathForCgetAction();
+    abstract protected function getResourceCollectionName();
     abstract protected function getSubResourceIdParamNameForGetPath();
     abstract protected function getPerformedMaintenanceRepository();
     abstract protected function getMaintenanceRepository();
@@ -28,12 +31,10 @@ abstract class PerformedMaintenanceController extends MotorcycleSubResourceContr
         return new GetPerformedMaintenanceAction($performedMaintenanceRepository);
     }
     
-    protected function createCgetAction(ParamFetcher $paramFetcher)
+    protected function createCgetAction()
     {
         $performedMaintenanceRepository = $this->getPerformedMaintenanceRepository();
-        $filtersNormalizer = new FiltersNormalizer();
-        $queryParamsFetcher = new QueryParamsFetcher($paramFetcher, $filtersNormalizer);
-        return new CgetPerformedMaintenanceAction($queryParamsFetcher, $performedMaintenanceRepository);
+        return new CgetPerformedMaintenanceAction($performedMaintenanceRepository);
     }
     
     protected function createDeleteAction()
@@ -53,7 +54,7 @@ abstract class PerformedMaintenanceController extends MotorcycleSubResourceContr
         
         $getAction = $this->createGetAction();
         $performedMaintenance = $getAction->get($motorcycleId, $performedMaintenanceId);
-        return $this->createViewWithSerializationContext($performedMaintenance);
+        return $performedMaintenance;
     }
     
     public function cgetAction(ParamFetcher $paramFetcher, $motorcycleId)
@@ -61,10 +62,35 @@ abstract class PerformedMaintenanceController extends MotorcycleSubResourceContr
         $this->throwExceptionIfNotBiker();
         $this->throwNotFoundIfMotorcycleDoesntBelongsToBiker($motorcycleId);
         
-        $cGetAction = $this->createCgetAction($paramFetcher);
+        $filtersNormalizer = new FiltersNormalizer();
+        $queryParamsFetcher = new QueryParamsFetcher($paramFetcher, $filtersNormalizer);
+        $filters = $queryParamsFetcher->getFiltersParam();
+        $orderBy = $queryParamsFetcher->getOrderByParam();
+        $limit = $queryParamsFetcher->getLimitParam();
+        $offset = $queryParamsFetcher->getOffsetParam();
         
-        $performedMaintenances = $cGetAction->cGet($motorcycleId);
-        return $this->createViewWithSerializationContext($performedMaintenances);
+        $cGetAction = $this->createCgetAction();
+        $performedMaintenances = $cGetAction->cGet($motorcycleId, $filters, $orderBy, $limit, $offset);
+        $resourceCollectionName = $this->getResourceCollectionName();
+        $collectionRepresentation = new CollectionRepresentation(
+            $performedMaintenances,
+            $resourceCollectionName,
+            $resourceCollectionName
+        );
+        
+        $cGetPath = $this->getPathForCgetAction();
+        $total = count($cGetAction->cGet($motorcycleId));
+        
+        $paginatedCollection = new OffsetRepresentation(
+            $collectionRepresentation,
+            $cGetPath,
+            array('motorcycleId' => $motorcycleId),
+            $offset,
+            $limit,
+            $total
+        );
+        
+        return $paginatedCollection;
     }
     
     public function postAction($motorcycleId, Request $request)
@@ -80,12 +106,10 @@ abstract class PerformedMaintenanceController extends MotorcycleSubResourceContr
             $view = $this->view($ex->getErrors(), Response::HTTP_BAD_REQUEST);
             return $view;
         }
+        
         $location = $this->createLocationHeaderContent($motorcycleId, $performedMaintenance->getId(), $request);
-        return $this->createViewWithSerializationContext(
-            $performedMaintenance,
-            Response::HTTP_CREATED,
-            array('Location' => $location)
-        );
+        $headers = array('Location' => $location);
+        return $this->view($performedMaintenance, Response::HTTP_CREATED, $headers);
     }
     
     public function patchAction($motorcycleId, $performedMaintenanceId, Request $request)
@@ -103,7 +127,7 @@ abstract class PerformedMaintenanceController extends MotorcycleSubResourceContr
             return $view;
         }
         
-        return $this->createViewWithSerializationContext($performedMaintenance);
+        return $performedMaintenance;
     }
     
     public function deleteAction($motorcycleId, $performedMaintenanceId)

@@ -6,7 +6,7 @@ class OilChangeWarningsConfigurationControllerTest extends MaintenanceWarningsCo
     protected function getEndpointUri()
     {
         return $this->getUrl(
-            'api_v1_get_motorcycle_oilchangewarnings_configuration',
+            'api_v1_get_motorcycle_oilchangewarning_configurations',
             array('motorcycleId' => 1)
         );
     }

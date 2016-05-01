@@ -6,7 +6,7 @@ class FrontTireChangeWarningConfigurationControllerTest extends MaintenanceWarni
     protected function getEndpointUri()
     {
         return $this->getUrl(
-            'api_v1_get_motorcycle_fronttirechangewarnings_configuration',
+            'api_v1_get_motorcycle_fronttirechangewarning_configurations',
             array('motorcycleId' => 1)
         );
     }

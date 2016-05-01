@@ -1,18 +1,18 @@
 <?php
 namespace Rtaranto\Application\Service\Maintenance\WarningsConfiguration;
 
-use Rtaranto\Application\Dto\WarningsConfiguration\MaintenanceWarningConfigurationDTO;
+use Rtaranto\Application\Dto\WarningsConfiguration\MaintenanceWarningConfigurationsDTO;
 use Rtaranto\Application\Service\Validator\ValidatorInterface;
 use Rtaranto\Domain\Entity\Maintenance;
 use Rtaranto\Domain\Entity\MaintenanceWarningObserver;
 use Rtaranto\Domain\Entity\Repository\MaintenanceRepositoryInterface;
 use Rtaranto\Domain\Entity\Repository\MaintenanceWarningObserverRepositoryInterface;
 
-class MaintenanceWarningConfigurationPatcher implements MaintenanceWarningConfigurationPatcherInterface
+abstract class MaintenanceWarningConfigurationPatcher implements MaintenanceWarningConfigurationPatcherInterface
 {
-    private $maintenanceWarningObserverRepository;
-    private $maintenanceRepository;
-    private $validator;
+    protected $maintenanceWarningObserverRepository;
+    protected $maintenanceRepository;
+    protected $validator;
     
     public function __construct(
         MaintenanceWarningObserverRepositoryInterface $maintenanceWarningObserverRepository,
@@ -26,13 +26,16 @@ class MaintenanceWarningConfigurationPatcher implements MaintenanceWarningConfig
     
     public function patchMaintenanceWarningConfiguration(
         $motorcycleId,
-        MaintenanceWarningConfigurationDTO $maintenanceWarningsConfigurationDTO
+        MaintenanceWarningConfigurationsDTO $maintenanceWarningsConfigurationDTO
     ) {
         $patchedMaintenanceWarningObserver = $this->patchObserver($motorcycleId, $maintenanceWarningsConfigurationDTO);
         $patchedMaintenance = $this->patchMaintenance($motorcycleId, $maintenanceWarningsConfigurationDTO);
         
-        $patchedMaintenanceWarningConfigurationDTO = $this->
-            createPatchedMaintenanceWarningConfigurationDTO($patchedMaintenance, $patchedMaintenanceWarningObserver);
+        $patchedMaintenanceWarningConfigurationDTO = $this->createPatchedMaintenanceWarningConfigurationDTO(
+            $motorcycleId,
+            $patchedMaintenance,
+            $patchedMaintenanceWarningObserver
+        );
         $this->validator->throwValidationFailedIfNotValid($patchedMaintenanceWarningConfigurationDTO);
         
         $this->maintenanceRepository->update($patchedMaintenance);
@@ -41,9 +44,9 @@ class MaintenanceWarningConfigurationPatcher implements MaintenanceWarningConfig
         return $patchedMaintenanceWarningConfigurationDTO;
     }
     
-    private function patchObserver(
+    protected function patchObserver(
         $motorcycleId,
-        MaintenanceWarningConfigurationDTO $maintenanceWarningsConfigurationDTO
+        MaintenanceWarningConfigurationsDTO $maintenanceWarningsConfigurationDTO
     ) {
         /* @var $maintenanceWarningObserver MaintenanceWarningObserver */
         $maintenanceWarningObserver = $this->maintenanceWarningObserverRepository->
@@ -61,9 +64,9 @@ class MaintenanceWarningConfigurationPatcher implements MaintenanceWarningConfig
         return $maintenanceWarningObserver;
     }
     
-    private function patchMaintenance(
+    protected function patchMaintenance(
         $motorcycleId,
-        MaintenanceWarningConfigurationDTO $maintenanceWarningsConfigurationDTO
+        MaintenanceWarningConfigurationsDTO $maintenanceWarningsConfigurationDTO
     ) {
         $maintenance = $this->maintenanceRepository->findOneByMotorcycle($motorcycleId);
         $kmsPerMaintenance = $maintenanceWarningsConfigurationDTO->getKmsPerMaintenance();
@@ -71,13 +74,9 @@ class MaintenanceWarningConfigurationPatcher implements MaintenanceWarningConfig
         return $maintenance;
     }
 
-    private function createPatchedMaintenanceWarningConfigurationDTO(
+    abstract protected function createPatchedMaintenanceWarningConfigurationDTO(
+        $motorcycleId,
         Maintenance $patchedMaintenance,
         MaintenanceWarningObserver $patchedMaintenanceWarningObserver
-    ) {
-        $isActive = $patchedMaintenanceWarningObserver->isActive();
-        $kmsPerMaintenance = $patchedMaintenance->getKmsPerMaintenance();
-        $kmsInAdvance = $patchedMaintenanceWarningObserver->getKmsInAdvance();
-        return new MaintenanceWarningConfigurationDTO($isActive, $kmsPerMaintenance, $kmsInAdvance);
-    }
+    );
 }

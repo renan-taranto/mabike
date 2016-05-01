@@ -12,14 +12,14 @@ use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
 use Rtaranto\Infrastructure\Repository\DoctrinePerformedMaintenanceRepository;
 use Symfony\Component\HttpFoundation\Request;
 
-
 class OilChangeController extends PerformedMaintenanceController
 {
     private static $PATH_GET_ACTION = 'api_v1_get_motorcycle_oil_change';
-    private static $SERIALIZATION_GROUP = 'view';
+    private static $PATH_CGET_ACTION = 'api_v1_get_motorcycle_oil_changes';
     private static $PARAM_NAME_SUB_RESOURCE_ID = 'performedOilChangeId';
     private static $PARAM_NAME_MOTORCYCLE_ID = 'motorcycleId';
-            
+    private static $COLLECTION_NAME = 'oil-changes';
+    
     /**
      * @Get("/motorcycles/{motorcycleId}/oil-changes")
      */
@@ -81,11 +81,6 @@ class OilChangeController extends PerformedMaintenanceController
         return self::$PATH_GET_ACTION;
     }
 
-    protected function getSerializationGroup()
-    {
-        return self::$SERIALIZATION_GROUP;
-    }
-    
     protected function getMotorcycleIdParamNameForGetPath()
     {
         return self::$PARAM_NAME_MOTORCYCLE_ID;
@@ -101,6 +96,16 @@ class OilChangeController extends PerformedMaintenanceController
     {
         $em = $this->getDoctrine()->getManager();
         return new DoctrinePerformedMaintenanceRepository($em, PerformedOilChange::class);
+    }
+
+    protected function getPathForCgetAction()
+    {
+        return self::$PATH_CGET_ACTION;
+    }
+
+    protected function getResourceCollectionName()
+    {
+        return self::$COLLECTION_NAME;
     }
 
 }

@@ -116,3 +116,10 @@ services:
         class: Rtaranto\Application\Service\Security\SaltedPasswordValidator
         arguments: ['@security.encoder_factory']
         
+    ####HATEOAS
+    hateoas.motorcycle_relations_rule:
+        class: AppBundle\Hateoas\MotorcycleRelationsRule
+        arguments: ['@request_stack']
+    hateoas.performed_maintenance_relations_rule:
+        class: AppBundle\Hateoas\PerformedMaintenanceRelationsRule
+        arguments: ['@request_stack']

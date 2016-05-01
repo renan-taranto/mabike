@@ -1,0 +1,25 @@
+Rtaranto\Domain\Entity\PerformedRearTireChange:    
+    relations:
+        -
+            rel: self
+            href: 
+                route: api_v1_get_motorcycle_reartire_change
+                parameters:
+                    motorcycleId: expr(object.getMotorcycle().getId())
+                    performedRearTireChangeId: expr(object.getId())
+        -
+            rel: warning-configurations
+            href: 
+                route: api_v1_get_motorcycle_reartirechangewarning_configurations
+                parameters:
+                    motorcycleId: expr(object.getMotorcycle().getId())
+            exclusion:
+                exclude_if: expr(not service('hateoas.performed_maintenance_relations_rule').isAllowedForCurrentRoute())
+        -
+            rel: motorcycle
+            href: 
+                route: api_v1_get_motorcycle
+                parameters:
+                    id: expr(object.getMotorcycle().getId())
+            exclusion:
+                exclude_if: expr(not service('hateoas.performed_maintenance_relations_rule').isAllowedForCurrentRoute())

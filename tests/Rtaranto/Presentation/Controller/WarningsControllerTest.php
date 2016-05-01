@@ -42,20 +42,28 @@ class WarningsControllerTest extends WebTestCase
         $apiKey = $this->fixtures->getReferenceRepository()->getReference('biker_user_1')->getApiKey();
         $response = $getRequest->get($uri, $apiKey);
         $content = json_decode($response->getContent(), true);
+        $elements = $content['_embedded']['warnings'];
         
         $expectOilChangeWarning = array("description" => "Oil Change", "at_kms" => 2700);
         $expectRearTireChangeWarning = array("description" => "Rear Tire Change", "at_kms" => 2800);
         $expectFrontTireChangeWarning = array("description" => "Front Tire Change", "at_kms" => 2600);
-        $this->assertContains($expectOilChangeWarning, $content);
-        $this->assertContains($expectRearTireChangeWarning, $content);
-        $this->assertContains($expectFrontTireChangeWarning, $content);
+        
+        $this->assertEquals($expectOilChangeWarning['description'], $elements[0]['description']);
+        $this->assertEquals($expectOilChangeWarning['at_kms'], $elements[0]['at_kms']);
+        
+        $this->assertEquals($expectRearTireChangeWarning['description'], $elements[1]['description']);
+        $this->assertEquals($expectRearTireChangeWarning['at_kms'], $elements[1]['at_kms']);
+        
+        $this->assertEquals($expectFrontTireChangeWarning['description'], $elements[2]['description']);
+        $this->assertEquals($expectFrontTireChangeWarning['at_kms'], $elements[2]['at_kms']);
+        
         $this->assertStatusCode(Response::HTTP_OK, $client);
     }
     
     protected function configureOilChangeWarning()
     {
         $oilChangeWarningsConfURI = $this->getUrl(
-            'api_v1_get_motorcycle_oilchangewarnings_configuration',
+            'api_v1_get_motorcycle_oilchangewarning_configurations',
             array('motorcycleId' => self::$MOTORCYCLE_ID)
         );
         $this->configureMaintenanceWarnings($oilChangeWarningsConfURI);
@@ -64,7 +72,7 @@ class WarningsControllerTest extends WebTestCase
     protected function configureRearTireChangeWarning()
     {
         $rearTireChangeWarningsConfURI = $this->getUrl(
-            'api_v1_get_motorcycle_reartirechangewarnings_configuration',
+            'api_v1_get_motorcycle_reartirechangewarning_configurations',
             array('motorcycleId' => self::$MOTORCYCLE_ID)
         );
         $this->configureMaintenanceWarnings($rearTireChangeWarningsConfURI);
@@ -73,7 +81,7 @@ class WarningsControllerTest extends WebTestCase
     protected function configureFrontTireChangeWarning()
     {
         $frontTireChangeWarninsConfURI = $this->getUrl(
-            'api_v1_get_motorcycle_fronttirechangewarnings_configuration',
+            'api_v1_get_motorcycle_fronttirechangewarning_configurations',
             array('motorcycleId' => self::$MOTORCYCLE_ID)
         );
         $this->configureMaintenanceWarnings($frontTireChangeWarninsConfURI);

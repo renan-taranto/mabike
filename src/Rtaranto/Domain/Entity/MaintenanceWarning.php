@@ -17,4 +17,9 @@ class MaintenanceWarning
     {
         return $this->atKms;
     }
+    
+    public function getDescription()
+    {
+        return $this->description;
+    }
 }

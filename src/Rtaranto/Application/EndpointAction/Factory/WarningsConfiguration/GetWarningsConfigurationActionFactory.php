@@ -3,10 +3,12 @@ namespace Rtaranto\Application\EndpointAction\Factory\WarningsConfiguration;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Rtaranto\Application\EndpointAction\WarningsConfiguration\GetWarningsConfigurationAction;
+use Rtaranto\Domain\Entity\Repository\MaintenanceRepositoryInterface;
+use Rtaranto\Domain\Entity\Repository\MaintenanceWarningObserverRepositoryInterface;
 use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
 use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceWarninObserverRepository;
 
-class GetWarningsConfigurationActionFactory implements GetWarningsConfigurationActionFactoryInterface
+abstract class GetWarningsConfigurationActionFactory implements GetWarningsConfigurationActionFactoryInterface
 {
     private $em;
     
@@ -17,11 +19,22 @@ class GetWarningsConfigurationActionFactory implements GetWarningsConfigurationA
     
     public function createGetAction($maintenanceClassName, $maintenanceWarningObserverClassName)
     {
-        $oilChangeWarningObserverRepository = new DoctrineMaintenanceWarninObserverRepository(
+        $maintenanceWarninObserverRepository = new DoctrineMaintenanceWarninObserverRepository(
             $this->em,
             $maintenanceWarningObserverClassName
         );
-        $oilChangeRepository = new DoctrineMaintenanceRepository($this->em, $maintenanceClassName);
-        return new GetWarningsConfigurationAction($oilChangeWarningObserverRepository, $oilChangeRepository);
+        
+        $maitenanceRepository = new DoctrineMaintenanceRepository($this->em, $maintenanceClassName);
+        $maintenanceWarningConfigurationDTOFactory = $this->createMaintenanceWarningConfigurationsDTOFactory(
+            $maintenanceWarninObserverRepository,
+            $maitenanceRepository
+        );
+        
+        return new GetWarningsConfigurationAction($maintenanceWarningConfigurationDTOFactory);
     }
+    
+    abstract protected function createMaintenanceWarningConfigurationsDTOFactory(
+        MaintenanceWarningObserverRepositoryInterface $maintenanceWarningObserverRepository,
+        MaintenanceRepositoryInterface $maintenanceRepository
+    );
 }

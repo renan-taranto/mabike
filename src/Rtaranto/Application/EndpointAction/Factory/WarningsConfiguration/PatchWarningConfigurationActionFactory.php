@@ -5,19 +5,20 @@ use Doctrine\ORM\EntityManagerInterface;
 use Rtaranto\Application\EndpointAction\RequestParamsProcessor;
 use Rtaranto\Application\EndpointAction\WarningsConfiguration\PatchWarnigsConfigurationAction;
 use Rtaranto\Application\ParametersBinder\ParametersBinder;
-use Rtaranto\Application\Service\Maintenance\WarningsConfiguration\MaintenanceWarningConfigurationPatcher;
 use Rtaranto\Application\Service\Validator\Validator;
+use Rtaranto\Domain\Entity\Repository\MaintenanceRepositoryInterface;
+use Rtaranto\Domain\Entity\Repository\MaintenanceWarningObserverRepositoryInterface;
 use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
 use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceWarninObserverRepository;
 use Rtaranto\Presentation\Form\WarningsConfiguration\MaintenanceWarningConfigurationDTOType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class PatchWarningConfigurationActionFactory implements PatchWarningConfigurationActionFactoryInterface
+abstract class PatchWarningConfigurationActionFactory implements PatchWarningConfigurationActionFactoryInterface
 {
-    private $em;
-    private $sfValidator;
-    private $formFactory;
+    protected $em;
+    protected $sfValidator;
+    protected $formFactory;
     
     public function __construct(
         FormFactoryInterface $formFactory,
@@ -39,21 +40,33 @@ class PatchWarningConfigurationActionFactory implements PatchWarningConfiguratio
             $maintenanceWarningObserverClassName
         );
         
-        $oilChangeRepository = new DoctrineMaintenanceRepository($this->em, $maintenanceClassName);
         $validator = new Validator($this->sfValidator);
-        $oilChangeWarningPatcher = new MaintenanceWarningConfigurationPatcher(
+        $maintenanceRepository = new DoctrineMaintenanceRepository($this->em, $maintenanceClassName);
+        $maintenanceWarningConfigurationPatcher = $this->createMaintenanceWarningConfigurationsPatcher(
             $maintenanceWarningObserverRepository,
-            $oilChangeRepository,
-            $validator
+            $maintenanceRepository);
+        
+        $maintenanceWarningConfigurationsDTOFactory = $this->createMaintenanceWarningConfigurationsDTOFactory(
+            $maintenanceWarningObserverRepository,
+            $maintenanceRepository
         );
         
         $parametersBinder = new ParametersBinder($this->formFactory, MaintenanceWarningConfigurationDTOType::class);
         $inputProcessor = new RequestParamsProcessor($parametersBinder, $validator);
         return new PatchWarnigsConfigurationAction(
-            $maintenanceWarningObserverRepository,
-            $oilChangeRepository,
-            $oilChangeWarningPatcher,
+            $maintenanceWarningConfigurationsDTOFactory,
+            $maintenanceWarningConfigurationPatcher,
             $inputProcessor
         );
     }
+    
+    abstract protected function createMaintenanceWarningConfigurationsDTOFactory(
+        MaintenanceWarningObserverRepositoryInterface $maintenanceWarningObserverRepository,
+        MaintenanceRepositoryInterface $maintenanceRepository
+    );
+    
+    abstract protected function createMaintenanceWarningConfigurationsPatcher(
+        MaintenanceWarningObserverRepositoryInterface $maintenanceWarningObserverRepository,
+        MaintenanceRepositoryInterface $maintenanceRepository
+    );
 }

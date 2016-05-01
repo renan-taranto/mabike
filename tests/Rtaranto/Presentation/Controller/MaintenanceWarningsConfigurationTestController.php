@@ -34,7 +34,9 @@ abstract class MaintenanceWarningsConfigurationTestController extends WebTestCas
             'kms_in_advance' => 0
         );
         
-        $this->assertEquals($expectedRepresentation, $content);
+        $this->assertEquals($expectedRepresentation['is_active'], $content['is_active']);
+        $this->assertEquals($expectedRepresentation['kms_per_maintenance'], $content['kms_per_maintenance']);
+        $this->assertEquals($expectedRepresentation['kms_in_advance'], $content['kms_in_advance']);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
     
@@ -56,7 +58,9 @@ abstract class MaintenanceWarningsConfigurationTestController extends WebTestCas
         
         $content = json_decode($response->getContent(), true);
         
-        $this->assertEquals($bodyData, $content);
+        $this->assertEquals($bodyData['is_active'], $content['is_active']);
+        $this->assertEquals($bodyData['kms_per_maintenance'], $content['kms_per_maintenance']);
+        $this->assertEquals($bodyData['kms_in_advance'], $content['kms_in_advance']);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
     
@@ -83,7 +87,9 @@ abstract class MaintenanceWarningsConfigurationTestController extends WebTestCas
             'kms_in_advance' => 10
         );
 
-        $this->assertEquals($expectedBodyData, $content);
+        $this->assertEquals($expectedBodyData['is_active'], $content['is_active']);
+        $this->assertEquals($expectedBodyData['kms_per_maintenance'], $content['kms_per_maintenance']);
+        $this->assertEquals($expectedBodyData['kms_in_advance'], $content['kms_in_advance']);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
     
@@ -101,7 +107,7 @@ abstract class MaintenanceWarningsConfigurationTestController extends WebTestCas
         
         $response = $patchRequest->patch($uri, $bodyData, $apiKey);
         $content = json_decode($response->getContent(), true);
-
+        
         $this->assertEquals('This value should be 1 or more.', $content['errors']['kms_per_maintenance'][0]);
         $this->assertStatusCode(Response::HTTP_BAD_REQUEST, $client);
     }

@@ -6,7 +6,7 @@ class RearTireChangeWarningConfigurationControllerTest extends MaintenanceWarnin
     protected function getEndpointUri()
     {
         return $this->getUrl(
-            'api_v1_get_motorcycle_reartirechangewarnings_configuration',
+            'api_v1_get_motorcycle_reartirechangewarning_configurations',
             array('motorcycleId' => 1)
         );
     }

@@ -1,0 +1,24 @@
+Rtaranto\Application\Dto\WarningsConfiguration\OilChangeWarningConfigurationsDTO:
+    relations:
+        -
+            rel: self
+            href: 
+                route: api_v1_get_motorcycle_oilchangewarning_configurations
+                parameters:
+                    motorcycleId: expr(object.getMotorcycleId())
+#        -
+#            rel: warning-configurations
+#            href: 
+#                route: api_v1_get_motorcycle_reartirechangewarning_configurations
+#                parameters:
+#                    motorcycleId: expr(object.getMotorcycle().getId())
+#            exclusion:
+#                exclude_if: expr(not service('hateoas.performed_maintenance_relations_rule').isAllowedForCurrentRoute())
+        -
+            rel: motorcycle
+            href: 
+                route: api_v1_get_motorcycle
+                parameters:
+                    id: expr(object.getMotorcycleId())
+#            exclusion:
+#                exclude_if: expr(not service('hateoas.performed_maintenance_relations_rule').isAllowedForCurrentRoute())

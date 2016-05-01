@@ -42,14 +42,23 @@ class QueryParamsFetcher implements QueryParamsFetcherInterface
         return $this->getCustomParam(self::$PARAM_ORDER_BY, true);
     }
     
-    public function getLimitParam()
+    public function getLimitParam($minLength = 5)
     {
         $limitParam = $this->getCustomParam(self::$PARAM_LIMIT);
-        return empty($limitParam) ? 5 : $limitParam;
+        
+        if ((int)$limitParam != $limitParam or (int)$limitParam < 1) {
+            return $minLength;
+        }
+        return $limitParam;
     }
     
     public function getOffsetParam()
     {
-        return $this->getCustomParam(self::$PARAM_OFFSET);
+        $offsetParam = $this->getCustomParam(self::$PARAM_OFFSET);
+        
+        if ((int)$offsetParam != $offsetParam or (int)$offsetParam < 1) {
+            return 0;
+        }
+        return $offsetParam;
     }
 }

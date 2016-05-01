@@ -15,8 +15,9 @@ use Symfony\Component\HttpFoundation\Request;
 class FrontTireChangeController extends PerformedMaintenanceController
 {
     private static $PATH_GET_ACTION = 'api_v1_get_motorcycle_fronttire_change';
-    private static $SERIALIZATION_GROUP = 'view';
+    private static $PATH_CGET_ACTION = 'api_v1_get_motorcycle_fronttire_changes';
     private static $PARAM_NAME_SUB_RESOURCE_ID = 'performedFrontTireChangeId';
+    private static $COLLECTION_NAME = 'front-tire-changes';
     
     /**
      * @Get("/motorcycles/{motorcycleId}/front-tire-changes/{performedFrontTireChangeId}")
@@ -90,8 +91,13 @@ class FrontTireChangeController extends PerformedMaintenanceController
         return self::$PATH_GET_ACTION;
     }
 
-    protected function getSerializationGroup()
+    protected function getPathForCgetAction()
     {
-        return self::$SERIALIZATION_GROUP;
+        return self::$PATH_CGET_ACTION;
+    }
+
+    protected function getResourceCollectionName()
+    {
+        return self::$COLLECTION_NAME;
     }
 }

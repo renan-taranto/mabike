@@ -44,19 +44,19 @@ api_front_tire_changes:
 api_oil_change_warnings:
     type:     rest
     parent:   api_motorcycles
-    resource: Rtaranto\Presentation\Controller\OilChangeWarningsConfigurationController
+    resource: Rtaranto\Presentation\Controller\OilChangeWarningConfigurationsController
     name_prefix:  api_v1_
     
 api_rear_tire_change_warnings:
     type:     rest
     parent:   api_motorcycles
-    resource: Rtaranto\Presentation\Controller\RearTireChangeWarningsConfigurationController
+    resource: Rtaranto\Presentation\Controller\RearTireChangeWarningConfigurationsController
     name_prefix:  api_v1_
     
 api_front_tire_change_warnings:
     type:     rest
     parent:   api_motorcycles
-    resource: Rtaranto\Presentation\Controller\FrontTireChangeWarningsConfigurationController
+    resource: Rtaranto\Presentation\Controller\FrontTireChangeWarningConfigurationsController
     name_prefix:  api_v1_
     
 api_motorcycle_warnings:

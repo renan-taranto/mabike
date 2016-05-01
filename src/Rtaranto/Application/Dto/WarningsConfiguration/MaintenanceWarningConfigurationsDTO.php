@@ -1,20 +1,32 @@
 <?php
 namespace Rtaranto\Application\Dto\WarningsConfiguration;
 
-class MaintenanceWarningConfigurationDTO
+abstract class MaintenanceWarningConfigurationsDTO
 {
-    private $isActive;
-    private $kmsPerMaintenance;
-    private $kmsInAdvance;
+    protected $motorcycleId;
+    protected $isActive;
+    protected $kmsPerMaintenance;
+    protected $kmsInAdvance;
     
-    public function __construct($isActive, $kmsPerMaintenance, $kmsInAdvance)
+    public function __construct($motorcycleId, $isActive, $kmsPerMaintenance, $kmsInAdvance)
     {
+        $this->motorcycleId = $motorcycleId;
         $this->isActive = $isActive;
         $this->kmsPerMaintenance = $kmsPerMaintenance;
         $this->kmsInAdvance = $kmsInAdvance;
     }
     
-    public function getIsActive()
+    public function getMotorcycleId()
+    {
+        return $this->motorcycleId;
+    }
+
+    public function setMotorcycleId($motorcycleId)
+    {
+        $this->motorcycleId = $motorcycleId;
+    }
+
+        public function getIsActive()
     {
         return $this->isActive;
     }

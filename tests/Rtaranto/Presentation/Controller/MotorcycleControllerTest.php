@@ -29,12 +29,16 @@ class MotorcycleControllerTest extends WebTestCase
         $response = $getRequest->get($uri, $apiKey);
         
         $content = json_decode($response->getContent(), true);
-        
+        $elements = $content['_embedded']['motorcycles'];
         $expectedDucati = array('id' => 1, 'model' => 'Ducati Hypermotard 796', 'kms_driven' => 1560);
         $expectedXj6 = array('id' => 2, 'model' => 'XJ6', 'kms_driven' => 32000);
-
-        $this->assertEquals($expectedDucati, $content[0]);
-        $this->assertEquals($expectedXj6, $content[1]);
+        
+        $this->assertEquals($expectedDucati['id'], $elements[0]['id']);
+        $this->assertEquals($expectedDucati['model'], $elements[0]['model']);
+        $this->assertEquals($expectedDucati['kms_driven'], $elements[0]['kms_driven']);
+        $this->assertEquals($expectedXj6['id'], $elements[1]['id']);
+        $this->assertEquals($expectedXj6['model'], $elements[1]['model']);
+        $this->assertEquals($expectedXj6['kms_driven'], $elements[1]['kms_driven']);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
     
@@ -60,10 +64,9 @@ class MotorcycleControllerTest extends WebTestCase
         $response = $getRequest->get($uri, $apiKey);
         
         $content = json_decode($response->getContent(), true);
-        
-        $expectedMotorcycle = array();
+        $elements = $content['_embedded']['motorcycles'];
 
-        $this->assertEquals($expectedMotorcycle, $content);        
+        $this->assertEmpty($elements);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
     
@@ -128,15 +131,15 @@ class MotorcycleControllerTest extends WebTestCase
         $client = static::createClient();
         $getRequest = new JsonGetRequest($client);
         $id = 1;
-        $uri = $this->getMotorcyclesCollectionUri(array('id' => $id));
+        $uri = $this->getMotorcycleResourceUri(array('id' => $id));
         $apiKey = $this->getApiKeyForUserWithBikerRoleAndAssociatedMotorcycles();
         
         $response = $getRequest->get($uri, $apiKey);
         $content = json_decode($response->getContent(), true);
         
         $this->assertStatusCode(Response::HTTP_OK, $client);
-        $this->assertArrayHasKey('model', $content[0]);
-        $this->assertArrayHasKey('kms_driven', $content[0]);
+        $this->assertArrayHasKey('model', $content);
+        $this->assertArrayHasKey('kms_driven', $content);
     }
     
     public function testGetReturnsNotFound()
@@ -196,7 +199,9 @@ class MotorcycleControllerTest extends WebTestCase
         $expectedContent = array_merge(array('id' => $id), $data);
         
         $this->assertStatusCode(Response::HTTP_OK, $client);
-        $this->assertEquals($expectedContent, $content);
+        $this->assertEquals($expectedContent['id'], $content['id']);
+        $this->assertEquals($expectedContent['model'], $content['model']);
+        $this->assertEquals($expectedContent['kms_driven'], $content['kms_driven']);
     }
     
     public function testPatchUpdatesKmsDriven()
@@ -216,7 +221,9 @@ class MotorcycleControllerTest extends WebTestCase
         $expectedContent = array('id' => $id, 'model' => $model, 'kms_driven' => $kmsDriven);
         
         $this->assertStatusCode(Response::HTTP_OK, $client);
-        $this->assertEquals($expectedContent, $content);
+        $this->assertEquals($expectedContent['id'], $content['id']);
+        $this->assertEquals($expectedContent['model'], $content['model']);
+        $this->assertEquals($expectedContent['kms_driven'], $content['kms_driven']);
     }
     
     public function testPatchUpdatesModel()
@@ -235,7 +242,9 @@ class MotorcycleControllerTest extends WebTestCase
         $expectedContent = array('id' => $id, 'model' => $model, 'kms_driven' => 1560);
         
         $this->assertStatusCode(Response::HTTP_OK, $client);
-        $this->assertEquals($expectedContent, $content);
+        $this->assertEquals($expectedContent['id'], $content['id']);
+        $this->assertEquals($expectedContent['model'], $content['model']);
+        $this->assertEquals($expectedContent['kms_driven'], $content['kms_driven']);
     }
     
     public function testPatchInvalidKmsDrivenReturnsBadRequest()
@@ -269,8 +278,6 @@ class MotorcycleControllerTest extends WebTestCase
         
         $content = json_decode($response->getContent(), true);
         
-        $expectedContent = array('id' => $id, 'model' => $model, 'kms_driven' => 1560);
-        
         $this->assertEquals('This value is too short. It should have 2 characters or more.',
             $content['errors']['model'][0]);
         $this->assertStatusCode(Response::HTTP_BAD_REQUEST, $client);
@@ -293,7 +300,9 @@ class MotorcycleControllerTest extends WebTestCase
         $expectedContent = array('id' => $id, 'model' => 'Ducati Hypermotard 796', 'kms_driven' => 1560);
         
         $this->assertStatusCode(Response::HTTP_OK, $client);
-        $this->assertEquals($expectedContent, $content);
+        $this->assertEquals($expectedContent['id'], $content['id']);
+        $this->assertEquals($expectedContent['model'], $content['model']);
+        $this->assertEquals($expectedContent['kms_driven'], $content['kms_driven']);
     }
     
     public function testPatchReturnsNotFound()

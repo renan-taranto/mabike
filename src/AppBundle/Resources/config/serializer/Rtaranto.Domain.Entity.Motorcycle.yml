@@ -4,3 +4,42 @@ Rtaranto\Domain\Entity\Motorcycle:
             exclude: true
         maintenanceWarningObservers:
             exclude: true
+    relations:
+        -
+            rel: self
+            href: 
+                route: api_v1_get_motorcycle
+                parameters:
+                    id: expr(object.getId())
+        -
+            rel: oil-changes
+            href: 
+                route: api_v1_get_motorcycle_oil_changes
+                parameters:
+                    motorcycleId: expr(object.getId())
+            exclusion:
+                exclude_if: expr(not service('hateoas.motorcycle_relations_rule').isAllowedForCurrentRoute())
+        -
+            rel: front-tire-changes
+            href: 
+                route: api_v1_get_motorcycle_fronttire_changes
+                parameters:
+                    motorcycleId: expr(object.getId())
+            exclusion:
+                exclude_if: expr(not service('hateoas.motorcycle_relations_rule').isAllowedForCurrentRoute())
+        -
+            rel: rear-tire-changes
+            href: 
+                route: api_v1_get_motorcycle_reartire_changes
+                parameters:
+                    motorcycleId: expr(object.getId())
+            exclusion:
+                exclude_if: expr(not service('hateoas.motorcycle_relations_rule').isAllowedForCurrentRoute())
+        -
+            rel: warnings
+            href: 
+                route: api_v1_get_motorcycle_warnings
+                parameters:
+                    motorcycleId: expr(object.getId())
+            exclusion:
+                exclude_if: expr(not object.hasWarnings() or not service('hateoas.motorcycle_relations_rule').isAllowedForCurrentRoute())

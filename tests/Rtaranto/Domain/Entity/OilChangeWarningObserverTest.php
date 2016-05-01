@@ -19,8 +19,8 @@ class OilChangeWarningObserverTest extends \PHPUnit_Framework_TestCase
         
         $motorcycle->updateKmsDriven(1400);
         
-        $warning = $motorcycle->getWarnings()[0];
-        $this->assertNull($warning);
+        $warnings = $motorcycle->getWarnings();
+        $this->assertEmpty($warnings);
     }
     
     public function testObserverTriggerWarningForZeroKmMotorcycle()

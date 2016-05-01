@@ -1,8 +1,6 @@
 <?php
 namespace Rtaranto\Presentation\Controller;
 
-use Rtaranto\Application\EndpointAction\Factory\WarningsConfiguration\GetWarningsConfigurationActionFactory;
-use Rtaranto\Application\EndpointAction\Factory\WarningsConfiguration\PatchWarningConfigurationActionFactory;
 use Rtaranto\Application\EndpointAction\WarningsConfiguration\GetWarningsConfigurationAction;
 use Rtaranto\Application\Exception\ValidationFailedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,9 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class MaintenanceWarningConfigurationController extends MotorcycleSubResourceController
 {
-    abstract protected function getMaintenanceClassName();
-    abstract protected function getMaintenanceWarningObserverClassName();
-    
     public function getAction($motorcycleId)
     {
         $this->throwExceptionIfNotBiker();
@@ -39,24 +34,7 @@ abstract class MaintenanceWarningConfigurationController extends MotorcycleSubRe
     /**
      * @return GetWarningsConfigurationAction
      */
-    protected function createGetAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-        $factory = new GetWarningsConfigurationActionFactory($em);
-        $maintenanceClassName = $this->getMaintenanceClassName();
-        
-        $maintenanceWarningObserverClassName = $this->getMaintenanceWarningObserverClassName();
-        return $factory->createGetAction($maintenanceClassName, $maintenanceWarningObserverClassName);
-    }
+    abstract protected function createGetAction();
     
-    protected function createPatchAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-        $formFactory = $this->get('form.factory');
-        $sfValidator = $this->get('validator');
-        $actionFactory = new PatchWarningConfigurationActionFactory($formFactory, $sfValidator, $em);
-        $maintenanceClassName = $this->getMaintenanceClassName();
-        $maintenanceWarningObserverClassName = $this->getMaintenanceWarningObserverClassName();
-        return $actionFactory->createPatchAction($maintenanceClassName, $maintenanceWarningObserverClassName);
-    }
+    abstract protected function createPatchAction();
 }

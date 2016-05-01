@@ -68,4 +68,9 @@ abstract class PerformedMaintenance
     {
         return $this->id;
     }
+    
+    public function getMotorcycle()
+    {
+        return $this->motorcycle;
+    }
 }

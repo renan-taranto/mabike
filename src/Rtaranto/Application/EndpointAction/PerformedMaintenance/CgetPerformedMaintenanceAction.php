@@ -3,17 +3,11 @@ namespace Rtaranto\Application\EndpointAction\PerformedMaintenance;
 
 use Rtaranto\Application\EndpointAction\CgetSubResourceAction;
 use Rtaranto\Domain\Entity\Repository\PerformedMaintenanceRepositoryInterface;
-use Rtaranto\Presentation\Controller\QueryParam\QueryParamsFetcherInterface;
 
 class CgetPerformedMaintenanceAction extends CgetSubResourceAction
 {
-    private $performedMaintenanceRepository;
-  
-    public function __construct(
-        QueryParamsFetcherInterface $queryParamsFetcher,
-         PerformedMaintenanceRepositoryInterface $performedMaintenanceRepository
-    ) {
-        parent::__construct($queryParamsFetcher);
+    public function __construct(PerformedMaintenanceRepositoryInterface $performedMaintenanceRepository)
+    {
         $this->performedMaintenanceRepository = $performedMaintenanceRepository;
     }
     

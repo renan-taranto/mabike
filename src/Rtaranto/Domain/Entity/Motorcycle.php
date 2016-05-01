@@ -125,11 +125,25 @@ class Motorcycle
         if ($this->maintenanceWarningObservers->isEmpty()) {
             return;
         }
+        
         $warnings = array();
         /* @var $maintenanceWarningObserver MaintenanceWarningObserver */
         foreach ($this->maintenanceWarningObservers as $maintenanceWarningObserver) {
-            array_push($warnings, $maintenanceWarningObserver->getWarning());
+            $warning = $maintenanceWarningObserver->getWarning();
+            $this->addWarningIfNotEmpty($warnings, $warning);
         }
         return $warnings;
+    }
+    
+    private function addWarningIfNotEmpty(array &$warnings, $warning)
+    {
+        if (!empty($warning)) {
+            array_push($warnings, $warning);
+        }
+    }
+    
+    public function hasWarnings()
+    {
+        return !empty($this->getWarnings());
     }
 }

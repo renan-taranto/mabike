@@ -1,4 +1,4 @@
-Rtaranto\Application\Dto\WarningsConfiguration\MaintenanceWarningConfigurationDTO:
+Rtaranto\Application\Dto\WarningsConfiguration\RearTireChangeWarningConfigurationsDTO:
     properties:
         kmsPerMaintenance:
             - Range:

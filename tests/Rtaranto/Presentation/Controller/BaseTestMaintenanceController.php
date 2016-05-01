@@ -192,10 +192,13 @@ abstract class BaseTestMaintenanceController extends WebTestCase
         $performedMaintenance4 = $this->getResourceFromReferenceRepository(4);
         $performedMaintenance5 = $this->getResourceFromReferenceRepository(5);
         
-        $this->assertEquals($performedMaintenance4->getId(), $content[0]['id']);
-        $this->assertEquals($performedMaintenance4->getKmsDriven(), $content[0]['kms_driven']);
-        $this->assertEquals($performedMaintenance5->getId(), $content[1]['id']);
-        $this->assertEquals($performedMaintenance5->getKmsDriven(), $content[1]['kms_driven']);
+        $collection = $content['_embedded'];
+        $elements = reset($collection);
+        
+        $this->assertEquals($performedMaintenance4->getId(), $elements[0]['id']);
+        $this->assertEquals($performedMaintenance4->getKmsDriven(), $elements[0]['kms_driven']);
+        $this->assertEquals($performedMaintenance5->getId(), $elements[1]['id']);
+        $this->assertEquals($performedMaintenance5->getKmsDriven(), $elements[1]['kms_driven']);
         
         $this->assertStatusCode(200, $client);
     }

@@ -71,7 +71,8 @@ class BikerControllerTest extends WebTestCase
         
         $expectedBiker1 = array('id' => 1, 'name' => 'Test Biker', 'email' => 'testbiker@email.com');
         $expectedBiker2 = array('id' => 2, 'name' => 'Test Biker2', 'email' => 'testbiker2@email.com');
-        $this->assertEquals(array($expectedBiker1, $expectedBiker2), $content);
+        $expectedBikers = array($expectedBiker1, $expectedBiker2);
+        $this->assertEquals($expectedBikers, $content['_embedded']['bikers']);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
     
@@ -85,7 +86,7 @@ class BikerControllerTest extends WebTestCase
         
         $content = json_decode($response->getContent(), true);
         $expectedBiker = array('id' => 1, 'name' => 'Test Biker', 'email' => 'testbiker@email.com');
-        $this->assertEquals(array($expectedBiker), $content);
+        $this->assertEquals($expectedBiker, $content['_embedded']['bikers'][0]);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
     
@@ -98,8 +99,9 @@ class BikerControllerTest extends WebTestCase
         $response = $getRequest->get($this->getBikersEndpointUri() . '?&orderBy[id]=desc', $apiKey);
         
         $content = json_decode($response->getContent(), true);
+        
         $expectedBiker = array('id' => 2, 'name' => 'Test Biker2', 'email' => 'testbiker2@email.com');
-        $this->assertEquals($expectedBiker, $content[0]);
+        $this->assertEquals($expectedBiker, $content['_embedded']['bikers'][0]);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
     
@@ -113,7 +115,7 @@ class BikerControllerTest extends WebTestCase
         
         $content = json_decode($response->getContent(), true);
         $expectedBiker = array('id' => 2, 'name' => 'Test Biker2', 'email' => 'testbiker2@email.com');
-        $this->assertEquals($expectedBiker, $content[0]);
+        $this->assertEquals($expectedBiker, $content['_embedded']['bikers'][0]);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
     
@@ -127,7 +129,7 @@ class BikerControllerTest extends WebTestCase
         
         $content = json_decode($response->getContent(), true);
         $expectedBiker = array('id' => 2, 'name' => 'Test Biker2', 'email' => 'testbiker2@email.com');
-        $this->assertEquals($expectedBiker, $content[0]);
+        $this->assertEquals($expectedBiker, $content['_embedded']['bikers'][0]);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
     
@@ -141,7 +143,7 @@ class BikerControllerTest extends WebTestCase
         
         $content = json_decode($response->getContent(), true);
         $expectedBiker = array('id' => 1, 'name' => 'Test Biker', 'email' => 'testbiker@email.com');
-        $this->assertEquals($expectedBiker, $content[0]);
+        $this->assertEquals($expectedBiker, $content['_embedded']['bikers'][0]);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
     

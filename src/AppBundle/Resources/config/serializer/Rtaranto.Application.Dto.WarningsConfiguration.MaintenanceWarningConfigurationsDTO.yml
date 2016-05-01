@@ -1,0 +1,4 @@
+Rtaranto\Application\Dto\WarningsConfiguration\MaintenanceWarningConfigurationsDTO:
+    properties:
+        motorcycleId:
+            exclude: true
