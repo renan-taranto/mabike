@@ -11,9 +11,10 @@ class EntryPointController extends Controller
      */
     public function entryPointAction(Request $request)
     {
-        if ($this->isGranted('ROLE_DEV', $this->getUser())) {
-            return new \Symfony\Component\HttpFoundation\JsonResponse(array('msg' => 'developer'));
-        }
-        return new \Symfony\Component\HttpFoundation\JsonResponse(array('msg' => 'normal user'));
+        return array(
+            '_links' => array(
+                'motorcycles' => array('href' => $this->generateUrl('api_v1_get_motorcycles'))
+            )
+        );
     }
 }

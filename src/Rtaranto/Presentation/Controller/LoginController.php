@@ -27,7 +27,12 @@ class LoginController extends FOSRestController
             throw new BadRequestHttpException("Invalid username or password.");
         }
         
-        return array('auth_token' => $token, 'entry_point_url' => $this->generateUrl('api_v1_entry_point'));
+        return array(
+            'auth_token' => $token,
+            '_links' => array(
+                'entry_point' => array('href' => $this->generateUrl('api_v1_entry_point'))
+            )
+        );
     }
     
     /**

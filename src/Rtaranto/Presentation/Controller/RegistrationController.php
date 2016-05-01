@@ -26,7 +26,7 @@ class RegistrationController extends FOSRestController
         $data = array(
             'code' => Response::HTTP_OK,
             'message' => 'User successfully registered.',
-            'login_url' => $this->generateUrl('api_v1_login')
+            '_links' => array('login' => array('href' => $this->generateUrl('api_v1_login')))
         );
         return $data;
     }
