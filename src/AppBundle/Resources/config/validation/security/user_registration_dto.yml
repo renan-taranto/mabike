@@ -3,7 +3,7 @@ Rtaranto\Application\Dto\Security\UserRegistrationDTO:
         username:
             - NotBlank: ~
             - Length:
-                min: 3
+                min: 8
                 max: 50
         password:
             - NotBlank: ~
