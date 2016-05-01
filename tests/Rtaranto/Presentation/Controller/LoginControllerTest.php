@@ -27,7 +27,6 @@ class LoginControllerTest extends WebTestCase
         $content = json_decode($response->getContent(), true);
         $this->assertNotNull($content['auth_token']['key']);
         $this->assertNotNull($content['auth_token']['expiration_date_time']);
-        $this->assertNotNull($content['entry_point_url']);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
     
