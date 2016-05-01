@@ -6,6 +6,7 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Patch;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Request\ParamFetcher;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Rtaranto\Domain\Entity\PerformedRearTireChange;
 use Rtaranto\Domain\Entity\RearTireChange;
 use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
@@ -22,6 +23,16 @@ class RearTireChangeController extends PerformedMaintenanceController
     
     /**
      * @Post("/motorcycles/{motorcycleId}/rear-tire-changes")
+     * @ApiDoc(
+     *  description="Create a new Rear Tire Change",
+     *  requirements={
+     *      {"name"="motorcycleId", "dataType"="integer", "required"=true, "description"="Motorcycle id"}
+     * },
+     *  parameters={
+     *      {"name"="kms_driven", "dataType"="integer", "required"=false, "description"="Motorcycle kms driven. Default: Current Kms Driven"},
+     *      {"name"="date", "dataType"="string", "required"=false, "description"="Default: Current date"}
+     *  }
+     * )
      */
     public function postAction($motorcycleId, Request $request)
     {
@@ -30,6 +41,19 @@ class RearTireChangeController extends PerformedMaintenanceController
     
     /**
      * @Get("/motorcycles/{motorcycleId}/rear-tire-changes")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Returns a collection of Rear Tire Change",
+     *  requirements={
+     *      {"name"="motorcycleId", "dataType"="integer", "required"=true, "description"="Motorcycle id"}
+     * },
+     *  filters={
+     *      {"name"="offset", "dataType"="integer", "default": 0},
+     *      {"name"="limit", "dataType"="integer", "default": 5},
+     *      {"name"="orderBy", "dataType"="array", "pattern"="(id|kms_driven|date) ASC|DESC"},
+     *      {"name"="filters", "dataType"="array", "pattern"="(id|kms_driven|date) VALUE"}
+     *  }
+     * )
      */
     public function cgetAction(ParamFetcher $paramFetcher, $motorcycleId)
     {
@@ -38,6 +62,14 @@ class RearTireChangeController extends PerformedMaintenanceController
     
     /**
      * @Get("/motorcycles/{motorcycleId}/rear-tire-changes/{performedRearTireChangeId}")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Returns a Rear Tire Change",
+     *  requirements={
+     *      {"name"="motorcycleId", "dataType"="integer", "required"=true, "description"="Motorcycle id"},
+     *      {"name"="performedRearTireChangeId", "dataType"="integer", "required"=true, "description"="Rear Tire Change id"}
+     *  }
+     * )
      */
     public function getAction($motorcycleId, $performedRearTireChangeId)
     {
@@ -46,6 +78,13 @@ class RearTireChangeController extends PerformedMaintenanceController
     
     /**
      * @Delete("/motorcycles/{motorcycleId}/rear-tire-changes/{performedRearTireChangeId}")
+     * @ApiDoc(
+     *  description="Deletes a Rear Tire Change",
+     *  requirements={
+     *      {"name"="motorcycleId", "dataType"="integer", "required"=true, "description"="Motorcycle id"},
+     *      {"name"="performedRearTireChangeId", "dataType"="integer", "required"=true, "description"="Rear Tire Change id"},
+     *  }
+     * )
      */
     public function deleteAction($motorcycleId, $performedRearTireChangeId)
     {
@@ -54,6 +93,17 @@ class RearTireChangeController extends PerformedMaintenanceController
     
     /**
      * @Patch("/motorcycles/{motorcycleId}/rear-tire-changes/{performedRearTireChangeId}")
+     * @ApiDoc(
+     *  description="Updates a Rear Tire Change",
+     * requirements={
+     *      {"name"="motorcycleId", "dataType"="integer", "required"=true, "description"="Motorcycle id"},
+     *      {"name"="performedRearTireChangeId", "dataType"="integer", "required"=true, "description"="Rear Tire Change id"},
+     *  },
+     *  parameters={
+     *      {"name"="kms_driven", "dataType"="integer", "required"=false, "description"="Motorcycle kms driven."},
+     *      {"name"="date", "dataType"="string", "required"=false}
+     *  }
+     * )
      */
     public function patchAction($motorcycleId, $performedRearTireChangeId, Request $request)
     {

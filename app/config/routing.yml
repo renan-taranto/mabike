@@ -2,3 +2,7 @@ api_v1:
     type:     rest
     resource: "@AppBundle/Resources/config/routing/routes.yml"
     prefix:   /api/v1
+    
+NelmioApiDocBundle:
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    prefix:   /api/v1/doc

@@ -6,6 +6,7 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Request\ParamFetcher;
 use Hateoas\Representation\CollectionRepresentation;
 use Hateoas\Representation\OffsetRepresentation;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Rtaranto\Application\EndpointAction\FiltersNormalizer;
 use Rtaranto\Application\EndpointAction\Warnings\GetWarningsAction;
 use Rtaranto\Infrastructure\Repository\DoctrineMotorcycleRepository;
@@ -15,6 +16,13 @@ class WarningsController extends MotorcycleSubResourceController
 {
     /**
      * @Get("/motorcycles/{motorcycleId}/warnings")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Returns a collection of Warning",
+     *  requirements={
+     *      {"name"="motorcycleId", "dataType"="integer", "required"=true, "description"="Motorcycle id"}
+     *  }
+     * )
      */
     public function getAction($motorcycleId, ParamFetcher $paramFetcher)
     {

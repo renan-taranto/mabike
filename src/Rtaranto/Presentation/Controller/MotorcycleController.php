@@ -19,11 +19,24 @@ use Rtaranto\Presentation\Controller\QueryParam\QueryParamsFetcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class MotorcycleController extends FOSRestController implements ClassResourceInterface
 {
     private static $PATH_CGET = 'api_v1_get_motorcycles';
     
+    /**
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Returns a collection of Motorcycle",
+     *  filters={
+     *      {"name"="offset", "dataType"="integer", "default": 0},
+     *      {"name"="limit", "dataType"="integer", "default": 5},
+     *      {"name"="orderBy", "dataType"="array", "pattern"="(id|kms_driven|model) ASC|DESC"},
+     *      {"name"="filters", "dataType"="array", "pattern"="(id|kms_driven|model) VALUE"}
+     *  }
+     * )
+     */
     public function cgetAction(ParamFetcher $paramFetcher)
     {
         $this->throwExceptionIfNotBiker();
@@ -55,6 +68,15 @@ class MotorcycleController extends FOSRestController implements ClassResourceInt
         return $paginatedCollection;
     }
     
+    /**
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Returns a Motorcycle",
+     *  requirements={
+     *      {"name"="id", "dataType"="integer", "required"=true, "description"="Motorcycle id"}
+     *  }
+     * )
+     */
     public function getAction($id)
     {
         $this->throwExceptionIfNotBiker();
@@ -67,6 +89,15 @@ class MotorcycleController extends FOSRestController implements ClassResourceInt
         return $getMotorcycleAction->get($id);
     }
     
+    /**
+     * @ApiDoc(
+     *  description="Create a new Motorcycle",
+     *  parameters={
+     *      {"name"="model", "dataType"="string", "required"=true, "description"="Motorcycle model"},
+     *      {"name"="kms_driven", "dataType"="integer", "required"=false, "description"="Motorcycle kms driven. Default: 0"}
+     *  }
+     * )
+     */
     public function postAction(Request $request)
     {
         $this->throwExceptionIfNotBiker();
@@ -92,6 +123,14 @@ class MotorcycleController extends FOSRestController implements ClassResourceInt
         return $view;
     }
     
+    /**
+     * @ApiDoc(
+     *  description="Deletes a Motorcycle",
+     *  requirements={
+     *      {"name"="id", "dataType"="integer", "required"=true, "description"="Motorcycle id"}
+     *  }
+     * )
+     */
     public function deleteAction($id)
     {
         $this->throwExceptionIfNotBiker();
@@ -103,6 +142,18 @@ class MotorcycleController extends FOSRestController implements ClassResourceInt
         $deleteMotorcycleAction->delete($id);
     }
 
+    /**
+     * @ApiDoc(
+     *  description="Updates a Motorcycle",
+     *  requirements={
+     *      {"name"="id", "dataType"="integer", "required"=true, "description"="Motorcycle id"}
+     *  },
+     *  parameters={
+     *      {"name"="model", "dataType"="string", "required"=false, "description"="Motorcycle model"},
+     *      {"name"="kms_driven", "dataType"="integer", "required"=false, "description"="Motorcycle kms driven."}
+     *  }
+     * )
+     */
     public function patchAction($id, Request $request)
     {
         $this->throwExceptionIfNotBiker();

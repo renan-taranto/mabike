@@ -127,3 +127,5 @@ jms_serializer:
             AppBundle:
                 namespace_prefix: ""
                 path: "@AppBundle/Resources/config/serializer"
+                
+nelmio_api_doc: ~

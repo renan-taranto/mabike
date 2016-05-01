@@ -6,6 +6,7 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Patch;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Request\ParamFetcher;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Rtaranto\Domain\Entity\OilChange;
 use Rtaranto\Domain\Entity\PerformedOilChange;
 use Rtaranto\Infrastructure\Repository\DoctrineMaintenanceRepository;
@@ -22,6 +23,19 @@ class OilChangeController extends PerformedMaintenanceController
     
     /**
      * @Get("/motorcycles/{motorcycleId}/oil-changes")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Returns a collection of Oil Change",
+     *  requirements={
+     *      {"name"="motorcycleId", "dataType"="integer", "required"=true, "description"="Motorcycle id"}
+     * },
+     *  filters={
+     *      {"name"="offset", "dataType"="integer", "default": 0},
+     *      {"name"="limit", "dataType"="integer", "default": 5},
+     *      {"name"="orderBy", "dataType"="array", "pattern"="(id|kms_driven|date) ASC|DESC"},
+     *      {"name"="filters", "dataType"="array", "pattern"="(id|kms_driven|date) VALUE"}
+     *  }
+     * )
      */
     public function cgetAction(ParamFetcher $paramFetcher, $motorcycleId)
     {
@@ -30,6 +44,14 @@ class OilChangeController extends PerformedMaintenanceController
     
     /**
      * @Get("/motorcycles/{motorcycleId}/oil-changes/{performedOilChangeId}")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Returns a Oil Change",
+     *  requirements={
+     *      {"name"="motorcycleId", "dataType"="integer", "required"=true, "description"="Motorcycle id"},
+     *      {"name"="performedOilChangeId", "dataType"="integer", "required"=true, "description"="Oil Change id"}
+     *  }
+     * )
      */
     public function getAction($motorcycleId, $performedOilChangeId)
     {
@@ -38,6 +60,16 @@ class OilChangeController extends PerformedMaintenanceController
     
     /**
      * @Post("/motorcycles/{motorcycleId}/oil-changes")
+     * @ApiDoc(
+     *  description="Create a new Oil Change",
+     *  requirements={
+     *      {"name"="motorcycleId", "dataType"="integer", "required"=true, "description"="Motorcycle id"}
+     * },
+     *  parameters={
+     *      {"name"="kms_driven", "dataType"="integer", "required"=false, "description"="Motorcycle kms driven. Default: Current Kms Driven"},
+     *      {"name"="date", "dataType"="string", "required"=false, "description"="Default: Current date"}
+     *  }
+     * )
      */
     public function postAction($motorcycleId, Request $request)
     {
@@ -46,6 +78,17 @@ class OilChangeController extends PerformedMaintenanceController
     
     /**
      * @Patch("/motorcycles/{motorcycleId}/oil-changes/{performedOilChangeId}")
+     * @ApiDoc(
+     *  description="Updates a Oil Change",
+     * requirements={
+     *      {"name"="motorcycleId", "dataType"="integer", "required"=true, "description"="Motorcycle id"},
+     *      {"name"="performedOilChangeId", "dataType"="integer", "required"=true, "description"="Oil Change id"},
+     *  },
+     *  parameters={
+     *      {"name"="kms_driven", "dataType"="integer", "required"=false, "description"="Motorcycle kms driven."},
+     *      {"name"="date", "dataType"="string", "required"=false}
+     *  }
+     * )
      */
     public function patchAction($motorcycleId, $performedOilChangeId, Request $request)
     {
@@ -54,6 +97,13 @@ class OilChangeController extends PerformedMaintenanceController
     
     /**
      * @Delete("/motorcycles/{motorcycleId}/oil-changes/{performedOilChangeId}")
+     * @ApiDoc(
+     *  description="Deletes a Oil Change",
+     *  requirements={
+     *      {"name"="motorcycleId", "dataType"="integer", "required"=true, "description"="Motorcycle id"},
+     *      {"name"="performedOilChangeId", "dataType"="integer", "required"=true, "description"="Oil Change id"},
+     *  }
+     * )
      */
     public function deleteAction($motorcycleId, $performedOilChangeId)
     {
