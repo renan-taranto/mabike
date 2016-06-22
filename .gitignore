@@ -9,4 +9,4 @@
 !var/logs/.gitkeep
 !var/sessions/.gitkeep
 /phpunit.xml
-/nbproject/private/
+/nbproject/
