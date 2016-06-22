@@ -6,6 +6,7 @@ Rtaranto\Domain\Entity\PerformedMaintenance:
             performedoilchange: Rtaranto\Domain\Entity\PerformedOilChange
             performedreartirechange: Rtaranto\Domain\Entity\PerformedRearTireChange
             performedfronttirechange: Rtaranto\Domain\Entity\PerformedFrontTireChange
+        disabled: true
     properties:
         id:
             groups: [view]
