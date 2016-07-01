@@ -10,9 +10,9 @@ A REST API for keeping track of motorcycles maintenance
 - Maintenance Warning System  (adds warnings to the motorcycle resource representation when it's time to perform a maintenance).
 
 ### Requirements
-- The usual [Symfony 3 application requirements.](http://symfony.com/doc/3.0/reference/requirements.html);
+- The usual [Symfony 3 application requirements](http://symfony.com/doc/3.0/reference/requirements.html);
 - PDO-MySQL PHP extension;
-- PHPUnit and PDO-SQLite PHP extension (needed in order to run functional testes).
+- PHPUnit and PDO-SQLite PHP extension (needed in order to run functional tests).
 
 ### Instalation
 - Clone the project;
