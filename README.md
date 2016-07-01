@@ -22,13 +22,13 @@ A REST API for keeping track of motorcycles maintenance
 - Clear the cache with ``` $ php bin/console cache:clear ```.
 
 ### Documentation
-- The API manual (with sandbox) is available at [localhost:8000/app.php/api/v1/doc](localhost:8000/app.php/api/v1/doc)
+- The API manual (with sandbox) is available at [localhost:8000/app.php/api/v1/doc](http://localhost:8000/app.php/api/v1/doc)
 
 ### Usage
 - Start the PHP embedded server with ``` $ php bin/console server:run ```;
-- Register a User at [localhost:8000/app.php/api/v1/registration](localhost:8000/app.php/api/v1/registration);
-- Get an authentication token at [localhost:8000/app.php/api/v1/login](localhost:8000/app.php/api/v1/login);
+- Register a User at [http://localhost:8000/app.php/api/v1/registration](http://localhost:8000/app.php/api/v1/registration);
+- Get an authentication token at [http://localhost:8000/app.php/api/v1/login](http://localhost:8000/app.php/api/v1/login);
 - Add the token to the *"X-AUTH-TOKEN"* request header for every request;
-- The API entry point is at [localhost:8000/app.php/api/v1](localhost:8000/app.php/api/v1);
+- The API entry point is at [http://localhost:8000/app.php/api/v1](http://localhost:8000/app.php/api/v1);
 - The API manual and HATEOAS with HAL standard will tell everything else!
 
