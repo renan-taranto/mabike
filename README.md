@@ -16,7 +16,10 @@ A REST API for keeping track of motorcycles maintenance
 
 ### Instalation
 - Clone the project;
-- Run  ``` $ composer install ```;
+- Run ``` $ composer install ```;
+- Create the parameters.yml file at app/config/ directory based on the app/config/parameters.yml.dist file. Mailer information is not needed;
+- Run ``` $ php bin/console doctrine:database:create ```;
+- Run ``` $ php bin/console doctrine:schema:create ```;
 - Clear the cache with ``` $ php bin/console cache:clear ```.
 
 ### Documentation
