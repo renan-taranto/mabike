@@ -13,7 +13,7 @@ A REST API for keeping track of motorcycles maintenance
 - PDO-MySQL PHP extension;
 - PHPUnit and PDO-SQLite PHP extension (needed in order to run functional tests).
 
-### Instalation
+### Installation
 - Clone the project;
 - Run ``` $ composer install ```;
 - Create the parameters.yml file at app/config/ directory based on the app/config/parameters.yml.dist file. Mailer information is not needed;
