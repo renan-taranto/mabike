@@ -32,3 +32,7 @@ A REST API for keeping track of motorcycles maintenance
 - The API entry point is at [http://localhost:8000/app.php/api/v1](http://localhost:8000/app.php/api/v1);
 - The API manual and HATEOAS with HAL standard will tell everything else!
 
+### Troubleshooting
+##### Fatal error: Class 'DOMDocument' not found
+- XML Parser PHP extension must be enabled.
+- 
