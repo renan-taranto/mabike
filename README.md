@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/renan-taranto/mabike.svg?branch=master)](https://travis-ci.org/renan-taranto/mabike)
+[![Coverage Status](https://coveralls.io/repos/github/renan-taranto/mabike/badge.svg)](https://coveralls.io/github/renan-taranto/mabike)
 
 Mabike
 ======
