@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/renan-taranto/mabike.svg?branch=master)](https://travis-ci.org/renan-taranto/mabike)
+
 Mabike
 ======
 A REST API for keeping track of motorcycles maintenance 
